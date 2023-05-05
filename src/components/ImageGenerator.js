@@ -13,7 +13,7 @@ function ImageGenerator() {
     );
 
     const configuration = new Configuration({
-        apiKey: "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",
+        apiKey: "apikeyhere",
     });
 
     const openai = new OpenAIApi(configuration);
