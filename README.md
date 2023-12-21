@@ -1,6 +1,6 @@
-# Tattoogen React app
+# AI tarrot reading
 
-See a description of this project at: https://alexdevri.es/ai-tattoo-generator-intro-to-react-javascript-css/.
+This is new version with UI of this project: https://alexdevri.es/get-an-ai-tarot-reading-python-game-built-with-gpt/
 
 ## Available Scripts
 
