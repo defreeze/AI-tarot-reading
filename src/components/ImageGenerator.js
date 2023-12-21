@@ -6,7 +6,7 @@ function ImageGenerator() {
     const [prompt, setPrompt] = useState("");
     const [result, setResult] = useState("");
     const [loading, setLoading] = useState(false);
-    const [placeholder, setPlaceholder] = useState("Type your tattoo idea here...");
+    const [placeholder, setPlaceholder] = useState("Type here...");
 
     // Initialize OpenAI with your API key
     //const openai = new OpenAI(process.env.REACT_APP_OPENAI_API_KEY);
@@ -15,7 +15,7 @@ function ImageGenerator() {
 
 
     const generateImage = async () => {
-        setPlaceholder(`Tattoo for ${prompt}...`);
+        setPlaceholder(`Tarrot reading for ${prompt}...`);
         setLoading(true);
 
         try {
@@ -26,7 +26,7 @@ function ImageGenerator() {
                     'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
                 },
                 body: JSON.stringify({
-                    prompt: `line art tattoo. white background, white border, black lines: ${prompt}`,
+                    prompt: `Digital art, visualise a person un-gendered in a spiritual tarrot card environment based on this prompt: ${prompt}`,
                     n: 1,
                     size: "512x512",
                 })
@@ -49,10 +49,10 @@ function ImageGenerator() {
     return (
         <div className="container">
             {loading ? (
-                <h3>Generating tattoo, please wait...</h3>
+                <h3>Shuffeling cards, please wait...</h3>
             ) : (
                 <>
-                    <h2>AI Overlord Deciding Your Tattoo Fate</h2>
+                    <h2>AI Genie reading Your Future</h2>
                     <div className="input-wrapper">
                         <textarea
                             className="app-input"
@@ -61,11 +61,11 @@ function ImageGenerator() {
                             rows="1"
                             cols="50"
                         />
-                        <button onClick={generateImage}>Generate Tattoo</button>
+                        <button onClick={generateImage}>Get a tarrot reading</button>
                     </div>
 
                     {result.length > 0 && (
-                        <img className="result-image" src={result} alt="Generated Tattoo" />
+                        <img className="result-image" src={result} alt="Generated reading" />
                     )}
                 </>
             )}
