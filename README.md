@@ -2,6 +2,8 @@
 
 This is new version with UI of this project: https://alexdevri.es/get-an-ai-tarot-reading-python-game-built-with-gpt/
 
+![alt text]([http://url/to/img.png](https://raw.githubusercontent.com/defreeze/AI_tarrot_reading/main/tarot.PNG))
+
 ## Available Scripts
 
 In the project directory, you can run:
