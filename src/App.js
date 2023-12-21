@@ -1,11 +1,11 @@
 import './App.css';
-import ImageGenerator from './components/ImageGenerator';
+import Tarotgen from './components/tarotreading';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <ImageGenerator />
+        <Tarotgen />
       </header>
     </div>
   );
