@@ -100,7 +100,7 @@ function ImageGenerator() {
 
     return (
         <div className="container">
-            <h2>AI Genie Reading Your Future</h2>
+            <h2>Tarot reading by AI</h2>
             <div className="input-wrapper">
                 <div className="user-info">
                     <input
@@ -144,6 +144,7 @@ function ImageGenerator() {
             {generatedText && (
                 <div className="generated-text">
                     <h3>Generated Reading</h3>
+                    <p> The cards picked, past: {reading.past}, present: {reading.present}, future: {reading.future}</p>
                     <p>{generatedText}</p>
                 </div>
             )}
