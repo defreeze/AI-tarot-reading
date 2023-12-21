@@ -9,13 +9,13 @@ function ImageGenerator() {
     const [placeholder, setPlaceholder] = useState("Type here...");
 
     // Initialize OpenAI with your API key
-    //const openai = new OpenAI(process.env.REACT_APP_OPENAI_API_KEY);
+    // note that dangerouslyAllowBrowser; True is not ideal, since the key can be aquired by end users
     const openai = new OpenAI({ apiKey: process.env.REACT_APP_OPENAI_API_KEY, dangerouslyAllowBrowser: true });
 
 
 
     const generateImage = async () => {
-        setPlaceholder(`Tarrot reading for ${prompt}...`);
+        setPlaceholder(`Tarrot reading for: ${prompt}...`);
         setLoading(true);
 
         try {
