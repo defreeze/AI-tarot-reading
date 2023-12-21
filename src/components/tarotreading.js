@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import '../App.css';
 
-function ImageGenerator() {
+function Tarotgen() {
     const [emoji, setEmoji] = useState('');
     const emojis = ['💫', '🔮', '✨', '🌟', '🌙', '🌕', '🌖', '🌗', '🌘', '🌑', '💀', '🌈', '☄️', '🍀', '🪐', '🧞', '🌤️', '🏅', '🎭', '🎰', '🕯️', '📿', '🗝️', '🎊', '☀️', '⚡'
         , '🤖', '💝', '💞', '🃏', '🚩', '👁️‍🗨️', '♾️', '🎶', '💔', '🧚‍♀️', '👼', '👑', '🐉', '🥀', '🎓', '🧬', '🙏', '🌹', '🌏', '🥠', '🍾', '💒', '💸', '🏳️', '🎐', '🕊️'];
@@ -169,4 +169,4 @@ function ImageGenerator() {
 
 }
 
-export default ImageGenerator;
+export default Tarotgen;
