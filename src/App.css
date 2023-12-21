@@ -80,3 +80,24 @@
   color: #ffffff;
   text-align: justify;
 }
+
+.generated-text h3 {
+  text-align: center;
+  margin-top: 0;
+}
+
+.result-image-wrapper {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #ffffff;
+  border: 1px solid #ddd;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.result-image-wrapper h3 {
+  text-align: center;
+  margin-top: 0;
+}

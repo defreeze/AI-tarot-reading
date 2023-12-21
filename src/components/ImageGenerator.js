@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import OpenAI from "openai";
 import '../App.css';
 
 function ImageGenerator() {
     const [name, setName] = useState("");
-    const [age, setAge] = useState("");
+    const [dateTime, setDateTime] = useState("");
     const [choice, setChoice] = useState("");
     const [prompt, setPrompt] = useState("");
     const [result, setResult] = useState("");
     const [loading, setLoading] = useState(false);
     const [cards, setCards] = useState([]);
     const [reading, setReading] = useState({ past: "", present: "", future: "" });
-
     const [generatedText, setGeneratedText] = useState("");
 
     useEffect(() => {
@@ -64,12 +63,9 @@ function ImageGenerator() {
                     max_tokens: 400
                 })
             });
-
             const textData = await textResponse.json();
-            console.log("GPT Text Response:", textData);
             if (textData && textData.choices && textData.choices.length > 0 && textData.choices[0].text) {
                 setGeneratedText(textData.choices[0].text);
-
                 // Step 2: Use the generated text to create an image
                 const imagePrompt = `Digital art, visualize a person un-gendered in a spiritual tarot card environment based on this text: ${textData.choices[0].text}`;
 
@@ -85,9 +81,7 @@ function ImageGenerator() {
                         size: "512x512",
                     })
                 });
-
                 const imageData = await imageResponse.json();
-                console.log("Image Generation Response:", imageData);
                 if (imageData.data && imageData.data.length > 0) {
                     setResult(imageData.data[0].url);
                 } else {
@@ -117,11 +111,12 @@ function ImageGenerator() {
                         onChange={(e) => setName(e.target.value)}
                     />
                     <input
-                        type="number"
+                        type="datetime-local"
+                        id="birth-date-time"
                         className="user-input"
-                        placeholder="Enter your age"
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
+                        value={dateTime}
+                        onChange={(e) => setDateTime(e.target.value)}
+                        title="Set your date and time of birth"
                     />
                     <select
                         className="user-select"
@@ -145,16 +140,17 @@ function ImageGenerator() {
             <button onClick={generateTextAndImage} disabled={loading}>
                 {loading ? 'Generating...' : 'Get a Tarot Reading'}
             </button>
-            {loading && <p>Loading...</p>}
+            {loading && <p>Shuffling cards and looking at the stars...</p>}
             {generatedText && (
                 <div className="generated-text">
-                    <h3>Generated Reading:</h3>
+                    <h3>Generated Reading</h3>
                     <p>{generatedText}</p>
                 </div>
             )}
             {result && (
                 <div className="result-image-wrapper">
-                    <h3>Your Tarot Vision:</h3>
+                    <h3>Your Tarot reading visualized</h3>
+                    <p>The Ai generated a unique visualisation representing your tarot reading.</p>
                     <img className="result-image" src={result} alt="Generated Tarot Reading" />
                 </div>
             )}
