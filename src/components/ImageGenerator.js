@@ -12,6 +12,8 @@ function ImageGenerator() {
     const [cards, setCards] = useState([]);
     const [reading, setReading] = useState({ past: "", present: "", future: "" });
 
+    const [generatedText, setGeneratedText] = useState("");
+
     useEffect(() => {
         setCards([
             "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
@@ -42,91 +44,123 @@ function ImageGenerator() {
         return { past, present, future };
     };
 
-    const generateImage = async () => {
+    const generateTextAndImage = async () => {
         setLoading(true);
         const selectedReading = pickCards();
-        setReading(selectedReading);
 
-        const fullPrompt = `Name: ${name}, Age: ${age}, Choice: ${choice}. Tarot reading: Past - ${selectedReading.past}, Present - ${selectedReading.present}, Future - ${selectedReading.future}. ${prompt}`;
+        const textPrompt = `Generate a tarot reading based on these cards: Past - ${selectedReading.past}, Present - ${selectedReading.present}, Future - ${selectedReading.future}.`;
 
         try {
-            const response = await fetch('https://api.openai.com/v1/images/generations', {
+            // Step 1: Generate text with GPT
+            const textResponse = await fetch('https://api.openai.com/v1/completions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
                 },
                 body: JSON.stringify({
-                    prompt: `Digital art, visualise a person un-gendered in a spiritual tarot card environment based on this prompt: ${fullPrompt}`,
-                    n: 1,
-                    size: "512x512",
+                    model: "text-davinci-003",
+                    prompt: textPrompt,
+                    max_tokens: 400
                 })
             });
 
-            const data = await response.json();
-            setLoading(false);
-            if (data.data && data.data.length > 0) {
-                setResult(data.data[0].url);
+            const textData = await textResponse.json();
+            console.log("GPT Text Response:", textData);
+            if (textData && textData.choices && textData.choices.length > 0 && textData.choices[0].text) {
+                setGeneratedText(textData.choices[0].text);
+
+                // Step 2: Use the generated text to create an image
+                const imagePrompt = `Digital art, visualize a person un-gendered in a spiritual tarot card environment based on this text: ${textData.choices[0].text}`;
+
+                const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        prompt: imagePrompt,
+                        n: 1,
+                        size: "512x512",
+                    })
+                });
+
+                const imageData = await imageResponse.json();
+                console.log("Image Generation Response:", imageData);
+                if (imageData.data && imageData.data.length > 0) {
+                    setResult(imageData.data[0].url);
+                } else {
+                    throw new Error("No image data returned");
+                }
             } else {
-                throw new Error("No image data returned");
+                throw new Error("No text data returned from GPT");
             }
         } catch (error) {
+            console.error(`Error: ${error.message}`);
+        } finally {
             setLoading(false);
-            console.error(`Error generating image: ${error.message}`);
         }
     };
 
+
     return (
         <div className="container">
-            {loading ? (
-                <h3>Shuffling cards, please wait...</h3>
-            ) : (
-                <>
-                    <h2>AI Genie Reading Your Future</h2>
-                    <div className="input-wrapper">
-                        <div className="user-info">
-                            <input
-                                type="text"
-                                className="user-input"
-                                placeholder="Enter your name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                            <input
-                                type="number"
-                                className="user-input"
-                                placeholder="Enter your age"
-                                value={age}
-                                onChange={(e) => setAge(e.target.value)}
-                            />
-                            <select
-                                className="user-select"
-                                value={choice}
-                                onChange={(e) => setChoice(e.target.value)}
-                            >
-                                <option value="">Select Your Reading</option>
-                                <option value="1">Understanding a Situation</option>
-                                <option value="2">Make a Decision</option>
-                                <option value="3">Past/Present/Future</option>
-                            </select>
-                        </div>
-                        <textarea
-                            className="prompt-input"
-                            placeholder="Explain your situation as you feel comfortable with..."
-                            value={prompt}
-                            onChange={(e) => setPrompt(e.target.value)}
-                            rows="3"
-                        />
-                        <button onClick={generateImage}>Get a Tarot Reading</button>
-                    </div>
-
-                    {result.length > 0 && (
-                        <img className="result-image" src={result} alt="Generated Reading" />
-                    )}
-                </>
+            <h2>AI Genie Reading Your Future</h2>
+            <div className="input-wrapper">
+                <div className="user-info">
+                    <input
+                        type="text"
+                        className="user-input"
+                        placeholder="Enter your name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                    <input
+                        type="number"
+                        className="user-input"
+                        placeholder="Enter your age"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                    />
+                    <select
+                        className="user-select"
+                        value={choice}
+                        onChange={(e) => setChoice(e.target.value)}
+                    >
+                        <option value="">Select Your Reading</option>
+                        <option value="1">Understanding a Situation</option>
+                        <option value="2">Make a Decision</option>
+                        <option value="3">Standard Past/Present/Future</option>
+                    </select>
+                </div>
+                <textarea
+                    className="prompt-input"
+                    placeholder="Add details to your prompt..."
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    rows="3"
+                />
+            </div>
+            <button onClick={generateTextAndImage} disabled={loading}>
+                {loading ? 'Generating...' : 'Get a Tarot Reading'}
+            </button>
+            {loading && <p>Loading...</p>}
+            {generatedText && (
+                <div className="generated-text">
+                    <h3>Generated Reading:</h3>
+                    <p>{generatedText}</p>
+                </div>
+            )}
+            {result && (
+                <div className="result-image-wrapper">
+                    <h3>Your Tarot Vision:</h3>
+                    <img className="result-image" src={result} alt="Generated Tarot Reading" />
+                </div>
             )}
         </div>
     );
+
 }
 
 export default ImageGenerator;

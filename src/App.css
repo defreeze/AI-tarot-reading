@@ -66,3 +66,17 @@
   box-sizing: border-box;
   /* Include padding and border in the element's total width and height */
 }
+
+.generated-text {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #ffffff;
+  text-align: justify;
+}
