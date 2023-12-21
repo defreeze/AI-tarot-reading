@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Tattoogen React app
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+See a description of this project at: https://alexdevri.es/ai-tattoo-generator-intro-to-react-javascript-css/.
 
 ## Available Scripts
 
