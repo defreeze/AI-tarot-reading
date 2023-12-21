@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import OpenAI from "openai";
 import '../App.css';
 
 function ImageGenerator() {
+    const [emoji, setEmoji] = useState('');
+    const emojis = ['💫', '🔮', '✨', '🌟', '🌙', '🌕', '🌖', '🌗', '🌘', '🌑', '💀', '🌈', '☄️', '🍀', '🪐', '🧞', '🌤️', '🏅', '🎭', '🎰', '🕯️', '📿', '🗝️', '🎊', '☀️', '⚡'
+        , '🤖', '💝', '💞', '🃏', '🚩', '👁️‍🗨️', '♾️', '🎶', '💔', '🧚‍♀️', '👼', '👑', '🐉', '🥀', '🎓', '🧬', '🙏', '🌹', '🌏', '🥠', '🍾', '💒', '💸', '🏳️', '🎐', '🕊️'];
+
     const [name, setName] = useState("");
     const [dateTime, setDateTime] = useState("");
     const [choice, setChoice] = useState("");
@@ -33,6 +36,12 @@ function ImageGenerator() {
             "Six of Pentacles", "Seven of Pentacles", "Eight of Pentacles", "Nine of Pentacles", "Ten of Pentacles",
             "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
         ]);
+        // Function to pick a random emoji
+        const pickRandomEmoji = () => {
+            const randomIndex = Math.floor(Math.random() * emojis.length);
+            return emojis[randomIndex];
+        };
+        setEmoji(pickRandomEmoji());
     }, []);
 
     const pickCards = () => {
@@ -46,7 +55,6 @@ function ImageGenerator() {
     const generateTextAndImage = async () => {
         setLoading(true);
         const selectedReading = pickCards();
-
         const textPrompt = `Generate a tarot reading based on these cards: Past - ${selectedReading.past}, Present - ${selectedReading.present}, Future - ${selectedReading.future}.`;
 
         try {
@@ -100,7 +108,7 @@ function ImageGenerator() {
 
     return (
         <div className="container">
-            <h2>Tarot reading by AI</h2>
+            <h2>{emoji} Tarot reading by AI {emoji}</h2>
             <div className="input-wrapper">
                 <div className="user-info">
                     <input
@@ -140,14 +148,15 @@ function ImageGenerator() {
             <button onClick={generateTextAndImage} disabled={loading}>
                 {loading ? 'Generating...' : 'Get a Tarot Reading'}
             </button>
-            {loading && <p>Shuffling cards and looking at the stars...</p>}
+
             {generatedText && (
                 <div className="generated-text">
                     <h3>Generated Reading</h3>
                     <p> The cards picked, past: {reading.past}, present: {reading.present}, future: {reading.future}</p>
                     <p>{generatedText}</p>
                 </div>
-            )}
+            )}{
+                loading && <p>Shuffling cards and looking at the stars...</p>}
             {result && (
                 <div className="result-image-wrapper">
                     <h3>Your Tarot reading visualized</h3>
