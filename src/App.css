@@ -32,7 +32,37 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.user-input,
+.user-select {
+  margin: 0 5px;
+  flex-grow: 1;
+  /* Adjust the following to ensure inputs have the correct size */
+  min-width: 0;
+  /* Prevent flex items from growing too large */
+}
+
+.prompt-input {
+  width: 100%;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  /* Include padding and border in the element's total width and height */
 }
