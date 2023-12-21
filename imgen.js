@@ -12,6 +12,8 @@ function ImageGenerator() {
     const [cards, setCards] = useState([]);
     const [reading, setReading] = useState({ past: "", present: "", future: "" });
 
+    const [generatedText, setGeneratedText] = useState("");
+
     useEffect(() => {
         setCards([
             "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
