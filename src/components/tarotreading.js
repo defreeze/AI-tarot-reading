@@ -139,14 +139,14 @@ function Tarotgen() {
                 </div>
                 <textarea
                     className="prompt-input"
-                    placeholder="Add details to your prompt..."
+                    placeholder="Add details about your situation here..."
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     rows="3"
                 />
             </div>
             <button onClick={generateTextAndImage} disabled={loading}>
-                {loading ? 'Generating...' : 'Get a Tarot Reading'}
+                {loading ? 'Generating...' : 'Get Tarot Reading'}
             </button>
 
             {generatedText && (
