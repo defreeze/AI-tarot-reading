@@ -4,14 +4,16 @@ import Tarotgen from './components/tarotreading';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
+  const [Value1, setPassword] = useState('');
+  const correctValue = process.env.REACT_APP_VALUE;
+  console.log('Env variable:', process.env.REACT_APP_VALUE);
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && password === 'alexdevri.es') {
+    if (e.key === 'Enter' && Value1 === correctValue) {
       setIsAuthenticated(true);
     }
   };
@@ -32,7 +34,7 @@ function App() {
           <input
             type="password"
             placeholder="Enter Password.."
-            value={password}
+            value={Value1}
             onChange={handlePasswordChange}
             onKeyDown={handleKeyDown}
             className="password-input"

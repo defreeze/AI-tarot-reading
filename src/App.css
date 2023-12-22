@@ -132,7 +132,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 15%;
+  padding-top: 10%;
   z-index: 2;
   /* Higher than the content but not too high */
 }
