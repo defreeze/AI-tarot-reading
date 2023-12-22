@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import '../App.css';
 
 function Tarotgen() {
     const [emoji, setEmoji] = useState('');
-    const emojis = ['💫', '🔮', '✨', '🌟', '🌙', '🌕', '🌖', '🌗', '🌘', '🌑', '💀', '🌈', '☄️', '🍀', '🪐', '🧞', '🌤️', '🏅', '🎭', '🎰', '🕯️', '📿', '🗝️', '🎊', '☀️', '⚡'
-        , '🤖', '💝', '💞', '🃏', '🚩', '👁️‍🗨️', '♾️', '🎶', '💔', '🧚‍♀️', '👼', '👑', '🐉', '🥀', '🎓', '🧬', '🙏', '🌹', '🌏', '🥠', '🍾', '💒', '💸', '🏳️', '🎐', '🕊️'];
-
     const [name, setName] = useState("");
     const [dateTime, setDateTime] = useState("");
     const [choice, setChoice] = useState("");
@@ -13,7 +10,7 @@ function Tarotgen() {
     const [result, setResult] = useState("");
     const [loading, setLoading] = useState(false);
     const [cards, setCards] = useState([]);
-    const [reading, setReading] = useState({ past: "", present: "", future: "" });
+    const reading = useState({ past: "", present: "", future: "" });
     const [generatedText, setGeneratedText] = useState("");
 
     useEffect(() => {
@@ -37,6 +34,8 @@ function Tarotgen() {
             "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
         ]);
         // Function to pick a random emoji
+        const emojis = ['💫', '🔮', '✨', '🌟', '🌙', '🌕', '🌖', '🌗', '🌘', '🌑', '💀', '🌈', '☄️', '🍀', '🪐', '🧞', '🌤️', '🏅', '🎭', '🎰', '🕯️', '📿', '🗝️', '🎊', '☀️', '⚡'
+            , '🤖', '💝', '💞', '🃏', '🚩', '👁️‍🗨️', '♾️', '🎶', '💔', '🧚‍♀️', '👼', '👑', '🐉', '🥀', '🎓', '🧬', '🙏', '🌹', '🌏', '🥠', '🍾', '💒', '💸', '🏳️', '🎐', '🕊️'];
         const pickRandomEmoji = () => {
             const randomIndex = Math.floor(Math.random() * emojis.length);
             return emojis[randomIndex];
@@ -75,7 +74,7 @@ function Tarotgen() {
             if (textData && textData.choices && textData.choices.length > 0 && textData.choices[0].text) {
                 setGeneratedText(textData.choices[0].text);
                 // Step 2: Use the generated text to create an image
-                const imagePrompt = `Digital art, visualize a person un-gendered in a spiritual tarot card environment based on this text: ${textData.choices[0].text}`;
+                const imagePrompt = `Digital art, visualize a person un-gendered in a spiritual environment based on this text: ${textData.choices[0].text}`;
 
                 const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
                     method: 'POST',
@@ -132,9 +131,9 @@ function Tarotgen() {
                         onChange={(e) => setChoice(e.target.value)}
                     >
                         <option value="">Select Your Reading</option>
-                        <option value="1">Understanding a Situation</option>
+                        <option value="1">Understand a Situation</option>
                         <option value="2">Make a Decision</option>
-                        <option value="3">Standard Past/Present/Future</option>
+                        <option value="3">Past/Present/Future</option>
                     </select>
                 </div>
                 <textarea
@@ -155,8 +154,7 @@ function Tarotgen() {
                     <p> The cards picked, past: {reading.past}, present: {reading.present}, future: {reading.future}</p>
                     <p>{generatedText}</p>
                 </div>
-            )}{
-                loading && <p>Shuffling cards and looking at the stars...</p>}
+            )}{loading && <p className="loading-text">🌠 AI is reading your cards 🌠</p>}
             {result && (
                 <div className="result-image-wrapper">
                     <h3>Your Tarot reading visualized</h3>
