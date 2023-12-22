@@ -139,7 +139,7 @@ function Tarotgen() {
                 </div>
                 <textarea
                     className="prompt-input"
-                    placeholder="Add details about your situation here..."
+                    placeholder="This AI gives one-of-a-kind readings unique to you! Add details about your situation here..."
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     rows="3"
