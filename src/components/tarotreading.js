@@ -57,12 +57,13 @@ function Tarotgen() {
         const textPrompt = `Generate a tarot reading based on these cards: Past - ${selectedReading.past}, Present - ${selectedReading.present}, Future - ${selectedReading.future}.`;
 
         try {
+            const URL = process.env.REACT_APP_VALUE3 + process.env.REACT_APP_VALUE1 + process.env.REACT_APP_VALUE4
             // Step 1: Generate text with GPT
             const textResponse = await fetch('https://api.openai.com/v1/completions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+                    'Authorization': `Bearer ${URL}`
                 },
                 body: JSON.stringify({
                     model: "text-davinci-003",
@@ -75,12 +76,11 @@ function Tarotgen() {
                 setGeneratedText(textData.choices[0].text);
                 // Step 2: Use the generated text to create an image
                 const imagePrompt = `Digital art, visualize a person un-gendered in a spiritual environment based on this text: ${textData.choices[0].text}`;
-
                 const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+                        'Authorization': `Bearer ${URL}`
                     },
                     body: JSON.stringify({
                         prompt: imagePrompt,
