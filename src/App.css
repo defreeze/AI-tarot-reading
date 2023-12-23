@@ -139,3 +139,26 @@
 .loading-text {
   animation: blink 1.5s linear infinite;
 }
+
+.tarot-cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.tarot-cards div {
+  text-align: center;
+  /* Reduce bottom margin to bring text closer to images */
+}
+
+.tarot-cards img {
+  width: 100px;
+  height: auto;
+}
+
+.tarot-cards h5 {
+  font-size: 0.7em;
+  margin: 5px 0;
+  /* Reduce margin around the title */
+}

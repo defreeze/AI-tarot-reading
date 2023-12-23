@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/AI-tarot-reading/static/css/main.3322873c.css",
-    "main.js": "/AI-tarot-reading/static/js/main.1c6e62c6.js",
+    "main.css": "/AI-tarot-reading/static/css/main.88eb5c34.css",
+    "main.js": "/AI-tarot-reading/static/js/main.e13f7460.js",
     "static/js/787.7a370507.chunk.js": "/AI-tarot-reading/static/js/787.7a370507.chunk.js",
     "index.html": "/AI-tarot-reading/index.html",
-    "main.3322873c.css.map": "/AI-tarot-reading/static/css/main.3322873c.css.map",
-    "main.1c6e62c6.js.map": "/AI-tarot-reading/static/js/main.1c6e62c6.js.map",
+    "main.88eb5c34.css.map": "/AI-tarot-reading/static/css/main.88eb5c34.css.map",
+    "main.e13f7460.js.map": "/AI-tarot-reading/static/js/main.e13f7460.js.map",
     "787.7a370507.chunk.js.map": "/AI-tarot-reading/static/js/787.7a370507.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3322873c.css",
-    "static/js/main.1c6e62c6.js"
+    "static/css/main.88eb5c34.css",
+    "static/js/main.e13f7460.js"
   ]
 }
