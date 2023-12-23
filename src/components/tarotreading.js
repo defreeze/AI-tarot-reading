@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import TarotCards from './tarotcards';
 import '../App.css';
 
 function Tarotgen() {
@@ -10,13 +11,13 @@ function Tarotgen() {
     const [result, setResult] = useState("");
     const [loading, setLoading] = useState(false);
     const [cards, setCards] = useState([]);
-    const reading = useState({ past: "", present: "", future: "" });
+    const reading = useRef({ past: "", present: "", future: "" });
     const [generatedText, setGeneratedText] = useState("");
 
     useEffect(() => {
         setCards([
             "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
-            "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
+            "The Pope", "The Lovers", "The Chariot", "Strength", "The Hermit",
             "Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance",
             "The Devil", "The Tower", "The Star", "The Moon", "The Sun",
             "Judgement", "The World",
@@ -54,10 +55,18 @@ function Tarotgen() {
     const generateTextAndImage = async () => {
         setLoading(true);
         const selectedReading = pickCards();
+        reading.current = selectedReading;
+
+        // selectedReading.past
+        // selectedReading.present
+        // selectedReading.future
+        // each selectedreading value has an image with .jpg in the tarot_deck directory
+
         const textPrompt = `Generate a tarot reading based on these cards: Past - ${selectedReading.past}, Present - ${selectedReading.present}, Future - ${selectedReading.future}.`;
 
         try {
             const URL = process.env.REACT_APP_VALUE3 + process.env.REACT_APP_VALUE1 + process.env.REACT_APP_VALUE4
+
             // Step 1: Generate text with GPT
             const textResponse = await fetch('https://api.openai.com/v1/completions', {
                 method: 'POST',
@@ -104,7 +113,6 @@ function Tarotgen() {
         }
     };
 
-
     return (
         <div className="container">
             <h2>{emoji} Tarot reading by AI {emoji}</h2>
@@ -148,17 +156,21 @@ function Tarotgen() {
                 {loading ? 'Generating...' : 'Get Tarot Reading'}
             </button>
 
+            {/* TarotCards component displayed before generated text */}
+            {generatedText && <TarotCards reading={reading.current} />}
+
+
             {generatedText && (
                 <div className="generated-text">
                     <h3>Generated Reading</h3>
-                    <p> The cards picked, past: {reading.past}, present: {reading.present}, future: {reading.future}</p>
                     <p>{generatedText}</p>
                 </div>
-            )}{loading && <p className="loading-text">🌠 AI is reading your cards 🌠</p>}
+            )}
+            {loading && <p className="loading-text">🌠 AI is reading your cards 🌠</p>}
             {result && (
                 <div className="result-image-wrapper">
                     <h3>Your Tarot reading visualized</h3>
-                    <p>The Ai generated a unique visualisation representing your tarot reading.</p>
+                    <p>The AI generated a unique visualization representing your tarot reading.</p>
                     <img className="result-image" src={result} alt="Generated Tarot Reading" />
                 </div>
             )}
