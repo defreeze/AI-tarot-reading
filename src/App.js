@@ -6,7 +6,6 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [Value1, setPassword] = useState('');
   const correctValue = process.env.REACT_APP_VALUE;
-  console.log('Env variable:', process.env.REACT_APP_VALUE);
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);

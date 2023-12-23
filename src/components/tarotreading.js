@@ -123,7 +123,7 @@ function Tarotgen() {
                         className="user-input"
                         value={dateTime}
                         onChange={(e) => setDateTime(e.target.value)}
-                        title="Set your date and time of birth"
+                        title="Set your date/ time of birth"
                     />
                     <select
                         className="user-select"
