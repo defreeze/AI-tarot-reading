@@ -3,7 +3,7 @@ import './App.css';
 import Tarotgen from './components/tarotreading';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [Value1, setPassword] = useState('');
   const Correct = process.env.REACT_APP_VALUE;
   const Value = process.env.REACT_APP_KEY;
@@ -22,8 +22,10 @@ function App() {
   return (
     <div className="App">
       {/* Main Content */}
+      <img src="/AI_tarot_final1.png" alt="AI Tarot" className="bottom-right-image" />
+
       <header className="App-header">
-        <Tarotgen />
+        <Tarotgen setIsAuthenticated={setIsAuthenticated} />
       </header>
       <footer className="App-footer">
         made by <a href="https://www.alexdevri.es" target="_blank" rel="noopener noreferrer">alexdevri.es</a>
@@ -32,6 +34,7 @@ function App() {
       {/* Password Overlay */}
       {!isAuthenticated && (
         <div className="password-overlay">
+
           <input
             type="password"
             placeholder="Enter Password.."
@@ -40,6 +43,12 @@ function App() {
             onKeyDown={handleKeyDown}
             className="password-input"
           />
+          <p className="password-info">
+            ask for a password at&nbsp;
+            <a href="https://alexdevri.es/contact/" target="_blank" rel="noopener noreferrer">
+              www.alexdevri.es
+            </a>
+          </p>
         </div>
       )}
     </div>
