@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import TarotCards from './tarotcards';
 import '../App.css';
 
-function Tarotgen() {
+function Tarotgen({ setIsAuthenticated }) {
     const [emoji, setEmoji] = useState('');
     const [name, setName] = useState("");
     const [dateTime, setDateTime] = useState("");
@@ -13,6 +13,8 @@ function Tarotgen() {
     const [cards, setCards] = useState([]);
     const reading = useRef({ past: "", present: "", future: "" });
     const [generatedText, setGeneratedText] = useState("");
+    const [stage, setStage] = useState(0); // 0 for initial, 1 for after card selection, 2 for after evaluation
+    const [firstClick, setFirstClick] = useState(false);
 
     useEffect(() => {
         setCards([
@@ -36,7 +38,7 @@ function Tarotgen() {
         ]);
         // Function to pick a random emoji
         const emojis = ['💫', '🔮', '✨', '🌟', '🌙', '🌕', '🌖', '🌗', '🌘', '🌑', '💀', '🌈', '☄️', '🍀', '🪐', '🧞', '🌤️', '🏅', '🎭', '🎰', '🕯️', '📿', '🗝️', '🎊', '☀️', '⚡'
-            , '🤖', '💝', '💞', '🃏', '🚩', '👁️‍🗨️', '♾️', '🎶', '💔', '🧚‍♀️', '👼', '👑', '🐉', '🥀', '🎓', '🧬', '🙏', '🌹', '🌏', '🥠', '🍾', '💒', '💸', '🏳️', '🎐', '🕊️'];
+            , '🤖', '💝', '💞', '🃏', '👁️‍🗨️', '♾️', '🎶', '💔', '🧚‍♀️', '👼', '👑', '🐉', '🥀', '🎓', '🧬', '🙏', '🌹', '🌏', '🥠', '🍾', '💒', '💸', '🏳️', '🎐', '🕊️'];
         const pickRandomEmoji = () => {
             const randomIndex = Math.floor(Math.random() * emojis.length);
             return emojis[randomIndex];
@@ -44,25 +46,31 @@ function Tarotgen() {
         setEmoji(pickRandomEmoji());
     }, []);
 
+    const resetReading = () => {
+        setStage(0);
+        setGeneratedText("");
+        setResult("");
+        // Reset any other state variables if necessary
+    };
+
     const pickCards = () => {
         let deck = [...cards];
         let past = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
         let present = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
         let future = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
-        return { past, present, future };
+        reading.current = { past, present, future };
+        setStage(1); // Move to the next stage after picking cards
     };
 
     const generateTextAndImage = async () => {
+        if (!firstClick) {
+            setFirstClick(true);
+            setIsAuthenticated(false); // Trigger the password screen in App.js
+            return; // Exit the function to prevent further execution until authenticated
+        }
         setLoading(true);
-        const selectedReading = pickCards();
-        reading.current = selectedReading;
-
-        // selectedReading.past
-        // selectedReading.present
-        // selectedReading.future
-        // each selectedreading value has an image with .jpg in the tarot_deck directory
-
-        const textPrompt = `Generate a tarot reading based on these cards: Past - ${selectedReading.past}, Present - ${selectedReading.present}, Future - ${selectedReading.future}.`;
+        const { past, present, future } = reading.current;
+        const textPrompt = `Generate a tarot reading based on these cards: Past - ${past}, Present - ${present}, Future - ${future}.`;
 
         try {
             const URL = process.env.REACT_APP_VALUE3 + process.env.REACT_APP_VALUE1 + process.env.REACT_APP_VALUE4
@@ -94,7 +102,7 @@ function Tarotgen() {
                     body: JSON.stringify({
                         prompt: imagePrompt,
                         n: 1,
-                        size: "512x512",
+                        size: "256x256",
                     })
                 });
                 const imageData = await imageResponse.json();
@@ -110,6 +118,7 @@ function Tarotgen() {
             console.error(`Error: ${error.message}`);
         } finally {
             setLoading(false);
+            setStage(2);
         }
     };
 
@@ -124,6 +133,7 @@ function Tarotgen() {
                         placeholder="Enter your name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        title="Any name you self-identify with"
                     />
                     <input
                         type="datetime-local"
@@ -131,7 +141,7 @@ function Tarotgen() {
                         className="user-input"
                         value={dateTime}
                         onChange={(e) => setDateTime(e.target.value)}
-                        title="Set your date/ time of birth"
+                        title="Date/Time of birth"
                     />
                     <select
                         className="user-select"
@@ -152,22 +162,42 @@ function Tarotgen() {
                     rows="3"
                 />
             </div>
-            <button onClick={generateTextAndImage} disabled={loading}>
-                {loading ? 'Generating...' : 'Get Tarot Reading'}
-            </button>
 
-            {/* TarotCards component displayed before generated text */}
-            {generatedText && <TarotCards reading={reading.current} />}
+            {stage === 0 && (
+                <button className="button-design" onClick={pickCards} disabled={loading}>
+                    {loading ? 'Generating...' : 'Click to draw cards'}
+                </button>
+            )}
+
+            {stage >= 1 && (
+                <div className="tarot-cards-container">
+                    <TarotCards reading={reading.current} />
+                </div>
+            )}
 
 
-            {generatedText && (
+            {stage === 1 && (
+                <button className="button-design" onClick={generateTextAndImage} disabled={loading}>
+                    {loading ? 'Generating...' : 'Receive reading by AI'}
+                </button>
+            )}
+
+            {stage === 2 && (
+                <button className="button-design" onClick={resetReading}>
+                    Reset
+                </button>
+            )}
+
+            {stage === 2 && generatedText && (
                 <div className="generated-text">
                     <h3>Generated Reading</h3>
                     <p>{generatedText}</p>
                 </div>
             )}
-            {loading && <p className="loading-text">🌠 AI is reading your cards 🌠</p>}
-            {result && (
+
+            {loading && <p className="loading-text">⏳ AI is reading your cards ⌛️</p>}
+
+            {stage === 2 && result && (
                 <div className="result-image-wrapper">
                     <h3>Your Tarot reading visualized</h3>
                     <p>The AI generated a unique visualization representing your tarot reading.</p>
@@ -176,6 +206,8 @@ function Tarotgen() {
             )}
         </div>
     );
+
+
 
 }
 

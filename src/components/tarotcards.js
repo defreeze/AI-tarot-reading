@@ -11,15 +11,15 @@ function TarotCards({ reading }) {
 
     return (
         <div className="tarot-cards">
-            <div>
-                {reading.past && <img src={`/tarot_deck/${encodeFileName(reading.past)}.jpg`} alt={reading.present} />}
+            <div className="card-animation card-delay-1">
+                {reading.past && <img src={`/tarot_deck/${encodeFileName(reading.past)}.jpg`} alt={reading.past} />}
                 <h5>{reading.past}</h5>
             </div>
-            <div>
+            <div className="card-animation card-delay-2">
                 {reading.present && <img src={`/tarot_deck/${encodeFileName(reading.present)}.jpg`} alt={reading.present} />}
                 <h5>{reading.present}</h5>
             </div>
-            <div>
+            <div className="card-animation card-delay-3">
                 {reading.future && <img src={`/tarot_deck/${encodeFileName(reading.future)}.jpg`} alt={reading.future} />}
                 <h5>{reading.future}</h5>
             </div>
