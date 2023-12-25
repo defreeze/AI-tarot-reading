@@ -6,6 +6,19 @@
   position: relative;
 }
 
+@keyframes fadeInOut {
+
+  0%,
+  100% {
+    opacity: 0.05;
+  }
+
+  50% {
+    opacity: 0.4;
+    filter: box-shadow(0 0 20px rgb(7, 147, 35, 0.7));
+  }
+}
+
 /* For Chrome, Edge, and Safari */
 body::-webkit-scrollbar {
   width: 0px;
@@ -22,6 +35,24 @@ body {
   /* Firefox */
 }
 
+.img-container {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: end;
+  justify-content: flex-end;
+}
+
+.tarot-star {
+  position: fixed;
+  bottom: 6.4%;
+  right: 16.5%;
+  z-index: 2;
+  animation: fadeInOut 5s infinite;
+  width: 5%;
+  height: auto;
+}
 
 .bottom-right-image {
   position: fixed;
@@ -263,6 +294,8 @@ body {
 .card-delay-3 {
   animation-delay: 1.5s;
 }
+
+
 
 .button-design {
   margin-top: 0px;

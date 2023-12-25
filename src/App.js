@@ -22,8 +22,10 @@ function App() {
   return (
     <div className="App">
       {/* Main Content */}
-      <img src="/AI_tarot_final1.png" alt="AI Tarot" className="bottom-right-image" />
-
+      <div className="img-container">
+        <img src="/AI_tarot_final1.png" alt="AI Tarot" className="bottom-right-image" />
+        <img src="/tarotstar2.png" alt="Tarot Star" className="tarot-star" />
+      </div>
       <header className="App-header">
         <Tarotgen setIsAuthenticated={setIsAuthenticated} />
       </header>

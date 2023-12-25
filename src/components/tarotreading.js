@@ -5,8 +5,9 @@ import '../App.css';
 function Tarotgen({ setIsAuthenticated }) {
     const [emoji, setEmoji] = useState('');
     const [name, setName] = useState("");
-    const [dateTime, setDateTime] = useState("");
     const [choice, setChoice] = useState("");
+    const [moodChoice, setMoodChoice] = useState("");
+
     const [prompt, setPrompt] = useState("");
     const [result, setResult] = useState("");
     const [loading, setLoading] = useState(false);
@@ -124,6 +125,8 @@ function Tarotgen({ setIsAuthenticated }) {
 
     return (
         <div className="container">
+
+
             <h2>{emoji} Tarot reading by AI {emoji}</h2>
             <div className="input-wrapper">
                 <div className="user-info">
@@ -135,23 +138,32 @@ function Tarotgen({ setIsAuthenticated }) {
                         onChange={(e) => setName(e.target.value)}
                         title="Any name you self-identify with"
                     />
-                    <input
-                        type="datetime-local"
-                        id="birth-date-time"
+                    <select
                         className="user-input"
-                        value={dateTime}
-                        onChange={(e) => setDateTime(e.target.value)}
-                        title="Date/Time of birth"
-                    />
+                        value={moodChoice}
+                        onChange={(e) => setMoodChoice(e.target.value)}
+                    >
+                        <option value="" disabled selected>Your current Mood</option>
+                        <option value="1">Ecstatic</option>
+                        <option value="2">Content</option>
+                        <option value="3">Neutral</option>
+                        <option value="4">Anxious</option>
+                        <option value="5">Melancholic</option>
+                        <option value="6">Other</option>
+                    </select>
+
                     <select
                         className="user-select"
                         value={choice}
                         onChange={(e) => setChoice(e.target.value)}
                     >
-                        <option value="">Select Your Reading</option>
-                        <option value="1">Understand a Situation</option>
-                        <option value="2">Make a Decision</option>
-                        <option value="3">Past/Present/Future</option>
+                        <option value="" disabled selected>Select Your Reading</option>
+                        <option value="1">Past/Present/Future</option>
+                        <option value="2">Action & Outcome</option>
+                        <option value="3">Relationship Dynamics</option>
+                        <option value="4">Career Path</option>
+                        <option value="5">Daily Insight</option>
+                        <option value="5">Weekly Insight</option>
                     </select>
                 </div>
                 <textarea
@@ -195,7 +207,10 @@ function Tarotgen({ setIsAuthenticated }) {
                 </div>
             )}
 
+
             {loading && <p className="loading-text">⏳ AI is reading your cards ⌛️</p>}
+
+
 
             {stage === 2 && result && (
                 <div className="result-image-wrapper">
