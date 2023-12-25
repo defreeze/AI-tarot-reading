@@ -35,18 +35,11 @@ body {
   /* Firefox */
 }
 
-.img-container {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: end;
-  justify-content: flex-end;
-}
+
 
 .tarot-star {
-  position: fixed;
-  bottom: 6.4%;
+  position: absolute;
+  bottom: 6.2%;
   right: 16.5%;
   z-index: 2;
   animation: fadeInOut 5s infinite;
@@ -55,7 +48,7 @@ body {
 }
 
 .bottom-right-image {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   right: 0;
   width: 30%;

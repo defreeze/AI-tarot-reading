@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Tarotgen from './components/tarotreading';
 
@@ -8,6 +8,27 @@ function App() {
   const Correct = process.env.REACT_APP_VALUE;
   const Value = process.env.REACT_APP_KEY;
   const CorrectValue = Correct + Value;
+
+  useEffect(() => {
+    const adjustStarPosition = () => {
+      const bottomRightImage = document.querySelector('.bottom-right-image');
+      const tarotStar = document.querySelector('.tarot-star');
+
+      if (bottomRightImage && tarotStar) {
+        const imageRect = bottomRightImage.getBoundingClientRect();
+        tarotStar.style.bottom = `${window.innerHeight - imageRect.bottom + (imageRect.height * 0.11)}px`;
+        tarotStar.style.right = `${window.innerWidth - imageRect.right + (imageRect.width * 0.55)}px`;
+      }
+    };
+
+    adjustStarPosition();
+    window.addEventListener('resize', adjustStarPosition);
+
+    // Cleanup function to remove the event listener
+    return () => {
+      window.removeEventListener('resize', adjustStarPosition);
+    };
+  }, []);
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -22,10 +43,9 @@ function App() {
   return (
     <div className="App">
       {/* Main Content */}
-      <div className="img-container">
-        <img src="/AI_tarot_final1.png" alt="AI Tarot" className="bottom-right-image" />
-        <img src="/tarotstar2.png" alt="Tarot Star" className="tarot-star" />
-      </div>
+      <img src="/AI_tarot_final1.png" alt="AI Tarot" className="bottom-right-image" />
+      <img src="/tarotstar2.png" alt="Tarot Star" className="tarot-star" />
+
       <header className="App-header">
         <Tarotgen setIsAuthenticated={setIsAuthenticated} />
       </header>
@@ -36,7 +56,6 @@ function App() {
       {/* Password Overlay */}
       {!isAuthenticated && (
         <div className="password-overlay">
-
           <input
             type="password"
             placeholder="Enter Password.."
