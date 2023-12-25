@@ -6,11 +6,15 @@
   position: relative;
 }
 
+.hidden {
+  display: none;
+}
+
 @keyframes fadeInOut {
 
   0%,
   100% {
-    opacity: 0.05;
+    opacity: 0.1;
   }
 
   50% {
@@ -18,6 +22,7 @@
     filter: box-shadow(0 0 20px rgb(7, 147, 35, 0.7));
   }
 }
+
 
 /* For Chrome, Edge, and Safari */
 body::-webkit-scrollbar {
@@ -35,10 +40,8 @@ body {
   /* Firefox */
 }
 
-
-
 .tarot-star {
-  position: absolute;
+  position: fixed;
   bottom: 6.2%;
   right: 16.5%;
   z-index: 2;
@@ -48,7 +51,7 @@ body {
 }
 
 .bottom-right-image {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   right: 0;
   width: 30%;
@@ -56,6 +59,39 @@ body {
   z-index: 1;
 }
 
+@keyframes load {
+
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.loading-image {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  width: 30%;
+  height: auto;
+  z-index: 2;
+  animation: load 1s linear infinite;
+}
+
+
+/* old for planets1
+  position: fixed;
+  bottom: 10%;
+  right: 0px;
+  width: 30%;
+  height: auto;
+  z-index: 3;
+  animation: load 5s linear infinite;
+}
+*/
 .App-header {
   background-color: rgb(46, 24, 70);
   flex: 99;
@@ -83,7 +119,7 @@ body {
   flex: 1;
   margin-top: 0px;
   padding: 10px;
-  font-size: 12px;
+  font-size: 14px;
   background-color: rgb(46, 24, 70);
   color: #a49f9f;
 }
@@ -91,7 +127,7 @@ body {
 .App-footer a {
   color: #007bff;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 16px;
   position: relative;
   z-index: 2;
 }
@@ -201,7 +237,6 @@ body {
 
 }
 
-
 .password-input {
   padding: 10px;
   font-size: 20px;
@@ -226,7 +261,7 @@ body {
 }
 
 .loading-text {
-  animation: blink 1.5s linear infinite;
+  animation: blink 3s linear infinite;
   z-index: 2;
 }
 
@@ -287,8 +322,6 @@ body {
 .card-delay-3 {
   animation-delay: 1.5s;
 }
-
-
 
 .button-design {
   margin-top: 0px;
@@ -357,14 +390,12 @@ body {
   box-shadow: 0 0 0 3px rgba(138, 153, 171, 0.4);
 }
 
-/* Additional styling specifically for the select dropdown */
 .user-select {
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 12px;
 }
 
-/* Style adjustments for the textarea */
 .prompt-input {
   width: 99%;
   box-sizing: border-box;

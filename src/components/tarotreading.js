@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import TarotCards from './tarotcards';
 import '../App.css';
 
-function Tarotgen({ setIsAuthenticated }) {
+function Tarotgen({ setIsAuthenticated, setLoading, loading }) {
     const [emoji, setEmoji] = useState('');
     const [name, setName] = useState("");
     const [choice, setChoice] = useState("");
@@ -10,7 +10,6 @@ function Tarotgen({ setIsAuthenticated }) {
 
     const [prompt, setPrompt] = useState("");
     const [result, setResult] = useState("");
-    const [loading, setLoading] = useState(false);
     const [cards, setCards] = useState([]);
     const reading = useRef({ past: "", present: "", future: "" });
     const [generatedText, setGeneratedText] = useState("");
@@ -125,8 +124,6 @@ function Tarotgen({ setIsAuthenticated }) {
 
     return (
         <div className="container">
-
-
             <h2>{emoji} Tarot reading by AI {emoji}</h2>
             <div className="input-wrapper">
                 <div className="user-info">
@@ -143,7 +140,7 @@ function Tarotgen({ setIsAuthenticated }) {
                         value={moodChoice}
                         onChange={(e) => setMoodChoice(e.target.value)}
                     >
-                        <option value="" disabled selected>Your current Mood</option>
+                        <option value="" disabled selected>Your current mood</option>
                         <option value="1">Ecstatic</option>
                         <option value="2">Content</option>
                         <option value="3">Neutral</option>
@@ -157,13 +154,13 @@ function Tarotgen({ setIsAuthenticated }) {
                         value={choice}
                         onChange={(e) => setChoice(e.target.value)}
                     >
-                        <option value="" disabled selected>Your Reading Type</option>
+                        <option value="" disabled selected>Tarot reading type</option>
                         <option value="1">Past/Present/Future</option>
                         <option value="2">Action & Outcome</option>
                         <option value="3">Relationship Dynamics</option>
                         <option value="4">Career Path</option>
                         <option value="5">Daily Insight</option>
-                        <option value="5">Weekly Insight</option>
+                        <option value="6">Weekly Insight</option>
                     </select>
                 </div>
                 <textarea
@@ -177,7 +174,7 @@ function Tarotgen({ setIsAuthenticated }) {
 
             {stage === 0 && (
                 <button className="button-design" onClick={pickCards} disabled={loading}>
-                    {loading ? 'Generating...' : 'Click to draw cards'}
+                    {loading ? 'Drawing...' : 'Click to draw cards'}
                 </button>
             )}
 
@@ -190,7 +187,7 @@ function Tarotgen({ setIsAuthenticated }) {
 
             {stage === 1 && (
                 <button className="button-design" onClick={generateTextAndImage} disabled={loading}>
-                    {loading ? 'Generating...' : 'Receive reading by AI'}
+                    {loading ? 'Thinking...' : 'Receive reading by AI'}
                 </button>
             )}
 

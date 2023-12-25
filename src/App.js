@@ -8,6 +8,7 @@ function App() {
   const Correct = process.env.REACT_APP_VALUE;
   const Value = process.env.REACT_APP_KEY;
   const CorrectValue = Correct + Value;
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const adjustStarPosition = () => {
@@ -43,22 +44,28 @@ function App() {
   return (
     <div className="App">
       {/* Main Content */}
+
       <img src="/AI_tarot_final1.png" alt="AI Tarot" className="bottom-right-image" />
+      <img src="/AI_tarot_final1_purple.png" alt="Loading" className={`loading-image ${loading ? '' : 'hidden'}`} />
       <img src="/tarotstar2.png" alt="Tarot Star" className="tarot-star" />
 
       <header className="App-header">
-        <Tarotgen setIsAuthenticated={setIsAuthenticated} />
-      </header>
+        <Tarotgen
+          setIsAuthenticated={setIsAuthenticated}
+          setLoading={setLoading}
+          loading={loading}
+        />      </header>
       <footer className="App-footer">
         made by <a href="https://www.alexdevri.es" target="_blank" rel="noopener noreferrer">alexdevri.es</a>
       </footer>
+
 
       {/* Password Overlay */}
       {!isAuthenticated && (
         <div className="password-overlay">
           <input
             type="password"
-            placeholder="Enter Password.."
+            placeholder="Enter Password..."
             value={Value1}
             onChange={handlePasswordChange}
             onKeyDown={handleKeyDown}

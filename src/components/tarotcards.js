@@ -1,47 +1,57 @@
 import React, { useState, useEffect } from 'react';
 
 function TarotCards({ reading }) {
-    const [showBack, setShowBack] = useState({ past: true, present: true, future: true });
+    const [imagesLoaded, setImagesLoaded] = useState({ past: false, present: false, future: false });
 
     const encodeFileName = (fileName) => {
         return fileName.split(' ').join('%20');
     };
 
-    useEffect(() => {
-        // Set timeouts to flip each card
-        const timers = {
-            past: setTimeout(() => setShowBack(back => ({ ...back, past: false })), 500),
-            present: setTimeout(() => setShowBack(back => ({ ...back, present: false })), 1000),
-            future: setTimeout(() => setShowBack(back => ({ ...back, future: false })), 1500)
-        };
+    const handleImageLoad = (card) => {
+        setImagesLoaded(prevState => ({ ...prevState, [card]: true }));
+    };
 
-        return () => {
-            // Clear timeouts on unmount
-            clearTimeout(timers.past);
-            clearTimeout(timers.present);
-            clearTimeout(timers.future);
-        };
-    }, []);
+    useEffect(() => {
+        setImagesLoaded({ past: false, present: false, future: false });
+    }, [reading]);
 
     return (
         <div className="tarot-cards">
             <div className="card-animation card-delay-1">
-                {showBack.past
-                    ? <img src="/back2.jpg" alt="Card Back" />
-                    : reading.past && <img src={`/tarot_deck/${encodeFileName(reading.past)}.jpg`} alt={reading.past} />}
-                <h5>{reading.past}</h5>
+                {reading.past && (
+                    <>
+                        <img
+                            src={`/tarot_deck/${encodeFileName(reading.past)}.jpg`}
+                            alt={reading.past}
+                            onLoad={() => handleImageLoad('past')}
+                        />
+                        {imagesLoaded.past && <h5>{reading.past}</h5>}
+                    </>
+                )}
             </div>
             <div className="card-animation card-delay-2">
-                {showBack.present
-                    ? <img src="/back2.jpg" alt="Card Back" />
-                    : reading.present && <img src={`/tarot_deck/${encodeFileName(reading.present)}.jpg`} alt={reading.present} />}
-                <h5>{reading.present}</h5>
+                {reading.present && (
+                    <>
+                        <img
+                            src={`/tarot_deck/${encodeFileName(reading.present)}.jpg`}
+                            alt={reading.present}
+                            onLoad={() => handleImageLoad('present')}
+                        />
+                        {imagesLoaded.present && <h5>{reading.present}</h5>}
+                    </>
+                )}
             </div>
             <div className="card-animation card-delay-3">
-                {showBack.future
-                    ? <img src="/back2.jpg" alt="Card Back" />
-                    : reading.future && <img src={`/tarot_deck/${encodeFileName(reading.future)}.jpg`} alt={reading.future} />}
-                <h5>{reading.future}</h5>
+                {reading.future && (
+                    <>
+                        <img
+                            src={`/tarot_deck/${encodeFileName(reading.future)}.jpg`}
+                            alt={reading.future}
+                            onLoad={() => handleImageLoad('future')}
+                        />
+                        {imagesLoaded.future && <h5>{reading.future}</h5>}
+                    </>
+                )}
             </div>
         </div>
     );
