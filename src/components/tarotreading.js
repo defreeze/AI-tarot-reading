@@ -157,7 +157,7 @@ function Tarotgen({ setIsAuthenticated }) {
                         value={choice}
                         onChange={(e) => setChoice(e.target.value)}
                     >
-                        <option value="" disabled selected>Select Your Reading</option>
+                        <option value="" disabled selected>Your Reading Type</option>
                         <option value="1">Past/Present/Future</option>
                         <option value="2">Action & Outcome</option>
                         <option value="3">Relationship Dynamics</option>
