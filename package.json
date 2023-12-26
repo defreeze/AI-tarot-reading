@@ -1,5 +1,6 @@
 {
   "name": "AI-tarot-gen",
+  "homepage": "https://defreeze.github.io/AI-tarot-reading",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
