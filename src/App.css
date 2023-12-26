@@ -6,6 +6,203 @@
   position: relative;
 }
 
+.hidden {
+  display: none;
+}
+
+@keyframes fadeInOut {
+
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.header-buttons {
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 10px;
+  padding: 20px 20px;
+  z-index: 100;
+}
+
+.header-button {
+  /* Styling for individual buttons */
+  background-color: hsl(272, 18%, 41%);
+  border: 0px solid #ccc;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  font-size: 15px;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.header-button:hover {
+  background-color: rgb(56, 150, 109);
+}
+
+/* For Chrome, Edge, and Safari */
+body::-webkit-scrollbar {
+  width: 0px;
+  /* Remove scrollbar space */
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+/* For IE, Edge, and Firefox */
+body {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.tarot-star {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+  animation: fadeInOut 5s infinite;
+  width: 26.5%;
+  height: auto;
+}
+
+@keyframes rotate360 {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+.bottom-right-image {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 30%;
+  height: auto;
+  z-index: 1;
+}
+
+.loading-visual-female {
+  animation: rotate360 5s linear infinite;
+  max-width: 30%;
+  /* Adjust as needed */
+  opacity: 0.4;
+  height: auto;
+}
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 133vh;
+  z-index: 0;
+  /* Adjust as necessary */
+}
+
+.bottom-right-image-woman {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 25%;
+  height: auto;
+  z-index: 2;
+}
+
+.bottom-right-image-female {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 30%;
+  height: auto;
+  z-index: 2;
+}
+
+.AI-female-animate {
+  position: fixed;
+  bottom: 0;
+  right: 0%;
+  z-index: 2;
+  animation: fadeInOut2 5s infinite;
+  width: 30%;
+  height: auto;
+}
+
+.AI-woman-animate {
+  position: fixed;
+  bottom: 0;
+  right: 0%;
+  z-index: 2;
+  animation: fadeInOut2 5s infinite;
+  width: 25%;
+  height: auto;
+}
+
+@keyframes fadeInOut2 {
+
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+
+  50% {
+    opacity: 0.6;
+    filter: box-shadow(0 0 20px rgb(7, 147, 35, 0.7));
+  }
+}
+
+@keyframes teleportIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.teleport-in {
+  animation: teleportIn 1s ease-in-out;
+}
+
+
+@keyframes load {
+
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.loading-image {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  width: 30%;
+  height: auto;
+  z-index: 2;
+  animation: load 1s linear infinite;
+}
+
 .App-header {
   background-color: rgb(46, 24, 70);
   flex: 99;
@@ -15,6 +212,12 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+
+}
+
+.tarot-cards-container {
+  position: relative;
+  z-index: 2;
 }
 
 .App-link {
@@ -26,7 +229,7 @@
   flex: 1;
   margin-top: 0px;
   padding: 10px;
-  font-size: 12px;
+  font-size: 14px;
   background-color: rgb(46, 24, 70);
   color: #a49f9f;
 }
@@ -34,7 +237,9 @@
 .App-footer a {
   color: #007bff;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 16px;
+  position: relative;
+  z-index: 2;
 }
 
 .input-wrapper {
@@ -48,22 +253,28 @@
   justify-content: space-between;
   width: 100%;
   margin-bottom: 10px;
+  z-index: 2;
+}
+
+.container h2 {
+  margin-bottom: 20px;
 }
 
 .user-input,
 .user-select {
   margin: 0 5px;
   flex-grow: 1;
-  /* Adjust the following to ensure inputs have the correct size */
   min-width: 0;
-  /* Prevent flex items from growing too large */
+  z-index: 2;
+
 }
 
 .prompt-input {
   width: 100%;
   margin-bottom: 10px;
   box-sizing: border-box;
-  /* Include padding and border in the element's total width and height */
+  z-index: 2;
+
 }
 
 .generated-text {
@@ -83,6 +294,8 @@
 .generated-text h3 {
   text-align: center;
   margin-top: 0;
+  z-index: 2;
+
 }
 
 .result-image-wrapper {
@@ -94,11 +307,14 @@
   margin: 20px auto;
   padding: 15px;
   border-radius: 5px;
+  z-index: 2;
 }
 
 .result-image-wrapper h3 {
   text-align: center;
   margin-top: 0;
+  z-index: 2;
+
 }
 
 .password-overlay {
@@ -109,10 +325,26 @@
   height: 100%;
   background-color: rgba(30, 30, 30, 0.5);
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
-  padding-top: 10%;
-  z-index: 2;
+  align-items: center;
+  z-index: 3;
+}
+
+.password-info {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 15px;
+  margin-top: 0px;
+  padding: 8px;
+  border-radius: 10px;
+
+}
+
+.password-info a {
+  color: #248dfd;
+  text-decoration: none;
+
 }
 
 .password-input {
@@ -121,7 +353,9 @@
   border-radius: 5px;
   border: none;
   outline: none;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
+  box-shadow: 0 0 20px #000000, 0 0 5px #ffffff;
+
 }
 
 @keyframes blink {
@@ -137,5 +371,167 @@
 }
 
 .loading-text {
-  animation: blink 1.5s linear infinite;
+  animation: blink 3s linear infinite;
+  z-index: 2;
+}
+
+.tarot-cards {
+  display: flex;
+  justify-content: center;
+  gap: 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.tarot-cards div {
+  text-align: center;
+  width: 150px;
+  margin: 0 auto;
+}
+
+.tarot-cards img {
+  width: 120px;
+  height: auto;
+
+  display: block;
+  margin: 0 auto;
+}
+
+.tarot-cards h5 {
+  font-size: 0.7em;
+  margin: 2px 0;
+}
+
+.card-animation {
+  backface-visibility: hidden;
+  opacity: 0;
+  transform: rotateY(90deg);
+  animation: flipIn 1s ease-in-out forwards;
+}
+
+@keyframes flipIn {
+  from {
+    transform: rotateY(90deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: rotateY(0);
+    opacity: 1;
+  }
+}
+
+.card-delay-1 {
+  animation-delay: 0.5s;
+}
+
+.card-delay-2 {
+  animation-delay: 1s;
+}
+
+.card-delay-3 {
+  animation-delay: 1.5s;
+}
+
+.button-design {
+  margin-top: 0px;
+  padding: 10px 15px;
+  background-color: hsl(211, 100%, 50%);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  position: relative;
+  z-index: 2;
+}
+
+.button-design:hover {
+  background-color: rgb(56, 150, 109);
+  animation: shadowPulse 3s infinite;
+  /* Apply the animation */
+
+}
+
+@keyframes shadowPulse {
+  0% {
+    box-shadow: 0 0 5px #ff0000, 0 0 5px #3b203b;
+  }
+
+  50% {
+    box-shadow: 0 0 15px #ff0000, 0 0 15px #3b203b;
+    /* Bigger shadow */
+  }
+
+  100% {
+    box-shadow: 0 0 5px #ff0000, 0 0 5px #3b203b;
+  }
+}
+
+.button-design:disabled {
+  background-color: #cccccc;
+  /* Grayed out when disabled */
+  cursor: default;
+  z-index: 2;
+}
+
+.user-input,
+.user-select,
+#birth-date-time,
+.prompt-input {
+  padding: 5px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 0px;
+  resize: none;
+  width: 100%;
+  max-width: 700px;
+  box-sizing: border-box;
+}
+
+.user-input:focus,
+#birth-date-time:focus,
+.user-select:focus,
+.prompt-input:focus {
+  border-color: hsl(0, 0%, 0%);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(138, 153, 171, 0.4);
+}
+
+.user-select {
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+}
+
+.prompt-input {
+  width: 99%;
+  box-sizing: border-box;
+  min-height: 100px;
+}
+
+.AI-woman-animate2 {
+  position: fixed;
+  bottom: 0;
+  right: 0%;
+  z-index: 2;
+  animation: float 5s ease-in-out infinite;
+  width: 25%;
+  height: auto;
+  opacity: 0.8;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+    /* Adjust the value to control the height of the float */
+  }
 }
