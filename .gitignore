@@ -25,3 +25,5 @@ yarn-error.log*
 
 tarot_cards
 CBD_mini_tarot
+
+node_modules
