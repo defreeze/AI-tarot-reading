@@ -1,0 +1,92 @@
+.container2 {
+    background-color: rgb(46, 24, 70);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 1;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.aboutPage {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.about-buttons {
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: flex;
+    gap: 10px;
+    padding: 20px 20px;
+    z-index: 100;
+}
+
+.home-button {
+    /* Styling for individual buttons */
+    background-color: hsl(272, 18%, 41%);
+    border: 0px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    font-size: 15px;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.home-button:hover {
+    background-color: rgb(56, 150, 109);
+}
+
+.App-footer2 {
+    text-align: center;
+
+    width: 100%;
+    padding: 15px;
+    font-size: 14px;
+    background-color: rgb(46, 24, 70);
+    color: #a49f9f;
+    position: fixed;
+    bottom: 0;
+    left: 1;
+    z-index: 2;
+}
+
+.App-footer2 a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 16px;
+    position: relative;
+    z-index: 2;
+}
+
+.about-section {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+    max-width: 80%;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.about-column a {
+    color: #248dfd;
+    text-decoration: none;
+}
+
+.about-column {
+    flex: 1;
+    padding: 10px 10px;
+    max-width: 60%;
+    border: 2px solid rgb(74, 40, 110);
+
+}
+
+.about-column p {
+    font-size: 15px;
+    text-align: justify;
+}

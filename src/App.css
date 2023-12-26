@@ -18,10 +18,35 @@
   }
 
   50% {
-    opacity: 0.4;
+    opacity: 0.6;
   }
 }
 
+.header-buttons {
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 10px;
+  padding: 20px 20px;
+  z-index: 100;
+}
+
+.header-button {
+  /* Styling for individual buttons */
+  background-color: hsl(272, 18%, 41%);
+  border: 0px solid #ccc;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  font-size: 15px;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.header-button:hover {
+  background-color: rgb(56, 150, 109);
+}
 
 /* For Chrome, Edge, and Safari */
 body::-webkit-scrollbar {
@@ -77,7 +102,6 @@ body {
   height: auto;
 }
 
-
 .center-container {
   display: flex;
   justify-content: center;
@@ -90,8 +114,6 @@ body {
   z-index: 0;
   /* Adjust as necessary */
 }
-
-
 
 .bottom-right-image-woman {
   position: fixed;
