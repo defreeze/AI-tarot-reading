@@ -16,11 +16,20 @@ function AboutPage() {
                 {/* Two-column layout */}
                 <div className="about-section">
                     <div className="about-column">
-                        <h5>About App</h5>
-                        <p>The first app to let AI read your tarot! What follows is a non-technical explanation of the logic. This description is for tarot enthousiasts who want want to know how the tarot readings are created.</p>
-                        <p style={{ fontWeight: 'bold', fontSize: '18px' }}>Step 1</p>
+                        <h5>About the App</h5>
+                        <p>What follows is a non-technical explanation of the logic of the app. This description is for tarot enthousiasts who want to know how the tarot readings are created. The video shows the full reading process.</p>
+                        <video width="100%" autoPlay muted loop style={{ border: '1px solid black' }}>
+                            <source src="tarotdemo.mp4" type="video/mp4" />
+                            Your browser does not support the video tag.
+                        </video>
+
+                        <p style={{ fontWeight: 'bold', fontSize: '18px' }}>Step 1: Get User input</p>
                         <p>Text text text</p>
-                        <p style={{ fontWeight: 'bold', fontSize: '18px' }}>Step 2</p>
+                        <p style={{ fontWeight: 'bold', fontSize: '18px' }}>Step 2: Pull 3 cards</p>
+                        <p>Text text text</p>
+                        <p style={{ fontWeight: 'bold', fontSize: '18px' }}>Step 3: Create question for AI</p>
+                        <p>Text text text</p>
+                        <p style={{ fontWeight: 'bold', fontSize: '18px' }}>Step 4: Create visualisation</p>
                         <p>Text text text</p>
 
 
