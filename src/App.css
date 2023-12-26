@@ -161,7 +161,7 @@ body {
   }
 
   50% {
-    opacity: 0.8;
+    opacity: 0.6;
     filter: box-shadow(0 0 20px rgb(7, 147, 35, 0.7));
   }
 }
@@ -510,4 +510,28 @@ body {
   width: 99%;
   box-sizing: border-box;
   min-height: 100px;
+}
+
+.AI-woman-animate2 {
+  position: fixed;
+  bottom: 0;
+  right: 0%;
+  z-index: 2;
+  animation: float 5s ease-in-out infinite;
+  width: 25%;
+  height: auto;
+  opacity: 0.8;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+    /* Adjust the value to control the height of the float */
+  }
 }
