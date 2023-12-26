@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import TarotCards from './tarotcards';
 import '../App.css';
 
-function Tarotgen({ setIsAuthenticated, setLoading, loading }) {
+function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }) {
     const [emoji, setEmoji] = useState('');
     const [name, setName] = useState("");
-    const [choice, setChoice] = useState("");
+    //const [choice, setChoice] = useState("");
     const [moodChoice, setMoodChoice] = useState("");
 
     const [prompt, setPrompt] = useState("");
@@ -187,7 +187,7 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading }) {
 
             {stage === 1 && (
                 <button className="button-design" onClick={generateTextAndImage} disabled={loading}>
-                    {loading ? 'Thinking...' : 'Receive reading by AI'}
+                    {loading ? 'thinking' : 'Receive reading by AI'}
                 </button>
             )}
 

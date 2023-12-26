@@ -19,7 +19,6 @@
 
   50% {
     opacity: 0.4;
-    filter: box-shadow(0 0 20px rgb(7, 147, 35, 0.7));
   }
 }
 
@@ -42,13 +41,24 @@ body {
 
 .tarot-star {
   position: fixed;
-  bottom: 6.2%;
-  right: 16.5%;
+  bottom: 0;
+  right: 0;
   z-index: 2;
   animation: fadeInOut 5s infinite;
-  width: 5%;
+  width: 26.5%;
   height: auto;
 }
+
+@keyframes rotate360 {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 
 .bottom-right-image {
   position: fixed;
@@ -58,6 +68,96 @@ body {
   height: auto;
   z-index: 1;
 }
+
+.loading-visual-female {
+  animation: rotate360 5s linear infinite;
+  max-width: 30%;
+  /* Adjust as needed */
+  opacity: 0.4;
+  height: auto;
+}
+
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 133vh;
+  z-index: 0;
+  /* Adjust as necessary */
+}
+
+
+
+.bottom-right-image-woman {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 25%;
+  height: auto;
+  z-index: 2;
+}
+
+.bottom-right-image-female {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 30%;
+  height: auto;
+  z-index: 2;
+}
+
+.AI-female-animate {
+  position: fixed;
+  bottom: 0;
+  right: 0%;
+  z-index: 2;
+  animation: fadeInOut2 5s infinite;
+  width: 30%;
+  height: auto;
+}
+
+.AI-woman-animate {
+  position: fixed;
+  bottom: 0;
+  right: 0%;
+  z-index: 2;
+  animation: fadeInOut2 5s infinite;
+  width: 25%;
+  height: auto;
+}
+
+@keyframes fadeInOut2 {
+
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+
+  50% {
+    opacity: 0.8;
+    filter: box-shadow(0 0 20px rgb(7, 147, 35, 0.7));
+  }
+}
+
+@keyframes teleportIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.teleport-in {
+  animation: teleportIn 1s ease-in-out;
+}
+
 
 @keyframes load {
 
@@ -81,17 +181,6 @@ body {
   animation: load 1s linear infinite;
 }
 
-
-/* old for planets1
-  position: fixed;
-  bottom: 10%;
-  right: 0px;
-  width: 30%;
-  height: auto;
-  z-index: 3;
-  animation: load 5s linear infinite;
-}
-*/
 .App-header {
   background-color: rgb(46, 24, 70);
   flex: 99;
@@ -106,7 +195,6 @@ body {
 
 .tarot-cards-container {
   position: relative;
-  /* or absolute, fixed, sticky based on your layout needs */
   z-index: 2;
 }
 
