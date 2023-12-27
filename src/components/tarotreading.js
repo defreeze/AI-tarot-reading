@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import TarotCards from './tarotcards';
 import '../App.css';
 
-function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }) {
+function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswordPage, setShowPasswordPage }) {
     const [emoji, setEmoji] = useState('');
     const [name, setName] = useState("");
     //const [choice, setChoice] = useState("");
@@ -23,7 +23,9 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }
     const [tarotCard2Direction, setTarotCard2Direction] = useState('');
     const [tarotCard3Direction, setTarotCard3Direction] = useState('');
     const [loading2, setLoading2] = useState(false);
-
+    <Tarotgen
+        showPasswordPage={() => setShowPasswordPage(true)}
+    />
     const [reading,] = useState({
         past: { name: "", reversed: false },
         present: { name: "", reversed: false },
@@ -111,9 +113,11 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }
     };
 
     const generateTextAndImage = async () => {
-        if (!firstClick) {
-            setFirstClick(true);
-            setIsAuthenticated(false); // Trigger the password screen in App.js
+        if (!profile) {
+            setShowPasswordPage(true);
+
+            //setFirstClick(true);
+            //profile(null); // Trigger the password screen in App.js
             return; // Exit the function to prevent further execution until authenticated
         }
         setLoading(true);
