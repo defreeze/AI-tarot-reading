@@ -4,6 +4,8 @@ import Tarotgen from './components/tarotreading';
 import { preloadImages } from './preloadImages';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import AboutPage from './aboutPage';
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 
 
 function App() {
@@ -14,6 +16,38 @@ function App() {
   const CorrectValue = Correct + Value;
   const [loading, setLoading] = useState(false);
   const [choice, setChoice] = useState("");
+
+  const [showPasswordPage, setShowPasswordPage] = useState(false);
+  const [user, setUser] = useState([]);
+  const [profile, setProfile] = useState(null);
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => setUser(codeResponse),
+    onError: (error) => console.log('Login Failed:', error)
+  });
+  const logOut = () => {
+    googleLogout();
+    setProfile(null);
+    // Additional logic for logout
+  };
+
+  useEffect(
+    () => {
+      if (user) {
+        axios
+          .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              Accept: 'application/json'
+            }
+          })
+          .then((res) => {
+            setProfile(res.data);
+          })
+          .catch((err) => console.log(err));
+      }
+    },
+    [user]
+  );
 
   useEffect(() => {
     preloadImages();
@@ -28,8 +62,6 @@ function App() {
       setIsAuthenticated(true);
     }
   };
-
-
   return (
     <Router>
       <div className="App">
@@ -38,7 +70,16 @@ function App() {
           <Route path="/" element={
             <>
               {/* Main Content */}
-
+              {profile ? (
+                <div>
+                  {/* Display user information and logout button when logged in */}
+                  <img src={profile.picture} alt="User" />
+                  <p>{profile.name}</p>
+                  <button onClick={logOut}>Log out</button>
+                </div>
+              ) : (
+                <button onClick={() => login()}>Sign in with Google</button>
+              )}
               {choice === "1" || choice === "2" ? (
                 <>
                   <img src="/AI_tarot_final1_wise_woman2.png" alt="AI Tarot" className="bottom-right-image-woman" />
@@ -70,16 +111,17 @@ function App() {
                 <div className="header-buttons">
                   <Link to="/about" >
                     <button className="header-button">About</button>
-
                   </Link>
                 </div>
 
                 <Tarotgen
-                  setIsAuthenticated={setIsAuthenticated}
+                  profile={profile}
                   setLoading={setLoading}
                   choice={choice}
                   setChoice={setChoice}
                   loading={loading}
+                  showPasswordPage={showPasswordPage}
+                  setShowPasswordPage={setShowPasswordPage}
                 />
               </header>
               <footer className="App-footer">
@@ -87,8 +129,9 @@ function App() {
               </footer>
 
               {/* Password Overlay */}
-              {!isAuthenticated && (
+              {!profile && showPasswordPage && (
                 <div className="password-overlay">
+                  <button onClick={() => login()}>Sign in with Google </button>
                   <input
                     type="password"
                     placeholder="Enter Password..."

@@ -12,7 +12,6 @@ function AboutPage() {
                     </Link>
                 </div>
                 <h3>About Page</h3>
-
                 {/* Two-column layout */}
                 <div className="about-section">
                     <div className="about-column">
