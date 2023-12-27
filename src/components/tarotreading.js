@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import TarotCards from './tarotcards';
 import '../App.css';
 
@@ -11,7 +11,7 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }
     const [prompt, setPrompt] = useState("");
     const [result, setResult] = useState("");
     const [cards, setCards] = useState([]);
-    const reading = useRef({ past: "", present: "", future: "" });
+    // const reading = useRef({ past: "", present: "", future: "" });
     const [generatedText, setGeneratedText] = useState("");
     const [stage, setStage] = useState(0); // 0 for initial, 1 for after card selection, 2 for after evaluation
     const [firstClick, setFirstClick] = useState(false);
@@ -22,7 +22,13 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }
     const [tarotCard1Direction, setTarotCard1Direction] = useState('');
     const [tarotCard2Direction, setTarotCard2Direction] = useState('');
     const [tarotCard3Direction, setTarotCard3Direction] = useState('');
+    const [loading2, setLoading2] = useState(false);
 
+    const [reading,] = useState({
+        past: { name: "", reversed: false },
+        present: { name: "", reversed: false },
+        future: { name: "", reversed: false }
+    });
 
     useEffect(() => {
         setCards([
@@ -66,6 +72,7 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }
     };
 
     const pickCards = () => {
+        setLoading2(true);
         setTarotCard1Direction(Math.random() < 0.5 ? '-100%' : '100%');
         setTarotCard2Direction(Math.random() < 0.5 ? '-100%' : '100%');
         setTarotCard3Direction(Math.random() < 0.5 ? '-100%' : '100%');
@@ -92,8 +99,13 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }
             let past = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
             let present = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
             let future = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
-            reading.current = { past, present, future };
+            reading.current = {
+                past: { name: past, reversed: Math.random() < 0.5 },
+                present: { name: present, reversed: Math.random() < 0.5 },
+                future: { name: future, reversed: Math.random() < 0.5 }
+            };
             setStage(1);
+            setLoading2(false);
         }, 3000); // Duration of the animation
 
     };
@@ -206,25 +218,25 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }
                     onChange={(e) => setPrompt(e.target.value)}
                     rows="3"
                 />
-
-                {/* Image container */}
-                {showTarotDeck && (
-                    <div className="tarot-deck-container" >
-                        <img src="tarot1_stack1.png" alt="tarot1_stack1" className="tarot1_stack1" />
-                        {tarotCard1Src && <img src={tarotCard1Src} alt="tarot2_card1" className="tarot2_card1" style={{ '--slide-direction': tarotCard1Direction }} />}
-                        <img src="tarot3_stack2.png" alt="tarot3_stack2" className="tarot3_stack2" />
-                        {tarotCard2Src && <img src={tarotCard2Src} alt="tarot4_card2" className="tarot4_card2" style={{ '--slide-direction': tarotCard2Direction }} />}
-                        <img src="tarot5_stack3.png" alt="tarot5_stack3" className="tarot5_stack3" />
-                        {tarotCard3Src && <img src={tarotCard3Src} alt="tarot6_card3" className="tarot6_card3" style={{ '--slide-direction': tarotCard3Direction }} />}
-                        <img src="tarot7_stack4.png" alt="tarot7_stack4" className="tarot7_stack4" />
-                    </div>)}
             </div>
 
             {stage === 0 && (
-                <button className="button-design" onClick={pickCards} disabled={loading}>
-                    {loading ? 'Drawing...' : 'Click to draw cards'}
+                <button className="button-design" onClick={pickCards} disabled={loading2}>
+                    {loading2 ? 'Drawing cards' : 'Click to draw cards'}
                 </button>
             )}
+            {/* deck container */}
+            {showTarotDeck && (
+                <div className="tarot-deck-container" >
+                    <img src="tarot1_stack1.png" alt="tarot1_stack1" className="tarot1_stack1" />
+                    {tarotCard1Src && <img src={tarotCard1Src} alt="tarot2_card1" className="tarot2_card1" style={{ '--slide-direction': tarotCard1Direction }} />}
+                    <img src="tarot3_stack2.png" alt="tarot3_stack2" className="tarot3_stack2" />
+                    {tarotCard2Src && <img src={tarotCard2Src} alt="tarot4_card2" className="tarot4_card2" style={{ '--slide-direction': tarotCard2Direction }} />}
+                    <img src="tarot5_stack3.png" alt="tarot5_stack3" className="tarot5_stack3" />
+                    {tarotCard3Src && <img src={tarotCard3Src} alt="tarot6_card3" className="tarot6_card3" style={{ '--slide-direction': tarotCard3Direction }} />}
+                    <img src="tarot7_stack4.png" alt="tarot7_stack4" className="tarot7_stack4" />
+                </div>)}
+
 
 
             {stage >= 1 && (
