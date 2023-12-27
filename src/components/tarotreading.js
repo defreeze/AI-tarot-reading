@@ -56,6 +56,10 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }
 
     const resetReading = () => {
         setStage(0);
+        setShowTarotDeck(true);
+        setTarotCard1Src('');
+        setTarotCard2Src('');
+        setTarotCard3Src('');
         setGeneratedText("");
         setResult("");
         // Reset any other state variables if necessary
