@@ -27,6 +27,7 @@ function App() {
   const logOut = () => {
     googleLogout();
     setProfile(null);
+    setShowPasswordPage(false);
     // Additional logic for logout
   };
 
@@ -66,7 +67,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/about" element={<AboutPage />} />
+          <Route path="/about" element={<AboutPage profile={profile} login={login} logOut={logOut} />} />
           <Route path="/" element={
             <>
               {/* Main Content */}
@@ -111,7 +112,7 @@ function App() {
                 <div className="header-buttons">
                   {profile ? (
                     <>
-                      <span className="profile-name">hello {profile.name}! </span>
+                      <span className="profile-name">welcome {profile.name}! </span>
                       <button className="header-button-google" onClick={() => logOut()}>
                         <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
                         Sign out
@@ -149,9 +150,9 @@ function App() {
                     Sign in with Google
                   </button>
                   <p className="password-info">
-                    Asking AI costs money, log-in to get 1 free reading a day! <br />
-                    <a href="https://alexdevri.es/contact/" target="_blank" rel="noopener noreferrer">
-                      www.alexdevri.es
+                    AI costs money, log in to get 1 free reading a day! <br />
+                    <a href="https://www.buymeacoffee.com/alexdevries" target="_blank" rel="noopener noreferrer">
+                      ☕ buy me a coffee ☕
                     </a>
                   </p>
                 </div>
