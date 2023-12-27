@@ -535,3 +535,81 @@ body {
     /* Adjust the value to control the height of the float */
   }
 }
+
+/* This will center the tarot deck container in the middle of the screen */
+.tarot-deck-container {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 20px auto;
+  height: 150px;
+  margin-bottom: 0px;
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+}
+
+.tarot-deck-container img {
+  position: absolute;
+  width: 30%;
+  height: auto;
+  z-index: 5;
+}
+
+/* Z-index for stacking */
+/* Z-index for stacking */
+.tarot1_stack1 {
+  z-index: 10;
+}
+
+.tarot2_card1 {
+  animation: cardFadeSlide 1.5s ease-in-out;
+  --slide-direction: 100%;
+  /* Default slide direction */
+  z-index: 20;
+}
+
+.tarot3_stack2 {
+  z-index: 30;
+}
+
+.tarot4_card2 {
+  animation: cardFadeSlide 1.5s ease-in-out;
+  --slide-direction: -100%;
+  /* Default slide direction */
+  z-index: 40;
+}
+
+.tarot5_stack3 {
+  z-index: 50;
+}
+
+.tarot6_card3 {
+  animation: cardFadeSlide 1.5s ease-in-out;
+  --slide-direction: 100%;
+  /* Default slide direction */
+  z-index: 60;
+}
+
+.tarot7_stack4 {
+  z-index: 70;
+}
+
+@keyframes cardFadeSlide {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(var(--slide-direction));
+  }
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
