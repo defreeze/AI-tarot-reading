@@ -6,6 +6,16 @@
   position: relative;
 }
 
+.reversed {
+  transform: rotate(180deg);
+}
+
+.reversed-text {
+  font-size: smaller;
+  color: grey;
+  opacity: 0.5;
+}
+
 .hidden {
   display: none;
 }

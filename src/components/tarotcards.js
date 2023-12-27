@@ -21,11 +21,15 @@ function TarotCards({ reading }) {
                 {reading.past && (
                     <>
                         <img
-                            src={`/tarot_deck/${encodeFileName(reading.past)}.jpg`}
-                            alt={reading.past}
+                            src={`/tarot_deck/${encodeFileName(reading.past.name)}.jpg`}
+                            alt={reading.past.name}
+                            className={reading.past.reversed ? 'reversed' : ''}
                             onLoad={() => handleImageLoad('past')}
                         />
-                        {imagesLoaded.past && <h5>{reading.past}</h5>}
+                        {imagesLoaded.past && <h5>
+                            {reading.past.name}
+                            {reading.past.reversed && <div className="reversed-text"> Reversed</div>}
+                        </h5>}
                     </>
                 )}
             </div>
@@ -33,11 +37,15 @@ function TarotCards({ reading }) {
                 {reading.present && (
                     <>
                         <img
-                            src={`/tarot_deck/${encodeFileName(reading.present)}.jpg`}
-                            alt={reading.present}
+                            src={`/tarot_deck/${encodeFileName(reading.present.name)}.jpg`}
+                            alt={reading.present.name}
+                            className={reading.present.reversed ? 'reversed' : ''}
                             onLoad={() => handleImageLoad('present')}
                         />
-                        {imagesLoaded.present && <h5>{reading.present}</h5>}
+                        {imagesLoaded.present && <h5>
+                            {reading.present.name}
+                            {reading.present.reversed && <div className="reversed-text"> Reversed</div>}
+                        </h5>}
                     </>
                 )}
             </div>
@@ -45,11 +53,15 @@ function TarotCards({ reading }) {
                 {reading.future && (
                     <>
                         <img
-                            src={`/tarot_deck/${encodeFileName(reading.future)}.jpg`}
-                            alt={reading.future}
+                            src={`/tarot_deck/${encodeFileName(reading.future.name)}.jpg`}
+                            alt={reading.future.name}
+                            className={reading.future.reversed ? 'reversed' : ''}
                             onLoad={() => handleImageLoad('future')}
                         />
-                        {imagesLoaded.future && <h5>{reading.future}</h5>}
+                        {imagesLoaded.future && <h5>
+                            {reading.future.name}
+                            {reading.future.reversed && <div className="reversed-text"> Reversed</div>}
+                        </h5>}
                     </>
                 )}
             </div>
