@@ -70,16 +70,16 @@ function App() {
           <Route path="/" element={
             <>
               {/* Main Content */}
+              {/* 
               {profile ? (
                 <div>
-                  {/* Display user information and logout button when logged in */}
                   <img src={profile.picture} alt="User" />
                   <p>{profile.name}</p>
                   <button onClick={logOut}>Log out</button>
                 </div>
               ) : (
                 <button onClick={() => login()}>Sign in with Google</button>
-              )}
+              )}*/}
               {choice === "1" || choice === "2" ? (
                 <>
                   <img src="/AI_tarot_final1_wise_woman2.png" alt="AI Tarot" className="bottom-right-image-woman" />
@@ -109,7 +109,20 @@ function App() {
               }
               <header className="App-header">
                 <div className="header-buttons">
-                  <Link to="/about" >
+                  {profile ? (
+                    <>
+                      <span className="profile-name">hello {profile.name}! </span>
+                      <button className="header-button-google" onClick={() => logOut()}>
+                        <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
+                        Sign out
+                      </button>
+                    </>
+                  ) : (
+                    <button className="header-button-google" onClick={() => login()}>
+                      <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
+                      Sign in with Google
+                    </button>)}
+                  <Link to="/about" className="header-link">
                     <button className="header-button">About</button>
                   </Link>
                 </div>
@@ -131,17 +144,12 @@ function App() {
               {/* Password Overlay */}
               {!profile && showPasswordPage && (
                 <div className="password-overlay">
-                  <button onClick={() => login()}>Sign in with Google </button>
-                  <input
-                    type="password"
-                    placeholder="Enter Password..."
-                    value={Value1}
-                    onChange={handlePasswordChange}
-                    onKeyDown={handleKeyDown}
-                    className="password-input"
-                  />
+                  <button className="header-button-google" onClick={() => login()}>
+                    <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
+                    Sign in with Google
+                  </button>
                   <p className="password-info">
-                    ask for a password at&nbsp;
+                    Asking AI costs money, log-in to get 1 free reading a day! <br />
                     <a href="https://alexdevri.es/contact/" target="_blank" rel="noopener noreferrer">
                       www.alexdevri.es
                     </a>

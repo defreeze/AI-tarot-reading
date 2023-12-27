@@ -7,7 +7,7 @@ function AboutPage() {
         <div className="aboutPage">
             <div className="container2">
                 <div className="header-buttons">
-                    <Link to="/">
+                    <Link to="/" className="header-link">
                         <button className="home-button">Home</button>
                     </Link>
                 </div>
