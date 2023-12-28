@@ -15,15 +15,44 @@ function App() {
   const [showPasswordPage, setShowPasswordPage] = useState(false);
   const [user, setUser] = useState([]);
   const [profile, setProfile] = useState(null);
+  useEffect(() => {
+    // Retrieve profile from localStorage
+    const storedProfile = localStorage.getItem('profile');
+    if (storedProfile) {
+      setProfile(JSON.parse(storedProfile));
+    }
+  }, []);
+
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => setUser(codeResponse),
+    onSuccess: (codeResponse) => {
+      setUser(codeResponse);
+      // Fetch additional profile information
+      fetchProfileInfo(codeResponse.access_token);
+    },
     onError: (error) => console.log('Login Failed:', error)
   });
+
+  const fetchProfileInfo = (accessToken) => {
+    axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: 'application/json'
+      }
+    })
+      .then((res) => {
+        setProfile(res.data);
+        // Store the fetched profile data in localStorage
+        localStorage.setItem('profile', JSON.stringify(res.data));
+      })
+      .catch((err) => console.log(err));
+  };
+
   const logOut = () => {
     googleLogout();
     setProfile(null);
     setShowPasswordPage(false);
-    // Additional logic for logout
+    localStorage.removeItem('profile');
+    // Additional logout logic...
   };
 
   useEffect(
@@ -95,6 +124,7 @@ function App() {
               ) : []
               }
               <header className="App-header">
+
                 <div className="header-buttons">
                   {profile ? (
                     <>
@@ -133,16 +163,29 @@ function App() {
               {/* Password Overlay */}
               {!profile && showPasswordPage && (
                 <div className="password-overlay">
-                  <button className="header-button-google" onClick={() => login()}>
-                    <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
-                    Sign in with Google
-                  </button>
-                  <p className="password-info">
-                    AI costs money, sign in for 1 free reading a day! <br />
-                    <a href="https://www.buymeacoffee.com/alexdevries" target="_blank" rel="noopener noreferrer">
-                      ☕ buy me a coffee ;) ☕
-                    </a>
-                  </p>
+
+
+                  <div className="popup-overlay">
+                    <div className="popup-content2">
+                      <p>AI costs money, sign in for 2 free readings a day!<br />
+                        <a href="https://www.buymeacoffee.com/alexdevries" target="_blank" rel="noopener noreferrer">
+                          ☕ buy me a coffee ;) ☕
+                        </a>
+                      </p>
+                    </div>
+                    <button className="header-button-google" onClick={() => login()}>
+                      <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
+                      Sign in with Google
+                    </button>
+                  </div>
+
+
+
+
+
+
+
+
                 </div>
               )} </>
           } />

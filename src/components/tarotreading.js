@@ -5,13 +5,11 @@ import '../App.css';
 function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswordPage, setShowPasswordPage }) {
     const [emoji, setEmoji] = useState('');
     const [name, setName] = useState("");
-    //const [choice, setChoice] = useState("");
     const [moodChoice, setMoodChoice] = useState("");
 
     const [prompt, setPrompt] = useState("");
     const [result, setResult] = useState("");
     const [cards, setCards] = useState([]);
-    // const reading = useRef({ past: "", present: "", future: "" });
     const [generatedText, setGeneratedText] = useState("");
     const [stage, setStage] = useState(0); // 0 for initial, 1 for after card selection, 2 for after evaluation
     const [tarotCard1Src, setTarotCard1Src] = useState('');
@@ -22,6 +20,8 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
     const [tarotCard2Direction, setTarotCard2Direction] = useState('');
     const [tarotCard3Direction, setTarotCard3Direction] = useState('');
     const [loading2, setLoading2] = useState(false);
+    const [showLimitPopup, setShowLimitPopup] = useState(false);
+
     <Tarotgen
         showPasswordPage={() => setShowPasswordPage(true)}
     />
@@ -69,7 +69,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
         setTarotCard3Src('');
         setGeneratedText("");
         setResult("");
-        // Reset any other state variables if necessary
     };
 
     const pickCards = () => {
@@ -77,7 +76,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
         setTarotCard1Direction(Math.random() < 0.5 ? '-100%' : '100%');
         setTarotCard2Direction(Math.random() < 0.5 ? '-100%' : '100%');
         setTarotCard3Direction(Math.random() < 0.5 ? '-100%' : '100%');
-
 
         setTarotCard1Src('tarot2_card1.png');
 
@@ -110,67 +108,100 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
         }, 3000); // Duration of the animation
 
     };
+    const ReadingLimitPopup = () => {
+        return (
+            <div className="popup-overlay">
+                <div className="popup-content">
+                    <p>You've reached the limit of 2 readings per day.
+                        <br />
+                        If you like the app you can buy me a
+                        <a href="https://www.buymeacoffee.com/alexdevries" target="_blank" rel="noopener noreferrer"> coffee ☕
+                        </a>
+                    </p>
+                    <button onClick={() => setShowLimitPopup(false)}>Close</button>
+                </div>
+            </div>
+        );
+    };
 
     const generateTextAndImage = async () => {
         if (!profile) {
             setShowPasswordPage(true);
-
-            //setFirstClick(true);
-            //profile(null); // Trigger the password screen in App.js
-            return; // Exit the function to prevent further execution until authenticated
+            return;
         }
-        setLoading(true);
-        const { past, present, future } = reading.current;
-        const textPrompt = `Generate a tarot reading based on these cards: Past - ${past}, Present - ${present}, Future - ${future}.`;
 
-        try {
-            const URL = process.env.REACT_APP_VALUE3 + process.env.REACT_APP_VALUE1 + process.env.REACT_APP_VALUE4
+        const now = new Date();
 
-            // Step 1: Generate text with GPT
-            const textResponse = await fetch('https://api.openai.com/v1/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${URL}`
-                },
-                body: JSON.stringify({
-                    model: "text-davinci-003",
-                    prompt: textPrompt,
-                    max_tokens: 400
-                })
-            });
-            const textData = await textResponse.json();
-            if (textData && textData.choices && textData.choices.length > 0 && textData.choices[0].text) {
-                setGeneratedText(textData.choices[0].text);
-                // Step 2: Use the generated text to create an image
-                const imagePrompt = `Digital art, visualize a person un-gendered in a spiritual environment based on this text: ${textData.choices[0].text}`;
-                const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
+        // Retrieve stored click timestamps from localStorage
+        const clicks = JSON.parse(localStorage.getItem('tarotClicks')) || [];
+
+        // Filter out clicks that are not from today
+        const todayClicks = clicks.filter(click => {
+            const clickDate = new Date(click);
+            return clickDate.toDateString() === now.toDateString();
+        });
+
+        if (todayClicks.length < 2) {
+
+            setLoading(true);
+            const { past, present, future } = reading.current;
+            const textPrompt = `Generate a tarot reading based on these cards: Past - ${past}, Present - ${present}, Future - ${future}.`;
+
+            try {
+                const URL = process.env.REACT_APP_VALUE3 + process.env.REACT_APP_VALUE1 + process.env.REACT_APP_VALUE4
+
+                // Step 1: Generate text with GPT
+                const textResponse = await fetch('https://api.openai.com/v1/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${URL}`
                     },
                     body: JSON.stringify({
-                        prompt: imagePrompt,
-                        n: 1,
-                        size: "256x256",
+                        model: "text-davinci-003",
+                        prompt: textPrompt,
+                        max_tokens: 400
                     })
                 });
-                const imageData = await imageResponse.json();
-                if (imageData.data && imageData.data.length > 0) {
-                    setResult(imageData.data[0].url);
+                const textData = await textResponse.json();
+                if (textData && textData.choices && textData.choices.length > 0 && textData.choices[0].text) {
+                    setGeneratedText(textData.choices[0].text);
+                    // Step 2: Use the generated text to create an image
+                    const imagePrompt = `Digital art, visualize a person un-gendered in a spiritual environment based on this text: ${textData.choices[0].text}`;
+                    const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${URL}`
+                        },
+                        body: JSON.stringify({
+                            prompt: imagePrompt,
+                            n: 1,
+                            size: "256x256",
+                        })
+                    });
+                    const imageData = await imageResponse.json();
+                    if (imageData.data && imageData.data.length > 0) {
+                        setResult(imageData.data[0].url);
+                    } else {
+                        throw new Error("No image data returned");
+                    }
                 } else {
-                    throw new Error("No image data returned");
+                    throw new Error("No text data returned from GPT");
                 }
-            } else {
-                throw new Error("No text data returned from GPT");
+            } catch (error) {
+                console.error(`Error: ${error.message}`);
+            } finally {
+                setLoading(false);
+                setStage(2);
             }
-        } catch (error) {
-            console.error(`Error: ${error.message}`);
-        } finally {
-            setLoading(false);
-            setStage(2);
+            todayClicks.push(now);
+            localStorage.setItem('tarotClicks', JSON.stringify(todayClicks));
+        } else {
+
+            setShowLimitPopup(true);
         }
+
     };
 
     return (
@@ -254,6 +285,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
                     {loading ? 'thinking' : 'Receive reading by AI'}
                 </button>
             )}
+            {showLimitPopup && <ReadingLimitPopup />}
 
             {stage === 2 && (
                 <button className="button-design" onClick={resetReading}>
