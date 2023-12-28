@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import TarotCards from './tarotcards';
 import '../App.css';
 
-function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }) {
+function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswordPage, setShowPasswordPage }) {
     const [emoji, setEmoji] = useState('');
     const [name, setName] = useState("");
     //const [choice, setChoice] = useState("");
@@ -14,7 +14,6 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }
     // const reading = useRef({ past: "", present: "", future: "" });
     const [generatedText, setGeneratedText] = useState("");
     const [stage, setStage] = useState(0); // 0 for initial, 1 for after card selection, 2 for after evaluation
-    const [firstClick, setFirstClick] = useState(false);
     const [tarotCard1Src, setTarotCard1Src] = useState('');
     const [tarotCard2Src, setTarotCard2Src] = useState('');
     const [tarotCard3Src, setTarotCard3Src] = useState('');
@@ -23,7 +22,9 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }
     const [tarotCard2Direction, setTarotCard2Direction] = useState('');
     const [tarotCard3Direction, setTarotCard3Direction] = useState('');
     const [loading2, setLoading2] = useState(false);
-
+    <Tarotgen
+        showPasswordPage={() => setShowPasswordPage(true)}
+    />
     const [reading,] = useState({
         past: { name: "", reversed: false },
         present: { name: "", reversed: false },
@@ -111,9 +112,11 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }
     };
 
     const generateTextAndImage = async () => {
-        if (!firstClick) {
-            setFirstClick(true);
-            setIsAuthenticated(false); // Trigger the password screen in App.js
+        if (!profile) {
+            setShowPasswordPage(true);
+
+            //setFirstClick(true);
+            //profile(null); // Trigger the password screen in App.js
             return; // Exit the function to prevent further execution until authenticated
         }
         setLoading(true);
@@ -216,7 +219,7 @@ function Tarotgen({ setIsAuthenticated, setLoading, loading, choice, setChoice }
                     placeholder="This AI gives one-of-a-kind readings unique to you! Add details about your situation here..."
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    rows="3"
+                    rows="1"
                 />
             </div>
 

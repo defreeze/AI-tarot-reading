@@ -9,6 +9,12 @@
     color: white;
 }
 
+.header-link {
+    display: inline-flex;
+    /* or other display properties to match your buttons */
+    /* other styles to match your button's parent container */
+}
+
 .aboutPage {
     text-align: center;
     display: flex;
