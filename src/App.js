@@ -2,18 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import Tarotgen from './components/tarotreading';
 import { preloadImages } from './preloadImages';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AboutPage from './aboutPage';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
-  const [Value1, setPassword] = useState('');
-  const Correct = process.env.REACT_APP_VALUE;
-  const Value = process.env.REACT_APP_KEY;
-  const CorrectValue = Correct + Value;
   const [loading, setLoading] = useState(false);
   const [choice, setChoice] = useState("");
 
@@ -54,15 +49,6 @@ function App() {
     preloadImages();
   }, []);
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && Value1 === CorrectValue) {
-      setIsAuthenticated(true);
-    }
-  };
   return (
     <Router>
       <div className="App">
@@ -123,9 +109,11 @@ function App() {
                       <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
                       Sign in with Google
                     </button>)}
+                  {/* 
                   <Link to="/about" className="header-link">
-                    <button className="header-button">About</button>
+                    <button className="header-button" onClick={handleAboutClick}>About</button>
                   </Link>
+                  */}
                 </div>
 
                 <Tarotgen
@@ -152,7 +140,7 @@ function App() {
                   <p className="password-info">
                     AI costs money, log in to get 1 free reading a day! <br />
                     <a href="https://www.buymeacoffee.com/alexdevries" target="_blank" rel="noopener noreferrer">
-                      ☕ buy me a coffee ☕
+                      ☕ buy me a coffee ;) ☕
                     </a>
                   </p>
                 </div>
