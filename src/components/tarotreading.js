@@ -14,7 +14,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
     // const reading = useRef({ past: "", present: "", future: "" });
     const [generatedText, setGeneratedText] = useState("");
     const [stage, setStage] = useState(0); // 0 for initial, 1 for after card selection, 2 for after evaluation
-    const [firstClick, setFirstClick] = useState(false);
     const [tarotCard1Src, setTarotCard1Src] = useState('');
     const [tarotCard2Src, setTarotCard2Src] = useState('');
     const [tarotCard3Src, setTarotCard3Src] = useState('');
@@ -220,7 +219,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
                     placeholder="This AI gives one-of-a-kind readings unique to you! Add details about your situation here..."
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    rows="3"
+                    rows="1"
                 />
             </div>
 
