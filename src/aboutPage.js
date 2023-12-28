@@ -2,17 +2,29 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './aboutPage.css';
 
-function AboutPage() {
+function AboutPage({ profile, login, logOut }) {
     return (
         <div className="aboutPage">
             <div className="container2">
                 <div className="header-buttons">
-                    <Link to="/">
+                    {profile ? (
+                        <>
+                            <span className="profile-name">welcome {profile.name}! </span>
+                            <button className="header-button-google" onClick={() => logOut()}>
+                                <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
+                                Sign out
+                            </button>
+                        </>
+                    ) : (
+                        <button className="header-button-google" onClick={() => login()}>
+                            <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
+                            Sign in with Google
+                        </button>)}
+                    <Link to="/" className="header-link">
                         <button className="home-button">Home</button>
                     </Link>
                 </div>
                 <h3>About Page</h3>
-
                 {/* Two-column layout */}
                 <div className="about-section">
                     <div className="about-column">
