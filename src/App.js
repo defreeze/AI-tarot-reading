@@ -56,17 +56,7 @@ function App() {
           <Route path="/about" element={<AboutPage profile={profile} login={login} logOut={logOut} />} />
           <Route path="/" element={
             <>
-              {/* Main Content */}
-              {/* 
-              {profile ? (
-                <div>
-                  <img src={profile.picture} alt="User" />
-                  <p>{profile.name}</p>
-                  <button onClick={logOut}>Log out</button>
-                </div>
-              ) : (
-                <button onClick={() => login()}>Sign in with Google</button>
-              )}*/}
+
               {choice === "1" || choice === "2" ? (
                 <>
                   <img src="/AI_tarot_final1_wise_woman2.png" alt="AI Tarot" className="bottom-right-image-woman" />
