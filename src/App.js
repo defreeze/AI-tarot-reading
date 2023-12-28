@@ -138,7 +138,7 @@ function App() {
                     Sign in with Google
                   </button>
                   <p className="password-info">
-                    AI costs money, log in to get 1 free reading a day! <br />
+                    AI costs money, sign in for 1 free reading a day! <br />
                     <a href="https://www.buymeacoffee.com/alexdevries" target="_blank" rel="noopener noreferrer">
                       ☕ buy me a coffee ;) ☕
                     </a>
