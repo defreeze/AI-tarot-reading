@@ -789,3 +789,12 @@ body {
     padding: 0vw 0vw;
   }
 }
+
+.user-input:disabled,
+.user-select:disabled,
+.prompt-input:disabled {
+  color: rgb(255, 255, 255);
+  background-color: rgb(74, 40, 110);
+  border: 1px solid #000000;
+  opacity: 1;
+}

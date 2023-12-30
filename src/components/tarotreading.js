@@ -22,6 +22,8 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
     const [loading2, setLoading2] = useState(false);
     const [showLimitPopup, setShowLimitPopup] = useState(false);
 
+    const [inputsDisabled, setInputsDisabled] = useState(false);
+
     <Tarotgen
         showPasswordPage={() => setShowPasswordPage(true)}
     />
@@ -62,6 +64,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
     }, []);
 
     const resetReading = () => {
+        setInputsDisabled(false);
         setStage(0);
         setShowTarotDeck(true);
         setTarotCard1Src('');
@@ -72,6 +75,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
     };
 
     const pickCards = () => {
+        setInputsDisabled(true); // Disable inputs when button is clicked
         setLoading2(true);
         setTarotCard1Direction(Math.random() < 0.5 ? '-100%' : '100%');
         setTarotCard2Direction(Math.random() < 0.5 ? '-100%' : '100%');
@@ -141,32 +145,37 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
             return clickDate.toDateString() === now.toDateString();
         });
 
-        if (todayClicks.length < 2) {
+        if (todayClicks.length < 100) {
 
             setLoading(true);
-            const { past, present, future } = reading.current;
-            const textPrompt = `Generate a tarot reading based on these cards: Past - ${past}, Present - ${present}, Future - ${future}.`;
+            const { past: { name: pastName }, present: { name: presentName }, future: { name: futureName } } = reading.current;
+            const textPrompt = `Generate a tarot reading based on these cards: Past - ${pastName}, Present - ${presentName}, Future - ${futureName}.`;
 
             try {
-                const URL = process.env.REACT_APP_VALUE3 + process.env.REACT_APP_VALUE1 + process.env.REACT_APP_VALUE4
-
+                const URL2 = `${process.env.REACT_APP_VALUE3}${process.env.REACT_APP_VALUE1}${process.env.REACT_APP_VALUE4}`;
                 // Step 1: Generate text with GPT
-                const textResponse = await fetch('https://api.openai.com/v1/completions', {
+                const textResponse = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${URL}`
+                        'Authorization': `Bearer ${URL2}`
                     },
                     body: JSON.stringify({
-                        model: "text-davinci-003",
-                        prompt: textPrompt,
-                        max_tokens: 400
+                        model: 'gpt-3.5-turbo-1106',  // Specify the model you want to use
+                        messages: [{ role: 'system', content: 'You are a helpful assistant.' }, { role: 'user', content: textPrompt }],
+                        max_tokens: 1000
                     })
                 });
+
                 const textData = await textResponse.json();
+                console.log('textdata:', textData);
+                setGeneratedText(textData.choices[0].message.content);
+                {/*
                 if (textData && textData.choices && textData.choices.length > 0 && textData.choices[0].text) {
-                    setGeneratedText(textData.choices[0].text);
+                    setGeneratedText(textData.choices[0].message.content);
                     // Step 2: Use the generated text to create an image
+
+                   
                     const imagePrompt = `Digital art, visualize a person un-gendered in a spiritual environment based on this text: ${textData.choices[0].text}`;
                     const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
                         method: 'POST',
@@ -186,9 +195,10 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
                     } else {
                         throw new Error("No image data returned");
                     }
-                } else {
-                    throw new Error("No text data returned from GPT");
-                }
+                 
+            } else {
+                throw new Error("No text data returned from GPT");
+            }*/}
             } catch (error) {
                 console.error(`Error: ${error.message}`);
             } finally {
@@ -216,11 +226,13 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         title="Any name you self-identify with"
+                        disabled={inputsDisabled}
                     />
                     <select
                         className="user-input"
                         value={moodChoice}
                         onChange={(e) => setMoodChoice(e.target.value)}
+                        disabled={inputsDisabled}
                     >
                         <option value="" disabled selected>Your current mood</option>
                         <option value="1">Ecstatic</option>
@@ -235,6 +247,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
                         className="user-select"
                         value={choice}
                         onChange={(e) => setChoice(e.target.value)}
+                        disabled={inputsDisabled}
                     >
                         <option value="" disabled selected>Tarot reading type</option>
                         <option value="1">Past/Present/Future</option>
@@ -250,6 +263,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
                     placeholder="This AI gives one-of-a-kind readings unique to you! Add details about your situation here..."
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
+                    disabled={inputsDisabled}
                     rows="1"
                 />
             </div>
