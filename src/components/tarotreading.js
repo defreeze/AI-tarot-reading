@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
 import TarotCards from './tarotcards';
 import '../App.css';
+import { generatePrompt_PPF } from "./generatePrompt_PPF.ts";
+import { generatePrompt_action } from "./generatePrompt_action.ts";
+import { generatePrompt_rel } from "./generatePrompt_rel.ts";
+import { generatePrompt_career } from "./generatePrompt_career.ts";
+import { generatePrompt_daily } from "./generatePrompt_daily.ts";
+import { generatePrompt_weekly } from "./generatePrompt_weekly.ts";
 
-function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswordPage, setShowPasswordPage }) {
+
+function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPasswordPage }) {
     const [emoji, setEmoji] = useState('');
     const [name, setName] = useState("");
     const [moodChoice, setMoodChoice] = useState("");
 
-    const [prompt, setPrompt] = useState("");
+    const [context, setContext] = useState("");
     const [result, setResult] = useState("");
     const [cards, setCards] = useState([]);
     const [generatedText, setGeneratedText] = useState("");
@@ -21,7 +28,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
     const [tarotCard3Direction, setTarotCard3Direction] = useState('');
     const [loading2, setLoading2] = useState(false);
     const [showLimitPopup, setShowLimitPopup] = useState(false);
-
     const [inputsDisabled, setInputsDisabled] = useState(false);
 
     <Tarotgen
@@ -71,6 +77,10 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
         setTarotCard2Src('');
         setTarotCard3Src('');
         setGeneratedText("");
+        setMoodChoice('');
+        setName('');
+        setContext('');
+        //setChoice('');
         setResult("");
     };
 
@@ -134,6 +144,26 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
             return;
         }
 
+        const moodDescriptions = {
+            "1": "Ecstatic",
+            "2": "Content",
+            "3": "Neutral",
+            "4": "Anxious",
+            "5": "Melancholic",
+            "6": "unspecified feeling"
+        };
+        const promptGenerators = {
+            "1": generatePrompt_PPF,
+            "2": generatePrompt_action,
+            "3": generatePrompt_rel,
+            "4": generatePrompt_career,
+            "5": generatePrompt_daily,
+            "6": generatePrompt_weekly,
+            "": generatePrompt_PPF,
+        };
+        const promptGenerator = promptGenerators[choice];
+        const userMood = moodDescriptions[moodChoice] || "Undefined";
+
         const now = new Date();
 
         // Retrieve stored click timestamps from localStorage
@@ -146,11 +176,20 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
         });
 
         if (todayClicks.length < 100) {
-
             setLoading(true);
-            const { past: { name: pastName }, present: { name: presentName }, future: { name: futureName } } = reading.current;
-            const textPrompt = `Generate a tarot reading based on these cards: Past - ${pastName}, Present - ${presentName}, Future - ${futureName}.`;
+            const { past, present, future } = reading.current;
+            const formatCard = (card) => {
+                return card.reversed ? `${card.name} (Reversed)` : card.name;
+            };
 
+            const textPrompt = promptGenerator({
+                NAMEHERE: name,
+                MOODHERE: userMood,
+                CONTEXTHERE: context,
+                pastCard: formatCard(past),
+                presentCard: formatCard(present),
+                futureCard: formatCard(future)
+            });
             try {
                 const URL2 = `${process.env.REACT_APP_VALUE3}${process.env.REACT_APP_VALUE1}${process.env.REACT_APP_VALUE4}`;
                 // Step 1: Generate text with GPT
@@ -161,44 +200,14 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
                         'Authorization': `Bearer ${URL2}`
                     },
                     body: JSON.stringify({
-                        model: 'gpt-3.5-turbo-1106',  // Specify the model you want to use
-                        messages: [{ role: 'system', content: 'You are a helpful assistant.' }, { role: 'user', content: textPrompt }],
-                        max_tokens: 1000
+                        model: 'gpt-4',  // Specify the model you want to use 'gpt-3.5-turbo-1106'
+                        messages: [{ role: 'system', content: 'You are an expert AI Tarot reader.' }, { role: 'user', content: textPrompt }],
+                        max_tokens: 2000
                     })
                 });
 
                 const textData = await textResponse.json();
-                console.log('textdata:', textData);
                 setGeneratedText(textData.choices[0].message.content);
-                {/*
-                if (textData && textData.choices && textData.choices.length > 0 && textData.choices[0].text) {
-                    setGeneratedText(textData.choices[0].message.content);
-                    // Step 2: Use the generated text to create an image
-
-                   
-                    const imagePrompt = `Digital art, visualize a person un-gendered in a spiritual environment based on this text: ${textData.choices[0].text}`;
-                    const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${URL}`
-                        },
-                        body: JSON.stringify({
-                            prompt: imagePrompt,
-                            n: 1,
-                            size: "256x256",
-                        })
-                    });
-                    const imageData = await imageResponse.json();
-                    if (imageData.data && imageData.data.length > 0) {
-                        setResult(imageData.data[0].url);
-                    } else {
-                        throw new Error("No image data returned");
-                    }
-                 
-            } else {
-                throw new Error("No text data returned from GPT");
-            }*/}
             } catch (error) {
                 console.error(`Error: ${error.message}`);
             } finally {
@@ -235,12 +244,14 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
                         disabled={inputsDisabled}
                     >
                         <option value="" disabled selected>Your current mood</option>
-                        <option value="1">Ecstatic</option>
-                        <option value="2">Content</option>
-                        <option value="3">Neutral</option>
-                        <option value="4">Anxious</option>
-                        <option value="5">Melancholic</option>
-                        <option value="6">Other</option>
+                        <option value="1">😄 happy </option>
+                        <option value="2">😢 sad </option>
+                        <option value="3">😱 fear </option>
+                        <option value="4">🤮 disgust </option>
+                        <option value="5">😡 anger </option>
+                        <option value="6">😲 suprise </option>
+                        <option value="7">😰 anxious </option>
+                        <option value="8">😐 numbness </option>
                     </select>
 
                     <select
@@ -251,7 +262,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
                     >
                         <option value="" disabled selected>Tarot reading type</option>
                         <option value="1">Past/Present/Future</option>
-                        <option value="2">Action & Outcome</option>
+                        <option value="2">Action/Outcome</option>
                         <option value="3">Relationship Dynamics</option>
                         <option value="4">Career Path</option>
                         <option value="5">Daily Insight</option>
@@ -260,9 +271,9 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
                 </div>
                 <textarea
                     className="prompt-input"
-                    placeholder="This AI gives one-of-a-kind readings unique to you! Add details about your situation here..."
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
+                    placeholder="Get your personalized AI tarot reading! Share context or a specific question for an improved tailored experience..."
+                    value={context}
+                    onChange={(e) => setContext(e.target.value)}
                     disabled={inputsDisabled}
                     rows="1"
                 />
@@ -310,12 +321,13 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, showPasswor
             {stage === 2 && generatedText && (
                 <div className="generated-text">
                     <h3>Generated Reading</h3>
-                    <p>{generatedText}</p>
+                    <p dangerouslySetInnerHTML={{ __html: generatedText.replace(/\n/g, '<br />') }}></p>
+                    <p style={{ textAlign: "center", color: "grey", fontStyle: "italic" }}>Disclaimer: Our AI tarot readers can offer guidance, but the path you choose is your own. Embrace the mystery, trust your intuition, and always follow your heart.</p>
                 </div>
             )}
 
 
-            {loading && <p className="loading-text">⏳ AI is reading your cards ⌛️</p>}
+            {loading && <p className="loading-text">⏳ AI is deep reading your cards ⌛️</p>}
 
 
 
