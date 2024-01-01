@@ -163,8 +163,6 @@ function App() {
               {/* Password Overlay */}
               {!profile && showPasswordPage && (
                 <div className="password-overlay">
-
-
                   <div className="popup-overlay">
                     <div className="popup-content2">
                       <p>AI costs money, sign in for 2 free readings a day!<br />
@@ -178,14 +176,6 @@ function App() {
                       Sign in with Google
                     </button>
                   </div>
-
-
-
-
-
-
-
-
                 </div>
               )} </>
           } />
