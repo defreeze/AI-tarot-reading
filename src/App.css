@@ -164,7 +164,7 @@ body {
   right: 0;
   z-index: 2;
   animation: fadeInOut 5s infinite;
-  width: 26.5%;
+  width: 30%;
   height: auto;
 }
 
@@ -542,25 +542,27 @@ body {
   z-index: 3;
 }
 
+
+
 .button-design:hover {
   background-color: rgb(56, 150, 109);
-  animation: shadowPulse 3s infinite;
+  animation: shadowPulse 4s infinite;
   /* Apply the animation */
 
 }
 
 @keyframes shadowPulse {
   0% {
-    box-shadow: 0 0 5px #ff0000, 0 0 5px #3b203b;
+    box-shadow: 0 0 7px #bb6060, 0 0 5px #3b203b;
   }
 
   50% {
-    box-shadow: 0 0 15px #ff0000, 0 0 15px #3b203b;
+    box-shadow: 0 0 15px #bb6060, 0 0 15px #3b203b;
     /* Bigger shadow */
   }
 
   100% {
-    box-shadow: 0 0 5px #ff0000, 0 0 5px #3b203b;
+    box-shadow: 0 0 7px #bb6060, 0 0 5px #3b203b;
   }
 }
 

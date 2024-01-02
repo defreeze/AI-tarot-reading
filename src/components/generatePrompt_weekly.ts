@@ -18,7 +18,6 @@ export function generatePrompt_weekly(variables: {
     THIS WEEK's HEALTH: <weekly health card name here>: <interpretation of this week's health card (${variables.presentCard}) here>
     THIS WEEK's THOUGHTS: <weekly thoughts card name here>: <interpretation of this week's thoughts card (${variables.futureCard}) here>
 
-
     COMBINED INTERPRETATION: <specific advice for the coming week combining the interpretations of all cards, remember that this paragraph is the most important>
-    <sign off message and then sign off as AI tarot reade>`;
+    <sign off message and then sign off as AI tarot reader`;
 }
