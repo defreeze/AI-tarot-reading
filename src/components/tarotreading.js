@@ -29,6 +29,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
     const [loading2, setLoading2] = useState(false);
     const [showLimitPopup, setShowLimitPopup] = useState(false);
     const [inputsDisabled, setInputsDisabled] = useState(false);
+    const [showWarning, setShowWarning] = useState(false);
 
     <Tarotgen
         showPasswordPage={() => setShowPasswordPage(true)}
@@ -60,8 +61,8 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
             "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
         ]);
         // Function to pick a random emoji
-        const emojis = ['💫', '🔮', '✨', '🌟', '🌙', '🌕', '🌖', '🌗', '🌘', '🌑', '💀', '🌈', '☄️', '🍀', '🪐', '🧞', '🌤️', '🏅', '🎭', '🎰', '🕯️', '📿', '🗝️', '🎊', '☀️', '⚡'
-            , '🤖', '💝', '💞', '🃏', '👁️‍🗨️', '♾️', '🎶', '💔', '🧚‍♀️', '👼', '👑', '🐉', '🥀', '🎓', '🧬', '🙏', '🌹', '🌏', '🥠', '🍾', '💒', '💸', '🏳️', '🎐', '🕊️'];
+        const emojis = ['💫', '🔮', '✨', '🌟', '🌙', '🌕', '🌖', '🌗', '🌘', '🌑', '💀', '🌈', '☄️', '🍀', '🪐', '🧞', '🌤️', '🏅', '🥈', '🥉', '🥇', '🎭', '🎰', '🕯️', '📿', '🗝️', '🎊', '☀️', '⚡'
+            , '🤖', '💝', '💞', '🃏', '🧠', '👁️‍🗨️', '♾️', '🎶', '🦾', '💔', '🧚‍♀️', '👼', '🗺️', '👑', '🐉', '🎲', '🥀', '🎎', '🎓', '🧬', '🦋', '🌸', '🎋', '💩', '☮️', '🙏', '🌹', '👾', '🌏', '🥠', '🤡', '🍾', '💒', '💸', '🏳️', '🎐', '🕊️'];
         const pickRandomEmoji = () => {
             const randomIndex = Math.floor(Math.random() * emojis.length);
             return emojis[randomIndex];
@@ -84,7 +85,13 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         setResult("");
     };
 
+    const handleDisabledClick = () => {
+        setShowWarning(true);
+        setTimeout(() => setShowWarning(false), 2000); // Resets after 2 seconds
+    };
+
     const pickCards = () => {
+
         setInputsDisabled(true); // Disable inputs when button is clicked
         setLoading2(true);
         setTarotCard1Direction(Math.random() < 0.5 ? '-100%' : '100%');
@@ -225,7 +232,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
 
     return (
         <div className="container">
-            <h2>{emoji} Tarot reading by AI {emoji}</h2>
+            <h2>{emoji} Divination by AI {emoji}</h2>
             <div className="input-wrapper">
                 <div className="user-info">
                     <input
@@ -243,24 +250,25 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                         onChange={(e) => setMoodChoice(e.target.value)}
                         disabled={inputsDisabled}
                     >
-                        <option value="" disabled selected>Your current mood</option>
-                        <option value="1">😄 happy </option>
-                        <option value="2">😢 sad </option>
-                        <option value="3">😱 fear </option>
-                        <option value="4">🤮 disgust </option>
-                        <option value="5">😡 anger </option>
-                        <option value="6">😲 suprise </option>
-                        <option value="7">😰 anxious </option>
-                        <option value="8">😐 numbness </option>
+                        {moodChoice === "" && <option value="" hidden>Your current mood</option>}
+                        <option value="1">😄 happy</option>
+                        <option value="2">😢 sad</option>
+                        <option value="3">😱 fear</option>
+                        <option value="4">🤮 disgust</option>
+                        <option value="5">😡 anger</option>
+                        <option value="6">😲 surprise</option>
+                        <option value="7">😰 anxious</option>
+                        <option value="8">😐 numb / unclear</option>
+                        <option value="9">😎 we coolin'</option>
                     </select>
 
                     <select
-                        className="user-select"
+                        className={`user-select ${showWarning && (choice === "" ? 'warning-border' : '')}`}
                         value={choice}
                         onChange={(e) => setChoice(e.target.value)}
                         disabled={inputsDisabled}
                     >
-                        <option value="" disabled selected>Tarot reading type</option>
+                        {choice === "" && <option value="" hidden>Card reading type</option>}
                         <option value="1">Past/Present/Future</option>
                         <option value="2">Action/Outcome</option>
                         <option value="3">Relationship Dynamics</option>
@@ -271,7 +279,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                 </div>
                 <textarea
                     className="prompt-input"
-                    placeholder="Get your personalized AI tarot reading! Share context or a specific question for an improved tailored experience..."
+                    placeholder="Receive your intuitive AI card reading! Share context or a specific question for an even more tailored experience..."
                     value={context}
                     onChange={(e) => setContext(e.target.value)}
                     disabled={inputsDisabled}
@@ -280,9 +288,29 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
             </div>
 
             {stage === 0 && (
-                <button className="button-design" onClick={pickCards} disabled={loading2}>
+                <button
+                    className="button-design"
+                    onClick={() => {
+
+                        {/* for now mood is not auto filled in, can stay empty
+                        if (moodChoice === "") {
+                            const randomChoice = Math.floor(Math.random() * 8) + 1;
+                            setMoodChoice(randomChoice.toString());
+                        }  
+                    */}
+                        if (choice === "") {
+                            // Set a random value for choice between 1 and 6
+                            const randomChoice = Math.floor(Math.random() * 6) + 1;
+                            setChoice(randomChoice.toString());
+                        }
+
+                        pickCards();
+                    }}
+                    disabled={loading2}
+                >
                     {loading2 ? 'Drawing cards' : 'Click to draw cards'}
                 </button>
+
             )}
             {/* deck container */}
             {showTarotDeck && (
@@ -320,11 +348,14 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
 
             {stage === 2 && generatedText && (
                 <div className="generated-text">
-                    <h3>Generated Reading</h3>
-                    <p dangerouslySetInnerHTML={{ __html: generatedText.replace(/\n/g, '<br />') }}></p>
-                    <p style={{ textAlign: "center", color: "grey", fontStyle: "italic" }}>Disclaimer: Our AI tarot readers can offer guidance, but the path you choose is your own. Embrace the mystery, trust your intuition, and always follow your heart.</p>
+                    <p style={{ textAlign: "right", color: "#6a567b" }}>{new Date().toLocaleString("en-US", { hour: '2-digit', minute: '2-digit', year: 'numeric', month: 'numeric', day: 'numeric', hour12: true })}</p>
+                    <p style={{ textAlign: "center", fontSize: "18px" }}>Generated Reading</p>
+                    <p dangerouslySetInnerHTML={{ __html: generatedText.replace(/\n/g, '<br />') }} style={{ fontSize: "16px" }}></p>
+                    <p style={{ textAlign: "center", color: "grey", fontStyle: "italic" }}>Disclaimer: Our AI tarot readers can offer guidance, but the path you choose is your own. Embrace the mystery, trust your intuition, and follow your heart.</p>
                 </div>
             )}
+
+
 
 
             {loading && <p className="loading-text">⏳ AI is deep reading your cards ⌛️</p>}

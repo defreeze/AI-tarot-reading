@@ -13,9 +13,11 @@ export function generatePrompt_PPF(variables: {
     FORMAT:
     <Personalized greeting for ${variables.NAMEHERE}>,
     Concise summary of the combined meaning of the tarot reading.
+
     THE PAST, <past card name here>: <interpretation of the past card (${variables.pastCard}) here>
     THE PRESENT, <present card name here>: <interpretation of the present card (${variables.presentCard}) here>
     THE FUTURE, <future card name here>: <interpretation of the future card (${variables.futureCard}) here>
+
     COMBINED INTERPRETATION: <specific advice combining the interpretations of all cards, remember that this paragraph is the most important>
-    <sign off message and then sign off as AI tarot reade>`;
+    <sign off message and then sign off as AI tarot reader`;
 }
