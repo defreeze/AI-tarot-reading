@@ -19,5 +19,5 @@ export function generatePrompt_rel(variables: {
     THEIR PERSPECTIVE: <interpret the cards from the perspective of the other party>
  
     COMBINED INTERPRETATION: <specific relationship advice combining the interpretations of all cards, remember that this paragraph is the most important>
-    <sign off message and then sign off as AI tarot reade>`;
+    <sign off message and then sign off as AI tarot reader`;
 }

@@ -18,7 +18,6 @@ export function generatePrompt_daily(variables: {
     TODAY'S HEALTH: <today's health card name here>: <interpretation of the today's health card (${variables.presentCard}) here>
     TODAY'S THOUGHTS: <today's thoughts card name here>: <interpretation of the today's thoughts card (${variables.futureCard}) here>
 
-
     COMBINED INTERPRETATION: <specific daily advice combining the interpretations of all cards, remember that this paragraph is the most important>
-    <sign off message and then sign off as AI tarot reade>`;
+    <sign off message and then sign off as AI tarot reader`;
 }
