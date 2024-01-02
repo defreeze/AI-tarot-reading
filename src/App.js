@@ -173,7 +173,7 @@ function App() {
                     </div>
                     <button className="header-button-google" onClick={() => login()}>
                       <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
-                      Sign in with Google
+                      Sign in
                     </button>
                   </div>
                 </div>
