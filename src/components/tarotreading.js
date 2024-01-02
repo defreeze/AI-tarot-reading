@@ -29,7 +29,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
     const [loading2, setLoading2] = useState(false);
     const [showLimitPopup, setShowLimitPopup] = useState(false);
     const [inputsDisabled, setInputsDisabled] = useState(false);
-    const [showWarning, setShowWarning] = useState(false);
 
     <Tarotgen
         showPasswordPage={() => setShowPasswordPage(true)}
@@ -85,10 +84,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         setResult("");
     };
 
-    const handleDisabledClick = () => {
-        setShowWarning(true);
-        setTimeout(() => setShowWarning(false), 2000); // Resets after 2 seconds
-    };
+
 
     const pickCards = () => {
 
@@ -263,7 +259,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                     </select>
 
                     <select
-                        className={`user-select ${showWarning && (choice === "" ? 'warning-border' : '')}`}
+                        className={`user-select`}
                         value={choice}
                         onChange={(e) => setChoice(e.target.value)}
                         disabled={inputsDisabled}
@@ -291,13 +287,14 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                 <button
                     className="button-design"
                     onClick={() => {
-
-                        {/* for now mood is not auto filled in, can stay empty
+                        // Uncomment and modify this section if you decide to auto-fill the moodChoice later
+                        /*
                         if (moodChoice === "") {
-                            const randomChoice = Math.floor(Math.random() * 8) + 1;
-                            setMoodChoice(randomChoice.toString());
-                        }  
-                    */}
+                            const randomMoodChoice = Math.floor(Math.random() * 8) + 1;
+                            setMoodChoice(randomMoodChoice.toString());
+                        }
+                        */
+
                         if (choice === "") {
                             // Set a random value for choice between 1 and 6
                             const randomChoice = Math.floor(Math.random() * 6) + 1;
@@ -310,6 +307,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                 >
                     {loading2 ? 'Drawing cards' : 'Click to draw cards'}
                 </button>
+
 
             )}
             {/* deck container */}
