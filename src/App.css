@@ -445,7 +445,7 @@ body {
 }
 
 .loading-text {
-  animation: blink 3s linear infinite;
+  animation: blink 1.5s linear infinite;
   z-index: 2;
 }
 
