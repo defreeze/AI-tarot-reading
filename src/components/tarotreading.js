@@ -7,7 +7,8 @@ import { generatePrompt_rel } from "./generatePrompt_rel.ts";
 import { generatePrompt_career } from "./generatePrompt_career.ts";
 import { generatePrompt_daily } from "./generatePrompt_daily.ts";
 import { generatePrompt_weekly } from "./generatePrompt_weekly.ts";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRefresh } from '@fortawesome/free-solid-svg-icons';
 
 function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPasswordPage }) {
     const [emoji, setEmoji] = useState('');
@@ -81,6 +82,21 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         setName('');
         setContext('');
         //setChoice('');
+        setResult("");
+    };
+
+    const resetReading_alt = () => {
+        setInputsDisabled(false);
+        setStage(0);
+        setShowTarotDeck(true);
+        setTarotCard1Src('');
+        setTarotCard2Src('');
+        setTarotCard3Src('');
+        setGeneratedText("");
+        setMoodChoice('');
+        setName('');
+        setContext('');
+        setChoice('');
         setResult("");
     };
 
@@ -239,6 +255,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                         onChange={(e) => setName(e.target.value)}
                         title="Any name you self-identify with"
                         disabled={inputsDisabled}
+                        maxLength={25}
                     />
                     <select
                         className="user-input"
@@ -280,6 +297,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                     onChange={(e) => setContext(e.target.value)}
                     disabled={inputsDisabled}
                     rows="1"
+                    maxLength={207}
                 />
             </div>
 
@@ -294,7 +312,10 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                             setMoodChoice(randomMoodChoice.toString());
                         }
                         */
-
+                        if (moodChoice === "") {
+                            const randomMoodChoice = Math.floor(Math.random() * 8) + 1;
+                            setMoodChoice(randomMoodChoice.toString());
+                        }
                         if (choice === "") {
                             // Set a random value for choice between 1 and 6
                             const randomChoice = Math.floor(Math.random() * 6) + 1;
@@ -332,9 +353,16 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
 
 
             {stage === 1 && (
-                <button className="button-design" onClick={generateTextAndImage} disabled={loading}>
-                    {loading ? 'thinking' : 'Receive reading by AI'}
-                </button>
+                <div className="button-layout">
+
+                    <button className="button-design" onClick={generateTextAndImage} disabled={loading}>
+                        {loading ? 'thinking' : 'Receive reading by AI'}
+                    </button>
+
+                    <button className="button-design-refresh" onClick={resetReading_alt}>
+                        <FontAwesomeIcon icon={faRefresh} />
+                    </button>
+                </div>
             )}
             {showLimitPopup && <ReadingLimitPopup />}
 
@@ -369,9 +397,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
             )}
         </div>
     );
-
-
-
 }
 
 export default Tarotgen;

@@ -128,7 +128,7 @@ function App() {
                 <div className="header-buttons">
                   {profile ? (
                     <>
-                      <span className="profile-name">welcome {profile.name}! </span>
+                      {/*<span className="profile-name">welcome {profile.name}! </span> */}
                       <button className="header-button-google" onClick={() => logOut()}>
                         <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
                         Sign out
