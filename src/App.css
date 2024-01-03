@@ -314,7 +314,7 @@ body {
 }
 
 .App-link {
-  color: #61dafb;
+  color: hsl(203.68, 68.47%, 43.53%)
 }
 
 .App-footer {
@@ -328,7 +328,7 @@ body {
 }
 
 .App-footer a {
-  color: #007bff;
+  color: hsl(203.68, 68.47%, 43.53%);
   text-decoration: none;
   font-size: 16px;
   position: relative;
@@ -366,27 +366,6 @@ body {
   width: 100%;
   margin-bottom: 10px;
   box-sizing: border-box;
-  z-index: 2;
-
-}
-
-.generated-text {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 15px;
-  border: 2px solid rgb(74, 40, 110);
-  border-radius: 5px;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  font-size: 16px;
-  line-height: 1.6;
-  color: #ffffff;
-  text-align: justify;
-}
-
-.generated-text h3 {
-  text-align: center;
-  margin-top: 0;
   z-index: 2;
 
 }
@@ -531,7 +510,7 @@ body {
 .button-design {
   margin-top: 0px;
   padding: 10px 15px;
-  background-color: hsl(211, 100%, 50%);
+  background-color: hsl(203.68, 68.47%, 43.53%);
   color: white;
   border: none;
   border-radius: 5px;
@@ -542,27 +521,42 @@ body {
   z-index: 3;
 }
 
-
-
 .button-design:hover {
-  background-color: rgb(56, 150, 109);
+  background-color: hsl(148.54, 100%, 32.16%);
   animation: shadowPulse 4s infinite;
-  /* Apply the animation */
+}
 
+.button-design-refresh {
+  margin-top: 0px;
+  margin-left: 5px;
+  padding: 10px 12px;
+  background-color: hsl(0, 0%, 100%);
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  position: relative;
+  z-index: 3;
+}
+
+.button-design-refresh:hover {
+  background-color: hsl(0, 0%, 0%);
+  color: #ffffff;
 }
 
 @keyframes shadowPulse {
   0% {
-    box-shadow: 0 0 7px #bb6060, 0 0 5px #3b203b;
+    box-shadow: 0 0 7px #b98145, 0 0 5px #3b203b;
   }
 
   50% {
-    box-shadow: 0 0 15px #bb6060, 0 0 15px #3b203b;
-    /* Bigger shadow */
+    box-shadow: 0 0 15px #b98145, 0 0 15px #3b203b;
   }
 
   100% {
-    box-shadow: 0 0 7px #bb6060, 0 0 5px #3b203b;
+    box-shadow: 0 0 7px #b98145, 0 0 5px #3b203b;
   }
 }
 
@@ -629,7 +623,6 @@ body {
 
   50% {
     transform: translateY(-20px);
-    /* Adjust the value to control the height of the float */
   }
 }
 
@@ -655,8 +648,6 @@ body {
   z-index: 5;
 }
 
-/* Z-index for stacking */
-/* Z-index for stacking */
 .tarot1_stack1 {
   z-index: 10;
 }
@@ -664,7 +655,6 @@ body {
 .tarot2_card1 {
   animation: cardFadeSlide 1.5s ease-in-out;
   --slide-direction: 100%;
-  /* Default slide direction */
   z-index: 20;
 }
 
@@ -675,7 +665,6 @@ body {
 .tarot4_card2 {
   animation: cardFadeSlide 1.5s ease-in-out;
   --slide-direction: -100%;
-  /* Default slide direction */
   z-index: 40;
 }
 
@@ -686,7 +675,6 @@ body {
 .tarot6_card3 {
   animation: cardFadeSlide 1.5s ease-in-out;
   --slide-direction: 100%;
-  /* Default slide direction */
   z-index: 60;
 }
 
@@ -731,9 +719,7 @@ body {
   background-color: white;
   color: #000000;
   width: 25vw;
-  /* Width relative to the viewport width */
   height: 16vh;
-  /* Height relative to the viewport height */
   padding: 1vw;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -764,9 +750,7 @@ body {
   background-color: white;
   color: #000000;
   width: 28vw;
-  /* Width relative to the viewport width */
   height: 12vh;
-  /* Height relative to the viewport height */
   padding: 1vw;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -776,6 +760,29 @@ body {
   justify-content: space-between;
   align-items: center;
   font-size: 1.2vw;
+}
+
+.generated-text {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 15px;
+  border: 2px solid rgb(61, 36, 85);
+  /*  border: 2px solid rgb(74, 40, 110); */
+  border-radius: 5px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #ffffff;
+  text-align: justify;
+  background-color: rgb(46, 24, 70);
+}
+
+.generated-text h3 {
+  text-align: center;
+  margin-top: 0;
+  z-index: 2;
+
 }
 
 /* Optional: Adjustments for smaller screens */
@@ -795,8 +802,15 @@ body {
 .user-input:disabled,
 .user-select:disabled,
 .prompt-input:disabled {
-  color: rgb(255, 255, 255);
-  background-color: rgb(74, 40, 110);
-  border: 1px solid #000000;
+  color: #ffffff;
+  background-color: rgb(46, 24, 70);
+  border: 1px solid rgb(70, 43, 94);
+  opacity: 1;
+}
+
+.user-input:disabled::placeholder,
+.user-select:disabled::placeholder,
+.prompt-input:disabled::placeholder {
+  color: rgb(108, 79, 133);
   opacity: 1;
 }
