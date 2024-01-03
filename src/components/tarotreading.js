@@ -70,6 +70,25 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         setEmoji(pickRandomEmoji());
     }, []);
 
+
+    const nicknames = [
+        "Mystic Mariner", "Arcane Albatross", "Seer Seahorse", "Oracle Otter",
+        "Sage Sparrow", "Prophet Parrot", "Diviner Dolphin", "Enigma Eagle",
+        "Visionary Vulture", "Sorcerer Swan", "Charm Chameleon", "Potion Penguin",
+        "Wizard Walrus", "Spirit Stork", "Guru Gorilla", "Fortune Fox",
+        "Aura Antelope", "Celestial Cat", "Enlightened Elephant", "Lunar Lynx",
+        "Starlight Squirrel", "Mystical Moose", "Cosmic Coyote", "Fable Flamingo",
+        "Galactic Gecko", "Phantom Phoenix", "Eclipse Elk", "Voodoo Vulture",
+        "Astro Aardvark", "Moonlight Meerkat", "Solar Sparrow", "Legend Lemur",
+        "Chakra Cheetah", "Zodiac Zebra", "Talisman Tiger", "Rune Rabbit",
+        "Ethereal Eel", "Occult Owl", "Majestic Macaw", "Crystal Crow"
+    ];
+
+    // Function to get a random nickname
+    const getRandomNickname = () => {
+        const randomIndex = Math.floor(Math.random() * nicknames.length);
+        return nicknames[randomIndex];
+    };
     const resetReading = () => {
         setInputsDisabled(false);
         setStage(0);
@@ -312,6 +331,9 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                             setMoodChoice(randomMoodChoice.toString());
                         }
                         */
+                        if (name === "") {
+                            setName(getRandomNickname());
+                        }
                         if (moodChoice === "") {
                             const randomMoodChoice = Math.floor(Math.random() * 8) + 1;
                             setMoodChoice(randomMoodChoice.toString());
