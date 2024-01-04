@@ -160,9 +160,9 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         setTimeout(() => {
             setShowTarotDeck(false);
             reading.current = {
-                past: { name: past, reversed: Math.random() < 0.5 },
-                present: { name: present, reversed: Math.random() < 0.5 },
-                future: { name: future, reversed: Math.random() < 0.5 }
+                past: { name: past, reversed: Math.random() < 0.5, image: `/tarot_deck/${encodeFileName(past)}.jpg` },
+                present: { name: present, reversed: Math.random() < 0.5, image: `/tarot_deck/${encodeFileName(present)}.jpg` },
+                future: { name: future, reversed: Math.random() < 0.5, image: `/tarot_deck/${encodeFileName(future)}.jpg` }
             };
             setStage(1);
             setLoading2(false);
@@ -312,7 +312,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                         {choice === "" && <option value="" hidden>Card reading type</option>}
                         <option value="1">Past/Present/Future</option>
                         <option value="2">Action/Outcome</option>
-                        <option value="3">Relationship Dynamics</option>
+                        <option value="3">Relationship Review</option>
                         <option value="4">Career Path</option>
                         <option value="5">Daily Insight</option>
                         <option value="6">Weekly Insight</option>
