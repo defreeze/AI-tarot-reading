@@ -119,12 +119,26 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         setResult("");
     };
 
-
+    const encodeFileName = (fileName) => {
+        return fileName.split(' ').join('%20');
+    };
 
     const pickCards = () => {
 
         setInputsDisabled(true); // Disable inputs when button is clicked
         setLoading2(true);
+
+        let deck = [...cards];
+        let past = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
+        let present = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
+        let future = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
+
+        // Preload the images for the selected tarot cards
+        [past, present, future].forEach(card => {
+            const img = new Image();
+            img.src = `/tarot_deck/${encodeFileName(card)}.jpg`;
+        });
+
         setTarotCard1Direction(Math.random() < 0.5 ? '-100%' : '100%');
         setTarotCard2Direction(Math.random() < 0.5 ? '-100%' : '100%');
         setTarotCard3Direction(Math.random() < 0.5 ? '-100%' : '100%');
@@ -145,11 +159,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
 
         setTimeout(() => {
             setShowTarotDeck(false);
-
-            let deck = [...cards];
-            let past = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
-            let present = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
-            let future = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
             reading.current = {
                 past: { name: past, reversed: Math.random() < 0.5 },
                 present: { name: present, reversed: Math.random() < 0.5 },
