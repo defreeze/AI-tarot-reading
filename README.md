@@ -1,6 +1,6 @@
 # AI tarot reading
 
-This is new version with UI of this project: https://alexdevri.es/get-an-ai-tarot-reading-python-game-built-with-gpt/
+This is a new version with UI of this project: https://alexdevri.es/get-an-ai-tarot-reading-python-game-built-with-gpt/
 
 ![Screenshot](tarot.PNG)
 

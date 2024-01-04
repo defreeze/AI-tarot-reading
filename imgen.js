@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import OpenAI from "openai";
 import '../App.css';
 
 function ImageGenerator() {
