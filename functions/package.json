@@ -20,7 +20,8 @@
   "devDependencies": {
     "eslint": "^8.15.0",
     "eslint-config-google": "^0.14.0",
-    "firebase-functions-test": "^3.1.0"
+    "firebase-functions-test": "^3.1.0",
+    "@babel/plugin-proposal-private-property-in-object": "*"
   },
   "private": true
 }
