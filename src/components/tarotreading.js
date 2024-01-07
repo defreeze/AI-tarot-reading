@@ -269,6 +269,30 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         }
 
     };
+    const [currentMessage, setCurrentMessage] = useState(0);
+    const loadingMessages = [
+        "Shuffling the deck...",
+        "Connecting with the energies...",
+        "Aligning the stars...",
+        "Interpreting the signs...",
+        "Revealing hidden truths...",
+        "Unveiling the mysteries...",
+        "Deciphering the symbols...",
+        "Gazing into the crystal ball...",
+        "Reading the cosmic threads...",
+        "Drawing the celestial insights..."
+    ];
+
+    useEffect(() => {
+        if (loading) {
+            const intervalId = setInterval(() => {
+                setCurrentMessage(prev => (prev + 1) % loadingMessages.length);
+            }, 3000); // Change message every 3 seconds
+
+            return () => clearInterval(intervalId);
+        }
+    }, [loading, loadingMessages.length]); // Added loadingMessages.length here
+
 
     return (
         <div className="container">
@@ -414,10 +438,12 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
 
 
 
-
-            {loading && <p className="loading-text">⏳ AI is deep reading your cards ⌛️</p>}
-
-
+            {loading && (
+                <>
+                    <p className="loading-text">⏳ AI is deep reading your cards ⌛️</p>
+                    <p className="loading-subtext">{loadingMessages[currentMessage]}</p>
+                </>
+            )}
 
             {stage === 2 && result && (
                 <div className="result-image-wrapper">
