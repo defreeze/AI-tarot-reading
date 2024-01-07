@@ -5,19 +5,18 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// Create the root once with the container element
+const container = document.getElementById('root');
+const root = ReactDOM.createRoot(container);
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// Render the app inside the root without specifying the container again
 root.render(
   <GoogleOAuthProvider clientId="619587058121-qunfd2tpdn3ntvcgm2l66puq5a65rq0t.apps.googleusercontent.com">
     <React.StrictMode>
       <App />
     </React.StrictMode>
-  </GoogleOAuthProvider>,
-  document.getElementById('root')
-
+  </GoogleOAuthProvider>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// Performance reporting
 reportWebVitals();

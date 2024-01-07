@@ -25,6 +25,7 @@ function App() {
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
+      //console.log('Login Success:', codeResponse);
       setUser(codeResponse);
       // Fetch additional profile information
       fetchProfileInfo(codeResponse.access_token);
@@ -32,8 +33,10 @@ function App() {
     onError: (error) => console.log('Login Failed:', error)
   });
 
+
   const fetchProfileInfo = (accessToken) => {
-    axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`, {
+    //console.log('Using access token for profile info:', accessToken); // Log the token
+    axios.get('https://www.googleapis.com/oauth2/v1/userinfo', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         Accept: 'application/json'
@@ -41,11 +44,15 @@ function App() {
     })
       .then((res) => {
         setProfile(res.data);
-        // Store the fetched profile data in localStorage
         localStorage.setItem('profile', JSON.stringify(res.data));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log('Error fetching profile info:', err);
+        console.log('Error details:', err.response); // Log detailed error
+      });
   };
+
+
 
   const logOut = () => {
     googleLogout();
@@ -57,9 +64,9 @@ function App() {
 
   useEffect(
     () => {
-      if (user) {
+      if (user && user.access_token) {
         axios
-          .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+          .get('https://www.googleapis.com/oauth2/v1/userinfo', {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
               Accept: 'application/json'
@@ -73,6 +80,7 @@ function App() {
     },
     [user]
   );
+
 
   useEffect(() => {
     preloadImages();
