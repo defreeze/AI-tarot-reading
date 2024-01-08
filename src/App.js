@@ -4,18 +4,21 @@ import Tarotgen from './components/tarotreading';
 import { preloadImages } from './preloadImages';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AboutPage from './aboutPage';
-import { googleLogout, useGoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
-import app from './firebaseConfig';
+import './firebaseConfig';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 
 
 function App() {
   const [loading, setLoading] = useState(false);
   const [choice, setChoice] = useState("");
-
   const [showPasswordPage, setShowPasswordPage] = useState(false);
-  const [user, setUser] = useState([]);
+  //const [user, setUser] = useState([]);
   const [profile, setProfile] = useState(null);
+
+  //firebase
+  const auth = getAuth();
+  const googleProvider = new GoogleAuthProvider();
+
   useEffect(() => {
     // Retrieve profile from localStorage
     const storedProfile = localStorage.getItem('profile');
@@ -24,68 +27,47 @@ function App() {
     }
   }, []);
 
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {
-      //console.log('Login Success:', codeResponse);
-      setUser(codeResponse);
-      // Fetch additional profile information
-      fetchProfileInfo(codeResponse.access_token);
-    },
-    onError: (error) => console.log('Login Failed:', error)
-  });
-
-
-  const fetchProfileInfo = (accessToken) => {
-    //console.log('Using access token for profile info:', accessToken); // Log the token
-    axios.get('https://www.googleapis.com/oauth2/v1/userinfo', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: 'application/json'
-      }
-    })
-      .then((res) => {
-        setProfile(res.data);
-        localStorage.setItem('profile', JSON.stringify(res.data));
-      })
-      .catch((err) => {
-        console.log('Error fetching profile info:', err);
-        console.log('Error details:', err.response); // Log detailed error
+  const login = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        // The signed-in user info.
+        const user = result.user;
+        setProfile(user); // Set user profile
+        localStorage.setItem('profile', JSON.stringify(user)); // Store in localStorage
+      }).catch((error) => {
+        console.error('Login Failed:', error);
       });
   };
 
-
-
   const logOut = () => {
-    googleLogout();
-    setProfile(null);
-    setShowPasswordPage(false);
-    localStorage.removeItem('profile');
-    // Additional logout logic...
+    signOut(auth)
+      .then(() => {
+        setProfile(null);
+        localStorage.removeItem('profile');
+      })
+      .catch((error) => {
+        console.error('Logout Failed:', error);
+      });
   };
-
-  useEffect(
-    () => {
-      if (user && user.access_token) {
-        axios
-          .get('https://www.googleapis.com/oauth2/v1/userinfo', {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              Accept: 'application/json'
-            }
-          })
-          .then((res) => {
-            setProfile(res.data);
-          })
-          .catch((err) => console.log(err));
-      }
-    },
-    [user]
-  );
-
 
   useEffect(() => {
     preloadImages();
   }, []);
+
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setProfile(user);
+        localStorage.setItem('profile', JSON.stringify(user));
+      } else {
+        setProfile(null);
+        localStorage.removeItem('profile');
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup subscription on unmount
+  }, [auth]);
 
   return (
     <Router>
@@ -138,13 +120,13 @@ function App() {
                   {profile ? (
                     <>
                       {/*<span className="profile-name">welcome {profile.name}! </span> */}
-                      <button className="header-button-google" onClick={() => logOut()}>
+                      <button className="header-button-google" onClick={logOut}>
                         <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
                         Sign out
                       </button>
                     </>
                   ) : (
-                    <button className="header-button-google" onClick={() => login()}>
+                    <button className="header-button-google" onClick={login}>
                       <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
                       Sign in
                     </button>)}
