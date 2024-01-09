@@ -15,6 +15,7 @@ function App() {
   //const [user, setUser] = useState([]);
   const [profile, setProfile] = useState(null);
 
+
   //firebase
   const auth = getAuth();
   const googleProvider = new GoogleAuthProvider();
@@ -77,19 +78,9 @@ function App() {
           <Route path="/" element={
             <>
               {/* Main Content */}
-              {/* 
-              {profile ? (
-                <div>
-                  <img src={profile.picture} alt="User" />
-                  <p>{profile.name}</p>
-                  <button onClick={logOut}>Log out</button>
-                </div>
-              ) : (
-                <button onClick={() => login()}>Sign in with Google</button>
-              )}*/}
               {choice === "1" || choice === "2" ? (
                 <>
-                  <img src="/AI_tarot_final1_wise_woman2.png" alt="AI Tarot" className="bottom-right-image-woman" />
+                  <img src="/AI_tarot_final1_wise_woman3.png" alt="AI Tarot" className="bottom-right-image-woman" />
                   {/*<img src="/AI_tarot_final1_wise_woman_animation.png" alt="AI_female_animate" className="AI-woman-animate" />*/}
                   <img src="/AI_tarot_final1_wise_woman_animation2.png" alt="AI_female_animate" className="AI-woman-animate2" />
 
@@ -106,11 +97,23 @@ function App() {
                     <img src="/spell-visual1.png" alt="loading_female_animate" className={`loading-visual-female ${loading ? '' : 'hidden'}`} />
                   </div>
                 </>
-              ) : choice === "" || choice === "5" || choice === "6" ? (
+              ) : choice === "" || choice === "5" ? (
                 <>
                   <img src="/AI_tarot_final1.png" alt="AI Tarot" className="bottom-right-image" />
                   <img src="/AI_tarot_final1_purple.png" alt="Loading" className={`loading-image ${loading ? '' : 'hidden'}`} />
                   <img src="/tarotstar2.png" alt="Tarot Star" className="tarot-star" />
+                </>
+              ) : choice === "6" ? (
+                <>
+
+                  <img src="/AI_tarot_final1.png" alt="AI Tarot" className="bottom-right-image" />
+                  <img src="/AI_tarot_final1_purple.png" alt="Loading" className={`loading-image ${loading ? '' : 'hidden'}`} />
+                  <img src="/tarotstar2.png" alt="Tarot Star" className="tarot-star" />
+                  {/*
+                  <img src="/AI_tarot_final1_wise_manv2.png" alt="AI Tarot" className="bottom-right-image2" />
+                  <img src="/AI_tarot_final1_purple.png" alt="Loading" className={`loading-image ${loading ? '' : 'hidden'}`} />
+                  <img src="/AI_tarot_final1_wise_manv2_animation.png" alt="Tarot Star" className="oldman_fade" />
+              */}
                 </>
               ) : []
               }
@@ -130,11 +133,7 @@ function App() {
                       <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
                       Sign in
                     </button>)}
-                  {/* 
-                  <Link to="/about" className="header-link">
-                    <button className="header-button" onClick={handleAboutClick}>About</button>
-                  </Link>
-                  */}
+                  { }
                 </div>
 
                 <Tarotgen

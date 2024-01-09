@@ -32,6 +32,24 @@
   }
 }
 
+@keyframes fadeInOut_oldman {
+
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+
+
+  50% {
+    opacity: 1;
+  }
+
+}
+
+
+
+
 .header-buttons {
   align-items: center;
   position: fixed;
@@ -168,6 +186,17 @@ body {
   height: auto;
 }
 
+
+.oldman_fade {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+  animation: fadeInOut_oldman 10s infinite;
+  width: 25%;
+  height: auto;
+}
+
 @keyframes rotate360 {
   0% {
     transform: rotate(0deg);
@@ -184,6 +213,15 @@ body {
   bottom: 0;
   right: 0;
   width: 30%;
+  height: auto;
+  z-index: 1;
+}
+
+.bottom-right-image2 {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 25%;
   height: auto;
   z-index: 1;
 }
