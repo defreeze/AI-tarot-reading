@@ -1,0 +1,11 @@
+{
+  "projects": {
+    "default": "ai-tarot-v1"
+  },
+  "targets": {},
+  "etags": {
+    "ai-tarot-v1": {
+      "extensionInstances": {}
+    }
+  }
+}
