@@ -103,6 +103,29 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         //setChoice('');
         setResult("");
     };
+    const highlightCardNames = (text, reading) => {
+        let modifiedText = text;
+        const cardNames = [reading.current.past.name, reading.current.present.name, reading.current.future.name];
+
+        // Highlight the card names
+        cardNames.forEach(card => {
+            const regex = new RegExp(`\\b${card}\\b`, 'gi');
+            modifiedText = modifiedText.replace(regex, `<span style="color:#b98145;">${card}</span>`);
+        });
+        return modifiedText;
+    };
+
+
+
+
+
+
+
+
+
+
+
+
 
     const resetReading_alt = () => {
         setInputsDisabled(false);
@@ -431,7 +454,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                 <div className="generated-text">
                     <p style={{ textAlign: "right", color: "#6a567b" }}>{new Date().toLocaleString("en-US", { hour: '2-digit', minute: '2-digit', year: 'numeric', month: 'numeric', day: 'numeric', hour12: true })}</p>
                     <p style={{ textAlign: "center", fontSize: "18px" }}>Generated Reading</p>
-                    <p dangerouslySetInnerHTML={{ __html: generatedText.replace(/\n/g, '<br />') }} style={{ fontSize: "16px" }}></p>
+                    <p dangerouslySetInnerHTML={{ __html: highlightCardNames(generatedText, reading).replace(/\n/g, '<br />') }} style={{ fontSize: "16px" }}></p>
                     <p style={{ textAlign: "center", color: "grey", fontStyle: "italic" }}>Disclaimer: Our AI tarot readers can offer guidance, but the path you choose is your own. Embrace the mystery, trust your intuition, and follow your heart.</p>
                 </div>
             )}
