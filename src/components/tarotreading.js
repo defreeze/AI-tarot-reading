@@ -31,6 +31,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
     const [showLimitPopup, setShowLimitPopup] = useState(false);
     const [inputsDisabled, setInputsDisabled] = useState(false);
 
+
     <Tarotgen
         showPasswordPage={() => setShowPasswordPage(true)}
     />
@@ -39,6 +40,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         present: { name: "", reversed: false },
         future: { name: "", reversed: false }
     });
+
 
     useEffect(() => {
         setCards([
@@ -166,14 +168,14 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         setTarotCard2Direction(Math.random() < 0.5 ? '-100%' : '100%');
         setTarotCard3Direction(Math.random() < 0.5 ? '-100%' : '100%');
 
-        setTarotCard1Src('tarot2_card1.png');
+        setTarotCard1Src('tarot2_card1_v2.png');
 
         setTimeout(() => {
-            setTarotCard2Src('tarot4_card2.png');
+            setTarotCard2Src('tarot4_card2_v2.png');
         }, 500);
 
         setTimeout(() => {
-            setTarotCard3Src('tarot6_card3.png');
+            setTarotCard3Src('tarot6_card3_v2.png');
         }, 1000);
 
         setTimeout(() => {
@@ -403,6 +405,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                         pickCards();
                     }}
                     disabled={loading2}
+
                 >
                     {loading2 ? 'Drawing cards' : 'Click to draw cards'}
                 </button>
@@ -418,7 +421,9 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                     {tarotCard2Src && <img src={tarotCard2Src} alt="tarot4_card2" className="tarot4_card2" style={{ '--slide-direction': tarotCard2Direction }} />}
                     <img src="tarot5_stack3.png" alt="tarot5_stack3" className="tarot5_stack3" />
                     {tarotCard3Src && <img src={tarotCard3Src} alt="tarot6_card3" className="tarot6_card3" style={{ '--slide-direction': tarotCard3Direction }} />}
-                    <img src="tarot7_stack4.png" alt="tarot7_stack4" className="tarot7_stack4" />
+                    <img src="tarot7_stack4_v2.png" alt="tarot7_stack4" className="tarot7_stack4" />
+                    <img src="tarot8_stack5_v2.png" alt="tarot8_stack5" className="tarot8_stack5" />
+
                 </div>)}
 
 
