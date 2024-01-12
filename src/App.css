@@ -297,6 +297,18 @@ body {
   }
 }
 
+@keyframes fadeInOut3 {
+
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
 @keyframes teleportIn {
   from {
     opacity: 0;
@@ -563,12 +575,31 @@ body {
   transition: background-color 0.3s;
   position: relative;
   z-index: 3;
+
 }
 
 .button-design:hover {
-  background-color: hsl(148.54, 100%, 32.16%);
-  animation: shadowPulse 4s infinite;
+  background: linear-gradient(270deg,
+      hsl(203.68, 68.47%, 43.53%), hsl(203.68, 68.47%, 43.53%), rgb(16, 160, 57),
+      hsl(203.68, 68.47%, 43.53%),
+      hsl(203.68, 68.47%, 43.53%), rgb(16, 160, 57),
+      hsl(203.68, 68.47%, 43.53%));
+  background-size: 1000% 1000%;
+  animation: gradientShift 2s infinite linear;
 }
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: -100% 50%;
+  }
+}
+
+
+
 
 .button-design-refresh {
   margin-top: 0px;
@@ -725,6 +756,12 @@ body {
 .tarot7_stack4 {
   z-index: 70;
 }
+
+.tarot8_stack5 {
+  z-index: 80;
+  animation: fadeInOut3 5s infinite;
+}
+
 
 @keyframes cardFadeSlide {
   from {
