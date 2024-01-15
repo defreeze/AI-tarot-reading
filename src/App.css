@@ -347,7 +347,7 @@ body {
 }
 
 .App-header {
-  background-color: rgb(46, 24, 70);
+  background-color: rgb(52, 30, 79);
   flex: 99;
   display: flex;
   flex-direction: column;
@@ -373,7 +373,7 @@ body {
   margin-top: 0px;
   padding: 10px;
   font-size: 14px;
-  background-color: rgb(46, 24, 70);
+  background-color: rgb(52, 30, 79);
   color: #a49f9f;
 }
 
@@ -580,10 +580,10 @@ body {
 
 .button-design:hover {
   background: linear-gradient(270deg,
-      hsl(203.68, 68.47%, 43.53%), hsl(203.68, 68.47%, 43.53%), rgb(16, 160, 57),
-      hsl(203.68, 68.47%, 43.53%),
-      hsl(203.68, 68.47%, 43.53%), rgb(16, 160, 57),
-      hsl(203.68, 68.47%, 43.53%));
+      hsl(276, 100%, 62%), hsl(203.68, 68.47%, 43.53%), rgb(196, 20, 137),
+      hsl(0, 89%, 55%),
+      hsl(32, 96%, 53%), rgb(16, 160, 26),
+      hsl(276, 100%, 62%));
   background-size: 1000% 1000%;
   animation: gradientShift 2s infinite linear;
 }
