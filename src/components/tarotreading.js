@@ -367,7 +367,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                         <option value="4">Career Path</option>
                         <option value="5">Daily Insight</option>
                         <option value="6">Weekly Insight</option>
-                        <option value="7">Specific Question</option>
 
                     </select>
                 </div>
