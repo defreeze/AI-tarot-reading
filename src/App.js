@@ -12,7 +12,6 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [choice, setChoice] = useState("");
   const [showPasswordPage, setShowPasswordPage] = useState(false);
-  //const [user, setUser] = useState([]);
   const [profile, setProfile] = useState(null);
 
 
@@ -39,7 +38,9 @@ function App() {
         console.error('Login Failed:', error);
       });
   };
-
+  const handleFeedbackClick = () => {
+    window.open('https://forms.gle/mYw64PTEUC3C8RsWA', '_blank');
+  };
   const logOut = () => {
     signOut(auth)
       .then(() => {
@@ -73,6 +74,10 @@ function App() {
   return (
     <Router>
       <div className="App">
+        {/* Feedback Link */}
+        <div className="feedback-link" onClick={handleFeedbackClick}>
+          Help Us Improve!
+        </div>
         <Routes>
           <Route path="/about" element={<AboutPage profile={profile} login={login} logOut={logOut} />} />
           <Route path="/" element={

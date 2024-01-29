@@ -7,6 +7,7 @@ import { generatePrompt_rel } from "./generatePrompt_rel.ts";
 import { generatePrompt_career } from "./generatePrompt_career.ts";
 import { generatePrompt_daily } from "./generatePrompt_daily.ts";
 import { generatePrompt_weekly } from "./generatePrompt_weekly.ts";
+import { generatePrompt_general } from "./generatePrompt_general.ts";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRefresh } from '@fortawesome/free-solid-svg-icons';
 
@@ -231,6 +232,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
             "4": generatePrompt_career,
             "5": generatePrompt_daily,
             "6": generatePrompt_weekly,
+            "7": generatePrompt_general,
             "": generatePrompt_PPF,
         };
         const promptGenerator = promptGenerators[choice];
@@ -365,6 +367,8 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                         <option value="4">Career Path</option>
                         <option value="5">Daily Insight</option>
                         <option value="6">Weekly Insight</option>
+                        <option value="7">Specific Question</option>
+
                     </select>
                 </div>
                 <textarea
