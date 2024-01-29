@@ -880,6 +880,22 @@ body {
   }
 }
 
+.feedback-link {
+  position: absolute;
+  font-size: 20px;
+  top: 1%;
+  left: 7px;
+  padding: 10px;
+  color: yellow;
+  animation: fadeInOut3 5s infinite;
+  /* Clear yellow text */
+  cursor: pointer;
+  z-index: 1000;
+  transform: rotate(-10deg);
+  /* Tilts the text. Adjust the angle as needed */
+
+}
+
 .user-input:disabled,
 .user-select:disabled,
 .prompt-input:disabled {
