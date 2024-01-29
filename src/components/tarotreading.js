@@ -249,7 +249,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
             return clickDate.toDateString() === now.toDateString();
         });
 
-        if (todayClicks.length < 100) {
+        if (todayClicks.length < 2) {
             setLoading(true);
             const { past, present, future } = reading.current;
             const formatCard = (card) => {

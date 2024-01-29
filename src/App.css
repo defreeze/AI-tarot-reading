@@ -110,9 +110,27 @@
   align-items: center;
   justify-content: flex-start;
   height: 40px;
+  text-decoration: none;
   /* Adjust height as needed */
 }
 
+.my_account_button {
+  /* Styling for individual buttons */
+  background-color: hsl(272, 18%, 41%);
+  border: 0px solid #ccc;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  font-size: 15px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.my_account_button:hover {
+  background-color: rgb(56, 150, 109);
+  text-decoration: none;
+}
 
 .header-button-google .google-logo {
   height: 100%;
