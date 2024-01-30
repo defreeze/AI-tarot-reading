@@ -66,7 +66,6 @@ function AccountPage({ profile, logOut }) {
                         <p>
                             Enjoy using the app? We're actively developing new features, including a subscription option for unlimited access and to support our development efforts!
                         </p>
-                        <br></br>
                         <p className="centered-text">
                             We value your opinion! <a href="https://forms.gle/mYw64PTEUC3C8RsWA" target="_blank" rel="noopener noreferrer">share feedback here</a>
                         </p>
