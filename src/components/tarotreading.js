@@ -42,7 +42,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         future: { name: "", reversed: false }
     });
 
-
     useEffect(() => {
         setCards([
             "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
@@ -73,7 +72,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         setEmoji(pickRandomEmoji());
     }, []);
 
-
     const nicknames = [
         "Mystic Mariner", "Arcane Albatross", "Seer Seahorse", "Oracle Otter",
         "Sage Sparrow", "Prophet Parrot", "Diviner Dolphin", "Enigma Eagle",
@@ -86,6 +84,15 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         "Chakra Cheetah", "Zodiac Zebra", "Talisman Tiger", "Rune Rabbit",
         "Ethereal Eel", "Occult Owl", "Majestic Macaw", "Crystal Crow"
     ];
+
+    const now = new Date();
+    // Retrieve stored click timestamps from localStorage
+    const clicks = JSON.parse(localStorage.getItem('tarotClicks')) || [];
+    // Filter out clicks that are not from today
+    const todayClicks = clicks.filter(click => {
+        const clickDate = new Date(click);
+        return clickDate.toDateString() === now.toDateString();
+    });
 
     // Function to get a random nickname
     const getRandomNickname = () => {
@@ -103,7 +110,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         setMoodChoice('');
         setName('');
         setContext('');
-        //setChoice('');
         setResult("");
     };
     const highlightCardNames = (text, reading) => {
@@ -117,18 +123,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         });
         return modifiedText;
     };
-
-
-
-
-
-
-
-
-
-
-
-
 
     const resetReading_alt = () => {
         setInputsDisabled(false);
@@ -151,9 +145,8 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
 
     const pickCards = () => {
 
-        setInputsDisabled(true); // Disable inputs when button is clicked
+        setInputsDisabled(true);
         setLoading2(true);
-
         let deck = [...cards];
         let past = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
         let present = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
@@ -168,7 +161,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         setTarotCard1Direction(Math.random() < 0.5 ? '-100%' : '100%');
         setTarotCard2Direction(Math.random() < 0.5 ? '-100%' : '100%');
         setTarotCard3Direction(Math.random() < 0.5 ? '-100%' : '100%');
-
         setTarotCard1Src('tarot2_card1_v2.png');
 
         setTimeout(() => {
@@ -192,7 +184,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
             };
             setStage(1);
             setLoading2(false);
-        }, 3000); // Duration of the animation
+        }, 3000);
 
     };
     const ReadingLimitPopup = () => {
@@ -237,17 +229,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         };
         const promptGenerator = promptGenerators[choice];
         const userMood = moodDescriptions[moodChoice] || "Undefined";
-
-        const now = new Date();
-
-        // Retrieve stored click timestamps from localStorage
-        const clicks = JSON.parse(localStorage.getItem('tarotClicks')) || [];
-
-        // Filter out clicks that are not from today
-        const todayClicks = clicks.filter(click => {
-            const clickDate = new Date(click);
-            return clickDate.toDateString() === now.toDateString();
-        });
 
         if (todayClicks.length < 2) {
             setLoading(true);
