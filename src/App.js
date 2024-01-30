@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import Tarotgen from './components/tarotreading';
 import { preloadImages } from './preloadImages';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import AboutPage from './aboutPage';
+import AccountPage from './AccountPage';
+
 import './firebaseConfig';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 
@@ -12,7 +14,6 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [choice, setChoice] = useState("");
   const [showPasswordPage, setShowPasswordPage] = useState(false);
-  //const [user, setUser] = useState([]);
   const [profile, setProfile] = useState(null);
 
 
@@ -39,7 +40,9 @@ function App() {
         console.error('Login Failed:', error);
       });
   };
-
+  const handleFeedbackClick = () => {
+    window.open('https://forms.gle/mYw64PTEUC3C8RsWA', '_blank');
+  };
   const logOut = () => {
     signOut(auth)
       .then(() => {
@@ -73,8 +76,10 @@ function App() {
   return (
     <Router>
       <div className="App">
+        {/* Feedback Link */}
         <Routes>
           <Route path="/about" element={<AboutPage profile={profile} login={login} logOut={logOut} />} />
+          <Route path="/account" element={<AccountPage profile={profile} login={login} logOut={logOut} />} /> {/* New Route for Account Page */}
           <Route path="/" element={
             <>
               {/* Main Content */}
@@ -118,20 +123,29 @@ function App() {
               ) : []
               }
               <header className="App-header">
-
+                <div className="feedback-link" onClick={handleFeedbackClick}>
+                  Help Us Improve!
+                </div>
                 <div className="header-buttons">
                   {profile ? (
                     <>
-                      {/*<span className="profile-name">welcome {profile.name}! </span> */}
+                      {/* Link to Account Page */}
+                      <Link to="/account" className="my_account_button">
+                        My Account
+                      </Link>
+                      {/* 
                       <button className="header-button-google" onClick={logOut}>
                         <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
                         Sign out
                       </button>
+                      */}
                     </>
                   ) : (
                     <button className="header-button-google" onClick={login}>
+
                       <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
                       Sign in
+
                     </button>)}
                   { }
                 </div>
