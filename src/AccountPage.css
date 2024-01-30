@@ -37,22 +37,24 @@
 
 
 .home-button {
-    background-color: hsl(272, 18%, 41%);
-    border: 0px solid #ccc;
+    /* Styling for individual buttons */
     padding: 5px 10px;
     cursor: pointer;
     color: rgb(255, 255, 255);
     font-size: 15px;
-    padding: 10px 20px;
+    padding: 11px 20px;
     border-radius: 5px;
     text-decoration: none;
-    height: 40px;
-
+    background-color: #341e4f;
+    color: rgb(255, 255, 255);
+    border: 2px solid rgb(70, 43, 94);
 }
 
 .home-button:hover {
-    background-color: rgb(56, 150, 109);
     text-decoration: none;
+    background-color: hsl(272, 18%, 41%);
+    color: rgb(255, 255, 255);
+    border: 3px solid hsl(272, 18%, 41%);
 }
 
 .App-footer2 {
@@ -86,6 +88,7 @@
 .header-button-google:hover {
     background-color: #341e4f;
     color: rgb(255, 255, 255);
+
 }
 
 .header-button-google {
