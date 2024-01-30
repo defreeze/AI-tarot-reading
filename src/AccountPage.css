@@ -136,7 +136,8 @@
     flex: 1;
     padding: 10px 10px;
     max-width: 80%;
-    border: 3px solid #443656;
+    border: 2px solid rgb(70, 43, 94);
+    background-color: rgb(46, 24, 70);
 }
 
 .about-column p {
