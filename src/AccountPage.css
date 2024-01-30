@@ -1,0 +1,146 @@
+/* aboutpage CSS */
+.container2 {
+    background-color: #341e4f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 1;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.header-link {
+    display: inline-flex;
+    text-decoration: none;
+    /* or other display properties to match your buttons */
+    /* other styles to match your button's parent container */
+}
+
+.aboutPage {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.about-buttons {
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: flex;
+    gap: 10px;
+    padding: 20px 20px;
+    z-index: 100;
+}
+
+
+
+.home-button {
+    background-color: hsl(272, 18%, 41%);
+    border: 0px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    font-size: 15px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    height: 40px;
+
+}
+
+.home-button:hover {
+    background-color: rgb(56, 150, 109);
+    text-decoration: none;
+}
+
+.App-footer2 {
+    text-align: center;
+    width: 100%;
+    padding: 15px;
+    font-size: 14px;
+    background-color: #341e4f;
+    color: #a49f9f;
+    box-sizing: border-box;
+}
+
+.App-footer2 a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.about-section {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+    max-width: 80%;
+    margin-left: 50px;
+    margin-right: 50px;
+    flex-grow: 1;
+}
+
+.header-button-google:hover {
+    background-color: #341e4f;
+    color: rgb(255, 255, 255);
+}
+
+.header-button-google {
+    background-color: #341e4f;
+    ;
+    /* Google blue */
+    color: rgb(168, 168, 168);
+    padding: 0px 15px 0px 0px;
+    /* Zero padding on the left, 20px padding on the right */
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 2px;
+    display: flex;
+    /* Changed from inline-flex to flex */
+    align-items: center;
+    justify-content: left;
+    /* Align items to the start */
+}
+
+.header-buttons1 {
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    gap: 10px;
+    padding: 20px 20px;
+    z-index: 100;
+}
+
+.about-column a {
+    color: #248dfd;
+    text-decoration: none;
+}
+
+.about-column h5 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.centered-text {
+    text-align: center !important;
+}
+
+
+.about-column {
+    flex: 1;
+    padding: 10px 10px;
+    max-width: 80%;
+    border: 2px solid rgb(70, 43, 94);
+    background-color: rgb(46, 24, 70);
+}
+
+.about-column p {
+    font-size: 15px;
+    text-align: justify;
+}

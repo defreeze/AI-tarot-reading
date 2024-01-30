@@ -1,20 +1,9 @@
 //import React, { useState, useEffect } from 'react';
 
 function TarotCards({ reading }) {
-    //const [, setImagesLoaded] = useState({ past: false, present: false, future: false });
-
     const encodeFileName = (fileName) => {
         return fileName.split(' ').join('%20');
     };
-
-    //const handleImageLoad = (card) => {
-    //    setImagesLoaded(prevState => ({ ...prevState, [card]: true }));
-    //};
-
-    //useEffect(() => {
-    //    setImagesLoaded({ past: false, present: false, future: false });
-    //}, [reading]);
-
     return (
         <div className="tarot-cards">
             <div className="card-animation card-delay-1">

@@ -110,9 +110,27 @@
   align-items: center;
   justify-content: flex-start;
   height: 40px;
+  text-decoration: none;
   /* Adjust height as needed */
 }
 
+.my_account_button {
+  /* Styling for individual buttons */
+  background-color: hsl(272, 18%, 41%);
+  border: 0px solid #ccc;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  font-size: 15px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.my_account_button:hover {
+  background-color: rgb(56, 150, 109);
+  text-decoration: none;
+}
 
 .header-button-google .google-logo {
   height: 100%;
@@ -297,6 +315,18 @@ body {
   }
 }
 
+@keyframes fadeInOut3 {
+
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
 @keyframes teleportIn {
   from {
     opacity: 0;
@@ -335,7 +365,7 @@ body {
 }
 
 .App-header {
-  background-color: rgb(46, 24, 70);
+  background-color: rgb(52, 30, 79);
   flex: 99;
   display: flex;
   flex-direction: column;
@@ -361,7 +391,7 @@ body {
   margin-top: 0px;
   padding: 10px;
   font-size: 14px;
-  background-color: rgb(46, 24, 70);
+  background-color: rgb(52, 30, 79);
   color: #a49f9f;
 }
 
@@ -563,12 +593,31 @@ body {
   transition: background-color 0.3s;
   position: relative;
   z-index: 3;
+
 }
 
 .button-design:hover {
-  background-color: hsl(148.54, 100%, 32.16%);
-  animation: shadowPulse 4s infinite;
+  background: linear-gradient(270deg,
+      hsl(276, 100%, 62%), hsl(203.68, 68.47%, 43.53%), rgb(196, 20, 137),
+      hsl(0, 89%, 55%),
+      hsl(32, 96%, 53%), rgb(16, 160, 26),
+      hsl(276, 100%, 62%));
+  background-size: 1000% 1000%;
+  animation: gradientShift 2s infinite linear;
 }
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: -100% 50%;
+  }
+}
+
+
+
 
 .button-design-refresh {
   margin-top: 0px;
@@ -726,6 +775,12 @@ body {
   z-index: 70;
 }
 
+.tarot8_stack5 {
+  z-index: 80;
+  animation: fadeInOut3 5s infinite;
+}
+
+
 @keyframes cardFadeSlide {
   from {
     opacity: 1;
@@ -841,6 +896,22 @@ body {
     font-size: 2.5vw;
     padding: 0vw 0vw;
   }
+}
+
+.feedback-link {
+  position: absolute;
+  font-size: 20px;
+  top: 1%;
+  left: 7px;
+  padding: 10px;
+  color: yellow;
+  animation: fadeInOut3 5s infinite;
+  /* Clear yellow text */
+  cursor: pointer;
+  z-index: 1000;
+  transform: rotate(-10deg);
+  /* Tilts the text. Adjust the angle as needed */
+
 }
 
 .user-input:disabled,
