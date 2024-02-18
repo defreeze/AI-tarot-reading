@@ -51,7 +51,7 @@
 
 
 .header-buttons {
-  align-items: center;
+  align-items: right;
   position: fixed;
   top: 0;
   right: 0;
@@ -104,7 +104,7 @@
   padding: 0;
   /* Remove padding */
   border: none;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -116,8 +116,6 @@
 
 .my_account_button {
   /* Styling for individual buttons */
-  background-color: hsl(272, 18%, 41%);
-  border: 0px solid #ccc;
   padding: 5px 10px;
   cursor: pointer;
   color: rgb(255, 255, 255);
@@ -125,11 +123,16 @@
   padding: 10px 20px;
   border-radius: 5px;
   text-decoration: none;
+  background-color: #341e4f;
+  color: rgb(255, 255, 255);
+  border: 2px solid rgb(70, 43, 94);
 }
 
 .my_account_button:hover {
-  background-color: rgb(56, 150, 109);
   text-decoration: none;
+  background-color: hsl(272, 18%, 41%);
+  color: rgb(255, 255, 255);
+  border: 3px solid hsl(272, 18%, 41%);
 }
 
 .header-button-google .google-logo {
@@ -901,8 +904,8 @@ body {
 .feedback-link {
   position: absolute;
   font-size: 20px;
-  top: 1%;
-  left: 7px;
+  top: 1.5%;
+  left: 0px;
   padding: 10px;
   color: yellow;
   animation: fadeInOut3 5s infinite;
