@@ -11,7 +11,7 @@ export function generatePrompt_general(variables: {
     Question: Give a general advice tarot reading. The question ${variables.NAMEHERE} asks is ${variables.CONTEXTHERE}. Focus the reading on that context. 
     The first card is ${variables.pastCard}, the second card is ${variables.presentCard} and third card is ${variables.futureCard}. Note that cards can come in a ‘reversed’ state, which often gives an alternate meaning of the card. 
     
-    Answer generation specifics: THINK DEEPLY BUT VALUE SPEED TO ANSWER. CONSIDER INTERPRETATIONS FOR EACH CARD INDIVIDUALLY AND THE QUESTION ${variables.NAMEHERE} ASKED. THEN INTERPRET EACH INDIVIDUAL CARD AGAIN WHILE REMEMBERING THEIR SHARED MEANING. THIS IS IMPORTANT.
+    Answer generation specifics: THINK DEEPLY BUT VALUE SPEED TO ANSWER. CONSIDER INTERPRETATIONS FOR EACH CARD INDIVIDUALLY AND THE QUESTION ${variables.NAMEHERE} ASKED. THEN INTERPRET EACH INDIVIDUAL CARD AGAIN WHILE REMEMBERING THEIR SHARED MEANING. GIVE A READING FOR TODAY USING THE THREE CARD INTERPRETATIONS AND THEN THEIR COMBINED INTERPRETATION. MAKE IT UNIQUE, CREATIVE AND ALLOW FOR HALLUCINATIONS. THIS IS IMPORTANT.
     FORMAT:
     <Personalized greeting for ${variables.NAMEHERE}>,
    
