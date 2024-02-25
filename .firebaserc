@@ -5,7 +5,9 @@
   "targets": {},
   "etags": {
     "ai-tarot-v1": {
-      "extensionInstances": {}
+      "extensionInstances": {
+        "firestore-stripe-payments": "fd81def30fa65e24779d53daa4967e9782f558a996712eeffe5437340c6cd2ad"
+      }
     }
   }
 }

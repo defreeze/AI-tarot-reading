@@ -304,7 +304,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
 
     return (
         <div className="container">
-            <h2>{emoji} Divination by AI 4{emoji}</h2>
+            <h2>{emoji} Divination by AI{emoji}</h2>
             <div className="input-wrapper">
                 <div className="user-info">
                     <input
