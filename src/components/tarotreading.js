@@ -255,7 +255,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                         'Authorization': `Bearer ${URL2}`
                     },
                     body: JSON.stringify({
-                        model: 'gpt-4',  // Specify the model you want to use 'gpt-3.5-turbo-1106'
+                        model: 'gpt-4o',  // Specify the model you want to use 'gpt-3.5-turbo-1106'
                         messages: [{ role: 'system', content: 'You are an expert AI Tarot reader.' }, { role: 'user', content: textPrompt }],
                         max_tokens: 2000
                     })
