@@ -1,4 +1,4 @@
-// promptGenerator for weelky advice
+// promptGenerator for weekly advice
 export function generatePrompt_weekly(variables: {
     NAMEHERE: string;
     MOODHERE: string;
