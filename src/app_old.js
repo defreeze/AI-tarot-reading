@@ -6,17 +6,19 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import AboutPage from './aboutPage';
 import AccountPage from './AccountPage';
 
-import { doc, setDoc, serverTimestamp } from "firebase/firestore"; // Import Firestore functions
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from './firebaseConfig'; 
 
 import './firebaseConfig';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
+
 
 function App() {
   const [loading, setLoading] = useState(false);
   const [choice, setChoice] = useState("");
   const [showPasswordPage, setShowPasswordPage] = useState(false);
   const [profile, setProfile] = useState(null);
+
 
   //firebase
   const auth = getAuth();
@@ -30,42 +32,20 @@ function App() {
     }
   }, []);
 
-  const logLogin = async (user) => {
-    try {
-      const userRef = doc(db, "users", user.uid); // Reference to the user's document
-      await setDoc(
-        userRef,
-        {
-          lastLogin: serverTimestamp(), // Log the current login timestamp
-          loginCount: increment(1),    // Increment the login count
-        },
-        { merge: true } // Merge with existing data
-      );
-    } catch (error) {
-      console.error("Error logging login:", error);
-    }
-  };
-
   const login = () => {
     signInWithPopup(auth, googleProvider)
-      .then(async (result) => {
+      .then((result) => {
         // The signed-in user info.
         const user = result.user;
         setProfile(user); // Set user profile
         localStorage.setItem('profile', JSON.stringify(user)); // Store in localStorage
-
-        // Log login to Firestore
-        await logLogin(user);
-      })
-      .catch((error) => {
+      }).catch((error) => {
         console.error('Login Failed:', error);
       });
   };
-
   const handleFeedbackClick = () => {
     window.open('https://forms.gle/mYw64PTEUC3C8RsWA', '_blank');
   };
-
   const logOut = () => {
     signOut(auth)
       .then(() => {
@@ -81,14 +61,12 @@ function App() {
     preloadImages();
   }, []);
 
+
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
         setProfile(user);
         localStorage.setItem('profile', JSON.stringify(user));
-
-        // Log login to Firestore
-        await logLogin(user);
       } else {
         setProfile(null);
         localStorage.removeItem('profile');
@@ -111,10 +89,13 @@ function App() {
               {choice === "1" || choice === "2" ? (
                 <>
                   <img src="/AI_tarot_final1_wise_woman3.png" alt="AI Tarot" className="bottom-right-image-woman" />
+                  {/*<img src="/AI_tarot_final1_wise_woman_animation.png" alt="AI_female_animate" className="AI-woman-animate" />*/}
                   <img src="/AI_tarot_final1_wise_woman_animation2.png" alt="AI_female_animate" className="AI-woman-animate2" />
+
                   <div className="center-container">
                     <img src="/spell-visual1.png" alt="loading_female_animate" className={`loading-visual-female ${loading ? '' : 'hidden'}`} />
                   </div>
+
                 </>
               ) : choice === "3" || choice === "4" ? (
                 <>
@@ -132,11 +113,18 @@ function App() {
                 </>
               ) : choice === "6" ? (
                 <>
+
                   <img src="/AI_tarot_final1.png" alt="AI Tarot" className="bottom-right-image" />
                   <img src="/AI_tarot_final1_purple.png" alt="Loading" className={`loading-image ${loading ? '' : 'hidden'}`} />
                   <img src="/tarotstar2.png" alt="Tarot Star" className="tarot-star" />
+                  {/*
+                  <img src="/AI_tarot_final1_wise_manv2.png" alt="AI Tarot" className="bottom-right-image2" />
+                  <img src="/AI_tarot_final1_purple.png" alt="Loading" className={`loading-image ${loading ? '' : 'hidden'}`} />
+                  <img src="/AI_tarot_final1_wise_manv2_animation.png" alt="Tarot Star" className="oldman_fade" />
+              */}
                 </>
-              ) : []}
+              ) : []
+              }
               <header className="App-header">
                 <div className="feedback-link" onClick={handleFeedbackClick}>
                   Help Us Improve!
@@ -148,13 +136,21 @@ function App() {
                       <Link to="/account" className="my_account_button">
                         My Account
                       </Link>
+                      {/* 
+                      <button className="header-button-google" onClick={logOut}>
+                        <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
+                        Sign out
+                      </button>
+                      */}
                     </>
                   ) : (
                     <button className="header-button-google" onClick={login}>
+
                       <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
                       Sign in
-                    </button>
-                  )}
+
+                    </button>)}
+                  { }
                 </div>
 
                 <Tarotgen
@@ -170,10 +166,28 @@ function App() {
               <footer className="App-footer">
                 made by <a href="https://www.alexdevri.es" target="_blank" rel="noopener noreferrer">alexdevri.es</a>
               </footer>
-            </>
+
+              {/* Password Overlay */}
+              {!profile && showPasswordPage && (
+                <div className="password-overlay">
+                  <div className="popup-overlay">
+                    <div className="popup-content2">
+                      <p>AI costs money, sign in for 2 free readings a day!<br />
+                        <a href="https://www.buymeacoffee.com/alexdevries" target="_blank" rel="noopener noreferrer">
+                          ☕ buy me a coffee ;) ☕
+                        </a>
+                      </p>
+                    </div>
+                    <button className="header-button-google" onClick={() => login()}>
+                      <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
+                      Sign in
+                    </button>
+                  </div>
+                </div>
+              )} </>
           } />
         </Routes>
-      </div>
+      </div >
     </Router>
   );
 }
