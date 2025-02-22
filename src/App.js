@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import AboutPage from './aboutPage';
 import AccountPage from './AccountPage';
 
-import { doc, setDoc, serverTimestamp } from "firebase/firestore"; // Import Firestore functions
+import { doc, setDoc, serverTimestamp, increment } from "firebase/firestore"; // Import Firestore functions
 import { db } from './firebaseConfig'; 
 
 import './firebaseConfig';
@@ -169,7 +169,27 @@ function App() {
               </header>
               <footer className="App-footer">
                 made by <a href="https://www.alexdevri.es" target="_blank" rel="noopener noreferrer">alexdevri.es</a>
-              </footer>
+                </footer>
+
+                {/* Password Overlay */}
+                {!profile && showPasswordPage && (
+                  <div className="password-overlay">
+                    <div className="popup-overlay">
+                      <div className="popup-content2">
+                        <p>
+                          AI costs money, sign in for 2 free readings a day!<br />
+                          <a href="https://www.buymeacoffee.com/alexdevries" target="_blank" rel="noopener noreferrer">
+                            ☕ buy me a coffee ;) ☕
+                          </a>
+                        </p>
+                      </div>
+                      <button className="header-button-google" onClick={() => login()}>
+                        <img src="web_neutral_sq_na@1x.png" alt="Google" className="google-logo" />
+                        Sign in
+                      </button>
+                    </div>
+                  </div>
+                )}
             </>
           } />
         </Routes>
