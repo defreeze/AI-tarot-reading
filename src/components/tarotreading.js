@@ -230,7 +230,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         const promptGenerator = promptGenerators[choice];
         const userMood = moodDescriptions[moodChoice] || "Undefined";
 
-        if (todayClicks.length < 2) {
+        if (todayClicks.length < 100) {
             setLoading(true);
             const { past, present, future } = reading.current;
             const formatCard = (card) => {
