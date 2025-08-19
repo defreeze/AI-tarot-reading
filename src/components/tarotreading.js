@@ -82,14 +82,15 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         "Ethereal Eel", "Occult Owl", "Majestic Macaw", "Crystal Crow"
     ];
 
-    const now = new Date();
-    // Retrieve stored click timestamps from localStorage
-    const clicks = JSON.parse(localStorage.getItem('tarotClicks')) || [];
-    // Filter out clicks that are not from today
-    const todayClicks = clicks.filter(click => {
-        const clickDate = new Date(click);
-        return clickDate.toDateString() === now.toDateString();
-    });
+    // Function to get today's clicks from localStorage
+    const getTodayClicks = () => {
+        const now = new Date();
+        const clicks = JSON.parse(localStorage.getItem('tarotClicks')) || [];
+        return clicks.filter(click => {
+            const clickDate = new Date(click);
+            return clickDate.toDateString() === now.toDateString();
+        });
+    };
 
     // Function to get a random nickname
     const getRandomNickname = () => {
@@ -227,6 +228,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         const promptGenerator = promptGenerators[choice];
         const userMood = moodDescriptions[moodChoice] || "Undefined";
 
+        const todayClicks = getTodayClicks();
         if (todayClicks.length < 100) {
             setLoading(true);
             const { past, present, future } = reading.current;
@@ -243,8 +245,17 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                 futureCard: formatCard(future)
             });
             
+            //console.log('Generated prompt:', textPrompt);
+            //console.log('Prompt length:', textPrompt.length);
+            
             try {
                 const URL2 = `${process.env.REACT_APP_VALUE3}${process.env.REACT_APP_VALUE1}${process.env.REACT_APP_VALUE4}`;
+                
+                //console.log('Environment variables check:');
+                //console.log('REACT_APP_VALUE1:', process.env.REACT_APP_VALUE1 ? 'Set' : 'Not set');
+                //console.log('REACT_APP_VALUE3:', process.env.REACT_APP_VALUE3 ? 'Set' : 'Not set');
+                //console.log('REACT_APP_VALUE4:', process.env.REACT_APP_VALUE4 ? 'Set' : 'Not set');
+                //console.log('Combined API key length:', URL2.length);
                 
                 // Check if environment variables are defined
                 if (!process.env.REACT_APP_VALUE1 || !process.env.REACT_APP_VALUE3 || !process.env.REACT_APP_VALUE4) {
@@ -254,7 +265,9 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                     return;
                 }
                 
-                console.log('Attempting to call OpenAI API...');
+                //console.log('Attempting to call OpenAI API...');
+                //console.log('API Key (first 10 chars):', URL2.substring(0, 10) + '...');
+                //console.log('Prompt:', textPrompt);
                 
                 // Step 1: Generate text with GPT
                 const textResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -270,6 +283,9 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                         max_completion_tokens: 2000
                     })
                 });
+                
+                console.log('Response status:', textResponse.status);
+                console.log('Response ok:', textResponse.ok);
 
                 if (!textResponse.ok) {
                     const errorData = await textResponse.json();
@@ -284,7 +300,18 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                 }
 
                 const textData = await textResponse.json();
-                setGeneratedText(textData.choices[0].message.content);
+                console.log('Response data:', textData);
+                console.log('Choices array:', textData.choices);
+                console.log('First choice:', textData.choices[0]);
+                console.log('Message object:', textData.choices[0]?.message);
+                console.log('Content:', textData.choices[0]?.message?.content);
+                
+                if (textData.choices && textData.choices[0] && textData.choices[0].message && textData.choices[0].message.content) {
+                    setGeneratedText(textData.choices[0].message.content);
+                } else {
+                    console.error('No content found in API response');
+                    setGeneratedText('Error: No content received from AI');
+                }
             } catch (error) {
                 console.error(`Error calling OpenAI API: ${error.message}`);
                 alert(`Error: ${error.message}. Please check your internet connection and API configuration.`);
@@ -292,8 +319,10 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                 setLoading(false);
                 setStage(2);
             }
-            todayClicks.push(now);
-            localStorage.setItem('tarotClicks', JSON.stringify(todayClicks));
+            const currentClicks = JSON.parse(localStorage.getItem('tarotClicks')) || [];
+            const now = new Date();
+            currentClicks.push(now);
+            localStorage.setItem('tarotClicks', JSON.stringify(currentClicks));
         } else {
 
             setShowLimitPopup(true);
