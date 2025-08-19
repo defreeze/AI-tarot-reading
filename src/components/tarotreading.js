@@ -284,8 +284,8 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                     })
                 });
                 
-                console.log('Response status:', textResponse.status);
-                console.log('Response ok:', textResponse.ok);
+                //console.log('Response status:', textResponse.status);
+                //console.log('Response ok:', textResponse.ok);
 
                 if (!textResponse.ok) {
                     const errorData = await textResponse.json();
@@ -300,20 +300,32 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                 }
 
                 const textData = await textResponse.json();
-                console.log('Response data:', textData);
-                console.log('Choices array:', textData.choices);
-                console.log('First choice:', textData.choices[0]);
-                console.log('Message object:', textData.choices[0]?.message);
-                console.log('Content:', textData.choices[0]?.message?.content);
                 
-                if (textData.choices && textData.choices[0] && textData.choices[0].message && textData.choices[0].message.content) {
-                    setGeneratedText(textData.choices[0].message.content);
+                // Check if the response has the expected structure
+                if (textData.choices && textData.choices.length > 0) {
+                    const firstChoice = textData.choices[0];
+                    
+                    if (firstChoice.message && firstChoice.message.content) {
+                        console.log('Content found in message.content:', firstChoice.message.content.substring(0, 100) + '...');
+                        setGeneratedText(firstChoice.message.content);
+                    } else if (firstChoice.text) {
+                        // Fallback for older API versions
+                        setGeneratedText(firstChoice.text);
+                    } else {
+                        // Try to find content in any possible location
+                        const content = firstChoice.content || firstChoice.text || firstChoice.message?.text || firstChoice.message?.content;
+                        if (content) {
+                            setGeneratedText(content);
+                        } else {
+                            console.log('No content found in any expected location');
+                            setGeneratedText('Error: Unexpected response structure from AI');
+                        }
+                    }
                 } else {
-                    console.error('No content found in API response');
-                    setGeneratedText('Error: No content received from AI');
+                    setGeneratedText('Error: No choices received from AI');
                 }
             } catch (error) {
-                console.error(`Error calling OpenAI API: ${error.message}`);
+                //console.error(`Error calling OpenAI API: ${error.message}`);
                 alert(`Error: ${error.message}. Please check your internet connection and API configuration.`);
             } finally {
                 setLoading(false);
