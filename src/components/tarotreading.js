@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+//import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import TarotCards from './tarotcards';
 import '../App.css';
 import { generatePrompt_PPF } from "./generatePrompt_PPF.ts";
@@ -32,11 +33,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
     const [showLimitPopup, setShowLimitPopup] = useState(false);
     const [inputsDisabled, setInputsDisabled] = useState(false);
 
-
-    <Tarotgen
-        showPasswordPage={() => setShowPasswordPage(true)}
-    />
-    const [reading,] = useState({
+    const reading = useRef({
         past: { name: "", reversed: false },
         present: { name: "", reversed: false },
         future: { name: "", reversed: false }
@@ -245,8 +242,20 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                 presentCard: formatCard(present),
                 futureCard: formatCard(future)
             });
+            
             try {
                 const URL2 = `${process.env.REACT_APP_VALUE3}${process.env.REACT_APP_VALUE1}${process.env.REACT_APP_VALUE4}`;
+                
+                // Check if environment variables are defined
+                if (!process.env.REACT_APP_VALUE1 || !process.env.REACT_APP_VALUE3 || !process.env.REACT_APP_VALUE4) {
+                    console.error('Missing environment variables for OpenAI API key');
+                    alert('OpenAI API key not configured. Please check your environment variables.');
+                    setLoading(false);
+                    return;
+                }
+                
+                console.log('Attempting to call OpenAI API...');
+                
                 // Step 1: Generate text with GPT
                 const textResponse = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
@@ -255,16 +264,30 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                         'Authorization': `Bearer ${URL2}`
                     },
                     body: JSON.stringify({
-                        model: 'gpt-4o',  // Specify the model you want to use 'gpt-3.5-turbo-1106'
+                        model: 'gpt-5',
+                        //model: 'gpt-4o',  // Specify the model you want to use 'gpt-3.5-turbo-1106'
                         messages: [{ role: 'system', content: 'You are an expert AI Tarot reader.' }, { role: 'user', content: textPrompt }],
-                        max_tokens: 2000
+                        max_completion_tokens: 2000
                     })
                 });
+
+                if (!textResponse.ok) {
+                    const errorData = await textResponse.json();
+                    console.error('OpenAI API error:', errorData);
+                    if (textResponse.status === 401) {
+                        alert('Invalid OpenAI API key. Please check your configuration.');
+                    } else {
+                        alert(`OpenAI API error: ${errorData.error?.message || 'Unknown error'}`);
+                    }
+                    setLoading(false);
+                    return;
+                }
 
                 const textData = await textResponse.json();
                 setGeneratedText(textData.choices[0].message.content);
             } catch (error) {
-                console.error(`Error: ${error.message}`);
+                console.error(`Error calling OpenAI API: ${error.message}`);
+                alert(`Error: ${error.message}. Please check your internet connection and API configuration.`);
             } finally {
                 setLoading(false);
                 setStage(2);
@@ -288,6 +311,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         "Deciphering the symbols...",
         "Gazing into the crystal ball...",
         "Reading the cosmic threads...",
+        "Tarot readings now use gpt 5, the lastest AI model...",
         "Drawing the celestial insights..."
     ];
 
