@@ -256,6 +256,10 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                 //console.log('REACT_APP_VALUE3:', process.env.REACT_APP_VALUE3 ? 'Set' : 'Not set');
                 //console.log('REACT_APP_VALUE4:', process.env.REACT_APP_VALUE4 ? 'Set' : 'Not set');
                 //console.log('Combined API key length:', URL2.length);
+                //console.log('All env vars starting with REACT_APP:', Object.keys(process.env).filter(key => key.startsWith('REACT_APP_')));
+                //console.log('Current working directory env check:', process.env.NODE_ENV);
+                //console.log('Full process.env object:', process.env);
+                //console.log('Working directory check - current location:', window.location.href);
                 
                 // Check if environment variables are defined
                 if (!process.env.REACT_APP_VALUE1 || !process.env.REACT_APP_VALUE3 || !process.env.REACT_APP_VALUE4) {
@@ -277,10 +281,10 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                         'Authorization': `Bearer ${URL2}`
                     },
                     body: JSON.stringify({
-                        model: 'gpt-5',
+                        model: 'gpt-4o',
                         //model: 'gpt-4o',  // Specify the model you want to use 'gpt-3.5-turbo-1106'
                         messages: [{ role: 'system', content: 'You are an expert AI Tarot reader.' }, { role: 'user', content: textPrompt }],
-                        max_completion_tokens: 2000
+                        max_completion_tokens: 3000
                     })
                 });
                 
@@ -301,12 +305,31 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
 
                 const textData = await textResponse.json();
                 
+                // Debug: Log the entire response structure
+                //console.log('Full response structure:', {
+                //    hasChoices: !!textData.choices,
+                //    choicesLength: textData.choices?.length,
+                //    firstChoice: textData.choices?.[0],
+                //    firstChoiceKeys: textData.choices?.[0] ? Object.keys(textData.choices[0]) : [],
+                //    messageKeys: textData.choices?.[0]?.message ? Object.keys(textData.choices[0].message) : []
+                //});
+                
+                // Log the raw response for debugging
+                //console.log('Raw API response:', JSON.stringify(textData, null, 2));
+                
                 // Check if the response has the expected structure
+                //console.log('Checking response structure...');
+                //console.log('textData.choices exists:', !!textData.choices);
+                //console.log('textData.choices length:', textData.choices?.length);
+                //console.log('textData.choices type:', typeof textData.choices);
+                //console.log('textData.choices is array:', Array.isArray(textData.choices));
+                
                 if (textData.choices && textData.choices.length > 0) {
                     const firstChoice = textData.choices[0];
+                    //console.log('First choice object:', firstChoice);
+                    //console.log('First choice type:', typeof firstChoice);
                     
                     if (firstChoice.message && firstChoice.message.content) {
-                        console.log('Content found in message.content:', firstChoice.message.content.substring(0, 100) + '...');
                         setGeneratedText(firstChoice.message.content);
                     } else if (firstChoice.text) {
                         // Fallback for older API versions
@@ -317,12 +340,47 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                         if (content) {
                             setGeneratedText(content);
                         } else {
-                            console.log('No content found in any expected location');
                             setGeneratedText('Error: Unexpected response structure from AI');
                         }
                     }
                 } else {
                     setGeneratedText('Error: No choices received from AI');
+                }
+                
+                // Save reading to history if user is logged in and we have content
+                if (profile && profile.uid && textData.choices && textData.choices.length > 0) {
+                    try {
+                        console.log('Saving reading to history...');
+                        console.log('Profile:', profile);
+                        console.log('User ID:', profile.uid);
+                        
+                        const { addDoc, collection, serverTimestamp } = await import('firebase/firestore');
+                        const { db } = await import('../firebaseConfig');
+                        
+                        const firstChoice = textData.choices[0];
+                        const generatedContent = firstChoice.message?.content || firstChoice.text || '';
+                        
+                        const readingData = {
+                            userId: profile.uid,
+                            timestamp: serverTimestamp(),
+                            readingType: choice,
+                            cards: reading.current,
+                            generatedText: generatedContent,
+                            isPaid: false
+                        };
+                        
+                        console.log('Reading data to save:', readingData);
+                        
+                        const docRef = await addDoc(collection(db, 'readings'), readingData);
+                        console.log('Reading saved successfully with ID:', docRef.id);
+                    } catch (error) {
+                        console.error('Error saving reading to history:', error);
+                    }
+                } else {
+                    console.log('Not saving reading to history:');
+                    console.log('Profile exists:', !!profile);
+                    console.log('User ID exists:', !!(profile && profile.uid));
+                    console.log('Choices exist:', !!(textData.choices && textData.choices.length > 0));
                 }
             } catch (error) {
                 //console.error(`Error calling OpenAI API: ${error.message}`);
@@ -423,7 +481,7 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
                     onChange={(e) => setContext(e.target.value)}
                     disabled={inputsDisabled}
                     rows="1"
-                    maxLength={207}
+                    maxLength={307}
                 />
             </div>
 
