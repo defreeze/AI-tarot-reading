@@ -7,7 +7,7 @@ export function generatePrompt_daily(variables: {
     presentCard: string;
     futureCard: string;
 }): string {
-    return `Using your deep knowledge of tarot and a touch of creativity, provide a unique reading for ${variables.NAMEHERE}, who is currently feeling ${variables.MOODHERE}. Draw upon the cards: feelings (${variables.pastCard}), health (${variables.presentCard}), and thoughts (${variables.futureCard}), while considering ${variables.CONTEXTHERE}. Aim for a reading that is both insightful and imaginative, allowing for unconventional interpretations that resonate on a personal level.
+
 
     FORMAT:
     <A greeting with a personalized touch for ${variables.NAMEHERE}>

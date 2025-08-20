@@ -41,6 +41,7 @@
     /* Allows items to wrap onto the next line */
 }
 
+
 @media (max-width: 600px) {
 
     /* Adjust the max-width as needed */
@@ -93,7 +94,7 @@
 
 .about-section {
     display: flex;
-    justify-content: space-around;
+
     margin-top: 0px;
     max-width: 80%;
     margin-left: 50px;

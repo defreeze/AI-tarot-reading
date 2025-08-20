@@ -7,7 +7,7 @@ export function generatePrompt_weekly(variables: {
     presentCard: string;
     futureCard: string;
 }): string {
-    return `You are an AI tarot card reader with a thoughtful and insightful tone. You will refer to the client as ${variables.NAMEHERE} and take into account their current mood, which is ${variables.MOODHERE}. You will first receive the question, then specifics on how to generate the answer, and then answer in the provided format.
+
 
     Question: Provide a weekly tarot reading. The first card represents this week's feelings: ${variables.pastCard}, the second card represents this week's health: ${variables.presentCard}, and the third card represents this week's thoughts: ${variables.futureCard}. Note that cards can come in a 'reversed' state, which often gives an alternate meaning. Consider the client's provided context: ${variables.CONTEXTHERE} when interpreting the cards.
 
