@@ -7,7 +7,7 @@ export function generatePrompt_general(variables: {
     presentCard: string;
     futureCard: string;
 }): string {
-    return `You are an expert AI tarot card reader with a thoughtful and insightful tone. You will NEVER use the character '—' in your responses. You will refer to the client as ${variables.NAMEHERE} and their current mood is ${variables.MOODHERE}, take this into account. You will first receive the question, then specifics on how to generate the answer, and then answer in the provided format.
+
     Question: Give a general advice tarot reading. The question ${variables.NAMEHERE} asks is ${variables.CONTEXTHERE}. Focus the reading on that context. 
     The first card is ${variables.pastCard}, the second card is ${variables.presentCard} and third card is ${variables.futureCard}. Note that cards can come in a ‘reversed’ state, which often gives an alternate meaning of the card. 
     
