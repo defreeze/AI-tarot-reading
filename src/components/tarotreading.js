@@ -424,16 +424,63 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         }
     }, [loading, loadingMessages.length]); // Added loadingMessages.length here
 
+    // Function to update placeholder text based on screen size
+    const updatePlaceholders = () => {
+        const isMobile = window.innerWidth <= 470;
+        const isMediumScreen = window.innerWidth <= 570 && window.innerWidth > 470;
+        
+        // Update name input placeholder
+        const nameInput = document.querySelector('.user-input[type="text"]');
+        if (nameInput) {
+            nameInput.placeholder = isMediumScreen ? 'Name..' : 'Enter your name';
+        }
+        
+        // Update mood select placeholder
+        const moodSelect = document.querySelector('.user-input[type="text"]').nextElementSibling;
+        if (moodSelect && moodSelect.options[0]) {
+            moodSelect.options[0].text = isMediumScreen ? 'Mood..' : 'Your current mood';
+        }
+        
+        // Update reading type select placeholder
+        const choiceSelect = document.querySelector('.user-select');
+        if (choiceSelect && choiceSelect.options[0]) {
+            choiceSelect.options[0].text = isMediumScreen ? 'Type..' : 'Card reading type';
+        }
+        
+        // Update context textarea placeholder
+        const contextTextarea = document.querySelector('.prompt-input');
+        if (contextTextarea) {
+            contextTextarea.placeholder = isMobile 
+                ? 'Share context or question for a personalized reading...' 
+                : 'Receive your intuitive AI card reading! Share context or a specific question for an even more tailored experience...';
+        }
+    };
+
+    // Update placeholders on mount and window resize
+    useEffect(() => {
+        updatePlaceholders();
+        
+        const handleResize = () => {
+            updatePlaceholders();
+        };
+        
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+
+
 
     return (
         <div className="container">
-            <h2>{emoji} Divination by AI{emoji}</h2>
+            <h2>{emoji} Divination by AI {emoji}</h2>
             <div className="input-wrapper">
                 <div className="user-info">
                     <input
                         type="text"
                         className="user-input"
                         placeholder="Enter your name"
+
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         title="Any name you self-identify with"

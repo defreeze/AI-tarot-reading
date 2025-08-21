@@ -29,6 +29,12 @@ service cloud.firestore {
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
     }
     
+    // Allow users to read their own subscription history
+    match /subscriptions/{subscriptionId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow write: if false; // Only allow writes from backend (webhooks)
+    }
+    
     // Default: deny all other operations
     match /{document=**} {
       allow read, write: if false;
