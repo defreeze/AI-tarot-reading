@@ -12,36 +12,8 @@ function AccountPage({ profile, logOut }) {
     useEffect(() => {
         if (!profile) {
             navigate('/'); // Redirect to home if not logged in
-            return;
-        }
-        
-        // Only proceed if the ref is available
-        if (stripeButtonRef.current) {
-            const script = document.createElement('script');
-            script.src = "https://js.stripe.com/v3/buy-button.js";
-            script.async = true;
-            script.onload = () => {
-                if (stripeButtonRef.current) {
-                    stripeButtonRef.current.innerHTML = `
-                    <div class="stripe-buttons-container">
-                        <stripe-buy-button
-                        buy-button-id="buy_btn_1OeOtJHT5oVjW8Cf06ub65LB"
-                        publishable-key="pk_live_51OeNIGHT5oVjW8CfCamtlKEIh0Sgk0TaL4VyqCtIeoj7BVS1ozyp8D1LjgaVZqLUKyK1FOZ3C7g50ogUlIIWdccB00X41v6XyF"
-                        >
-                        </stripe-buy-button>
-                        <stripe-buy-button
-                        buy-button-id="buy_btn_1OeNxWHT5oVjW8CfHueYoAj1"
-                        publishable-key="pk_live_51OeNIGHT5oVjW8CfCamtlKEIh0Sgk0TaL4VyqCtIeoj7BVS1ozyp8D1LjgaVZqLUKyK1FOZ3C7g50ogUlIIWdccB00X41v6XyF"
-                        >
-                        </stripe-buy-button>
-                    </div>
-                    `;
-                }
-            };
-            if (stripeButtonRef.current) {
-                stripeButtonRef.current.appendChild(script);
-            }
-        }
+
+
     }, [profile, navigate]);
 
     const handleLogOut = () => {
