@@ -1,19 +1,23 @@
 .reading-history {
-    width: 100%;
-    max-width: 80%;
-    padding: 10px 10px;
-    border: 2px solid rgb(70, 43, 94);
-    background-color: rgb(46, 24, 70);
-    margin-top: 20px;
-    overflow: hidden;
+    width: 800px;
+    max-width: 800px;
+    padding: 5px 10px 10px 10px;
+    border: none;
+    background-color: transparent;
+    margin: 15px auto;
+    overflow: visible;
     position: relative;
 }
 
 .reading-history h3 {
     color: white;
-    margin-bottom: 1.5rem;
+    margin: 0 0 25px 0;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    padding-top: 0;
 }
 
 .timeline-container {
@@ -29,10 +33,19 @@
     scrollbar-width: thin;
     scrollbar-color: rgb(70, 43, 94) #6a567b;
     white-space: nowrap;
-    width: 100%;
+    width: calc(100% );
+    max-width: calc(800px );
     flex-wrap: nowrap;
     z-index: 2;
     scroll-behavior: smooth;
+    background: linear-gradient(90deg, 
+        rgba(210, 203, 216, 0.1) 0%, 
+        rgba(70, 43, 94, 0.05) 20%, 
+        rgba(70, 43, 94, 0.05) 80%, 
+        rgba(46, 24, 70, 0.1) 100%);
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-sizing: border-box;
 }
 
 .timeline-container::-webkit-scrollbar {
@@ -40,12 +53,12 @@
 }
 
 .timeline-container::-webkit-scrollbar-track {
-    background: #6a567b;
+    background: rgb(46, 24, 70);
     border-radius: 4px;
 }
 
 .timeline-container::-webkit-scrollbar-thumb {
-    background: rgb(70, 43, 94);
+    background: #6a567b;
     border-radius: 4px;
 }
 
@@ -119,7 +132,7 @@
 .reading-info {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.25rem;
     margin-bottom: 0.5rem;
     margin-top: 0.5rem;
@@ -140,8 +153,9 @@
     color: #a49f9f;
     font-style: italic;
     font-size: 0.8rem;
-    text-align: center;
+    text-align: left;
     margin-top: 0.5rem;
+    width: 100%;
 }
 
 .history-loading,
@@ -238,27 +252,232 @@
     color: white;
 }
 
+/* Disclaimer styling to match reading content */
+.disclaimer-text {
+    text-align: left;
+    color: grey;
+    font-style: italic;
+    margin-top: 20px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .reading-history {
+        width: 95%;
+        max-width: 95%;
         padding: 1rem;
+        margin: 15px 10px;
+    }
+    
+    .reading-history h3 {
+        font-size: 16px;
+        margin: 0 0 20px 0;
     }
     
     .timeline-container {
-        padding-left: 1.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        gap: 2rem;
+        width: 100%;
+        max-width: 100%;
     }
     
     .timeline-line {
-        left: 0.75rem;
+        left: 0;
     }
     
     .timeline-dot {
-        left: -1.5rem;
+        left: 0;
     }
     
     .reading-info {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
+    }
+    
+    /* Mobile timeline optimization */
+    .timeline-item {
+        width: 120px !important;
+        min-width: 120px !important;
+        max-width: 120px !important;
+        flex-basis: 120px !important;
+    }
+    
+    .timeline-container,
+    .timeline-content-wrapper {
+        gap: 2rem !important;
+    }
+    
+    /* Timeline text scaling */
+    .reading-type {
+        font-size: 0.8rem !important;
+    }
+    
+    .reading-date {
+        font-size: 0.8rem !important;
+    }
+    
+    .upgrade-prompt {
+        font-size: 0.7rem !important;
+    }
+    
+    /* Mobile reading details scaling */
+    .reading-details {
+        margin: 1rem 0.5rem;
+        padding: 1rem;
+        max-width: 95%;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    
+    .reading-content {
+        margin: 10px 0;
+        padding: 10px;
+        line-height: 1.4;
+        font-size: 14px;
+        max-width: 100% !important;
+        width: 100% !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background-color: transparent !important;
+        text-align: left !important;
+    }
+    
+    .tarot-cards-container {
+        transform: scale(0.8);
+        transform-origin: center;
+        margin: 0.5rem 0;
+    }
+    
+    .reading-cards h4 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .reading-text h4 {
+        font-size: 1rem;
+        margin: 0.5rem 0 0.25rem 0;
+    }
+    
+    .disclaimer-text {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+}
+
+/* Even smaller screens */
+@media (max-width: 480px) {
+    .reading-history {
+        width: 98%;
+        max-width: 98%;
+        padding: 0.75rem;
+        margin: 10px 5px;
+    }
+    
+    .reading-history h3 {
+        font-size: 15px;
+        margin: 0 0 15px 0;
+    }
+    
+    .timeline-container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        gap: 1.5rem;
+    }
+    
+    /* Mobile timeline optimization */
+    .timeline-item {
+        width: 100px !important;
+        min-width: 100px !important;
+        max-width: 100px !important;
+        flex-basis: 100px !important;
+    }
+    
+    .timeline-container,
+    .timeline-content-wrapper {
+        gap: 1.5rem !important;
+    }
+    
+    /* Timeline text scaling */
+    .reading-type {
+        font-size: 0.7rem !important;
+    }
+    
+    .reading-date {
+        font-size: 0.7rem !important;
+    }
+    
+    .upgrade-prompt {
+        font-size: 0.6rem !important;
+    }
+    
+    .reading-details {
+        margin: 0.5rem;
+        padding: 0.75rem;
+        max-width: 98%;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    
+    .reading-content {
+        margin: 5px 0;
+        padding: 8px;
+        font-size: 13px;
+        line-height: 1.3;
+        max-width: 100% !important;
+        width: 100% !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background-color: transparent !important;
+        text-align: left !important;
+    }
+    
+    .tarot-cards-container {
+        transform: scale(0.7);
+        transform-origin: center;
+    }
+    
+    .reading-cards h4,
+    .reading-text h4 {
+        font-size: 0.9rem;
+    }
+    
+    .disclaimer-text {
+        font-size: 13px;
+        line-height: 1.3;
+    }
+}
+
+/* Extra small screens - 440px and below */
+@media (max-width: 440px) {
+    .tarot-cards-container {
+        transform: scale(0.6);
+        transform-origin: center;
+    }
+    
+    .reading-content {
+        margin: 3px 0;
+        padding: 6px;
+        font-size: 12px;
+        line-height: 1.2;
+        max-width: 100% !important;
+        width: 100% !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background-color: transparent !important;
+        text-align: left !important;
+    }
+    
+    .reading-details {
+        margin: 0.25rem;
+        padding: 0.5rem;
+    }
+    
+    .disclaimer-text {
+        font-size: 12px;
+        line-height: 1.2;
     }
 }

@@ -7,7 +7,8 @@ import AboutPage from './aboutPage';
 import AccountPage from './AccountPage';
 
 import { doc, setDoc, serverTimestamp, increment } from "firebase/firestore"; // Import Firestore functions
-import { db } from './firebaseConfig'; 
+import { db } from './firebaseConfig';
+import { createOrUpdateUser } from './utils/userManagement'; 
 
 import './firebaseConfig';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
@@ -32,7 +33,11 @@ function App() {
 
   const logLogin = async (user) => {
     try {
-      const userRef = doc(db, "users", user.uid); // Reference to the user's document
+      // Create or update the complete user document with subscription fields
+      await createOrUpdateUser(user);
+      
+      // Also log the login timestamp and increment count
+      const userRef = doc(db, "users", user.uid);
       await setDoc(
         userRef,
         {
@@ -104,7 +109,7 @@ function App() {
         {/* Feedback Link */}
         <Routes>
           <Route path="/about" element={<AboutPage profile={profile} login={login} logOut={logOut} />} />
-          <Route path="/account" element={<AccountPage profile={profile} login={login} logOut={logOut} />} /> {/* New Route for Account Page */}
+          <Route path="/sanctuary" element={<AccountPage profile={profile} login={login} logOut={logOut} />} /> {/* New Route for Account Page */}
           <Route path="/" element={
             <>
               {/* Main Content */}
@@ -145,7 +150,7 @@ function App() {
                   {profile ? (
                     <>
                       {/* Link to Account Page */}
-                      <Link to="/account" className="my_account_button">
+                      <Link to="/sanctuary" className="my_account_button">
                         My Account
                       </Link>
                     </>

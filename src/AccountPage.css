@@ -49,6 +49,86 @@
         flex-direction: column;
         align-items: center;
     }
+    
+    /* Stripe elements mobile scaling */
+    .stripe-container {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .stripe-container > div {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .stripe-container button {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+}
+
+/* More aggressive mobile scaling for very small screens */
+@media (max-width: 450px) {
+    .stripe-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+    
+    .stripe-container > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        transform: scale(0.9) !important;
+        transform-origin: left center !important;
+    }
+    
+    .stripe-container button {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        font-size: 14px !important;
+        padding: 8px 12px !important;
+    }
+    
+    /* Target Stripe's specific classes */
+    .stripe-container [data-testid="hosted-payment-form"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .stripe-container [role="button"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* Even more aggressive scaling for very small screens */
+@media (max-width: 415px) {
+    .stripe-container > div {
+        transform: scale(0.8) !important;
+        transform-origin: left center !important;
+    }
+    
+    .stripe-container button {
+        font-size: 12px !important;
+        padding: 6px 10px !important;
+    }
+}
+
+/* Maximum scaling for extremely small screens */
+@media (max-width: 375px) {
+    .stripe-container > div {
+        transform: scale(0.7) !important;
+        transform-origin: left center !important;
+    }
+    
+    .stripe-container button {
+        font-size: 11px !important;
+        padding: 5px 8px !important;
+    }
 }
 
 
@@ -96,7 +176,7 @@
     display: flex;
 
     margin-top: 0px;
-    max-width: 80%;
+    max-width: 100%;
     margin-left: 50px;
     margin-right: 50px;
     flex-grow: 1;
@@ -155,9 +235,10 @@
 .about-column {
     flex: 1;
     padding: 10px 10px;
-    max-width: 80%;
+    max-width: 800px;
+    width: 800px;
     border: 2px solid rgb(70, 43, 94);
-    background-color: rgb(46, 24, 70);
+    background-color: transparent;
 }
 
 .about-column p {

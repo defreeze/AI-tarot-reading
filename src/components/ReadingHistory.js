@@ -133,7 +133,7 @@ const ReadingHistory = ({ userId }) => {
 
     return (
         <div className="reading-history">
-            <h3>Tarot Reading History</h3>
+            <h6>Tarot Reading History</h6>
             <div className="timeline-line"></div>
             <div className="timeline-container">
                 <div className="timeline-content-wrapper">
@@ -152,7 +152,7 @@ const ReadingHistory = ({ userId }) => {
                                 </div>
                                 {index < readings.length - 3 && (
                                     <div className="upgrade-prompt">
-                                        <small>💎 Upgrade to view this reading</small>
+                                        <small>💎 Premium needed</small>
                                     </div>
                                 )}
                             </div>
@@ -187,6 +187,11 @@ const ReadingHistory = ({ userId }) => {
                                        }} />
                                    </div>
                                </div>
+                               
+                                                               {/* Disclaimer - same as original reading */}
+                                <p className="disclaimer-text">
+                                    Disclaimer: Our AI tarot readers can offer guidance, but the path you choose is your own. Embrace the mystery, trust your intuition, and follow your heart.
+                                </p>
                            </div>
                        </div>
                    )}

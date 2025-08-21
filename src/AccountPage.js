@@ -2,7 +2,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './AccountPage.css';
-
+import ReadingHistory from './components/ReadingHistory';
+import AccountInfo from './components/AccountInfo';
 
 function AccountPage({ profile, logOut }) {
     const navigate = useNavigate();
@@ -40,18 +41,25 @@ function AccountPage({ profile, logOut }) {
                 </div>
                 <h3>👑My Account</h3>
                 {/* Two-column layout */}
-                <div className="about-section">
-                    <div className="about-column">
-                        <h5>Settings</h5>
+                                       <div className="about-section">
+                           {/* Reading History Section */}
+                           <ReadingHistory userId={profile.uid} />
+                           
+                           {/* Account Statistics Section */}
+                           <AccountInfo userId={profile.uid} />
+                           
+                           <div className="about-column" style={{ marginTop: '30px' }}>
 
                         <p>
-
+                            Enjoy the app? Please donate or subscribe to increase your reading limit and past reading storage! We greatly appreciate your support and feedback!
                         </p>
                         <p className="centered-text">
                             We value your opinion! <a href="https://forms.gle/mYw64PTEUC3C8RsWA" target="_blank" rel="noopener noreferrer">share feedback here</a>
                         </p>
                         {/* Stripe Payment Button */}
+                        <div ref={stripeButtonRef} className="stripe-container"></div>
 
+                    </div>
                 </div>
 
                 <footer className="App-footer2">
