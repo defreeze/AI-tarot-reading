@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { collection, query, where, orderBy, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import TarotCards from './tarotcards';
@@ -8,6 +8,10 @@ const ReadingHistory = ({ userId }) => {
     const [readings, setReadings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedReading, setSelectedReading] = useState(null);
+    const [isDragging, setIsDragging] = useState(false);
+    const [startX, setStartX] = useState(0);
+    const [scrollLeft, setScrollLeft] = useState(0);
+    const timelineRef = useRef(null);
 
     const highlightCardNames = (text, cards) => {
         if (!cards) return text;
@@ -118,6 +122,37 @@ const ReadingHistory = ({ userId }) => {
         }
     };
 
+    // Drag to scroll functionality
+    const handleMouseDown = (e) => {
+        setIsDragging(true);
+        setStartX(e.pageX - timelineRef.current.offsetLeft);
+        setScrollLeft(timelineRef.current.scrollLeft);
+        timelineRef.current.style.cursor = 'grabbing';
+        timelineRef.current.style.userSelect = 'none';
+    };
+
+    const handleMouseMove = (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - timelineRef.current.offsetLeft;
+        const walk = (x - startX) * 2; // Scroll speed multiplier
+        timelineRef.current.scrollLeft = scrollLeft - walk;
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+        timelineRef.current.style.cursor = 'grab';
+        timelineRef.current.style.userSelect = 'auto';
+    };
+
+    const handleMouseLeave = () => {
+        if (isDragging) {
+            setIsDragging(false);
+            timelineRef.current.style.cursor = 'grab';
+            timelineRef.current.style.userSelect = 'auto';
+        }
+    };
+
     if (loading) {
         return <div className="history-loading">Loading your reading history...</div>;
     }
@@ -133,9 +168,16 @@ const ReadingHistory = ({ userId }) => {
 
     return (
         <div className="reading-history">
-            <h6>Tarot Reading History</h6>
+            <h6>Card Reading History</h6>
             <div className="timeline-line"></div>
-            <div className="timeline-container">
+            <div 
+                className="timeline-container"
+                ref={timelineRef}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
+            >
                 <div className="timeline-content-wrapper">
                     {readings.map((reading, index) => (
                         <div key={reading.id} className="timeline-item">

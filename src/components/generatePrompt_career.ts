@@ -7,9 +7,7 @@ export function generatePrompt_career(variables: {
     presentCard: string;
     futureCard: string;
 }): string {
-
-
-    Question: Provide a career tarot reading. The three cards are ${variables.pastCard}, ${variables.presentCard}, and ${variables.futureCard}. Note that cards can come in a 'reversed' state, which often gives an alternate meaning of the card. Consider the client's self-given context when interpreting the cards: ${variables.CONTEXTHERE}.
+    return `Question: Provide a career tarot reading. The three cards are ${variables.pastCard}, ${variables.presentCard}, and ${variables.futureCard}. Note that cards can come in a 'reversed' state, which often gives an alternate meaning of the card. Consider the client's self-given context when interpreting the cards: ${variables.CONTEXTHERE}.
 
     Answer generation specifics: Think deeply, but value speed in your response. Give career advice according to these aspects: what they are good at, what they love, what the world needs, and what they can get paid for. Then, provide their combined interpretation. Make it unique and creative, allowing for some imaginative insights. This is important.
 

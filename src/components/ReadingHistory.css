@@ -1,5 +1,5 @@
 .reading-history {
-    width: 800px;
+    width: 100%;
     max-width: 800px;
     padding: 5px 10px 10px 10px;
     border: none;
@@ -7,6 +7,7 @@
     margin: 15px auto;
     overflow: visible;
     position: relative;
+    box-sizing: border-box;
 }
 
 .reading-history h3 {
@@ -30,11 +31,11 @@
     overflow-x: auto;
     overflow-y: hidden;
     padding-bottom: 1rem;
-    scrollbar-width: thin;
-    scrollbar-color: rgb(70, 43, 94) #6a567b;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
     white-space: nowrap;
-    width: calc(100% );
-    max-width: calc(800px );
+    width: 100%;
+    max-width: 100%;
     flex-wrap: nowrap;
     z-index: 2;
     scroll-behavior: smooth;
@@ -46,21 +47,14 @@
     padding-left: 1rem;
     padding-right: 1rem;
     box-sizing: border-box;
+    cursor: grab; /* Show grab cursor to indicate draggable */
 }
 
 .timeline-container::-webkit-scrollbar {
-    height: 8px;
+    display: none; /* Hide scrollbar for Chrome/Safari/Opera */
 }
 
-.timeline-container::-webkit-scrollbar-track {
-    background: rgb(46, 24, 70);
-    border-radius: 4px;
-}
-
-.timeline-container::-webkit-scrollbar-thumb {
-    background: #6a567b;
-    border-radius: 4px;
-}
+/* Removed scrollbar track and thumb styling since scrollbar is hidden */
 
 .timeline-line {
     position: relative;
@@ -89,7 +83,6 @@
 .timeline-content-wrapper {
     display: flex;
     gap: 4rem;
-    min-width: max-content;
 }
 
 .timeline-dot {
@@ -154,7 +147,7 @@
     font-style: italic;
     font-size: 0.8rem;
     text-align: left;
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
     width: 100%;
 }
 

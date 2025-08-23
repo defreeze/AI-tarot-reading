@@ -7,9 +7,7 @@ export function generatePrompt_daily(variables: {
     presentCard: string;
     futureCard: string;
 }): string {
-
-
-    FORMAT:
+    return `FORMAT:
     <A greeting with a personalized touch for ${variables.NAMEHERE}>
 
     <A brief yet powerful overview of the day ahead, focusing on the synergy of the cards>
