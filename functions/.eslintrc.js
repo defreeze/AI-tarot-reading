@@ -8,13 +8,16 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
-    "google",
   ],
   rules: {
-    "no-restricted-globals": ["error", "name", "length"],
-    "prefer-arrow-callback": "error",
-    "quotes": ["error", "double", {"allowTemplateLiterals": true}],
-    "linebreak-style": "off", // disable linebreak-style rule
+    "indent": "off",
+    "quotes": "off",
+    "max-len": "off",
+    "no-trailing-spaces": "off",
+    "require-jsdoc": "off",
+    "comma-dangle": "off",
+    "object-curly-spacing": "off",
+    "linebreak-style": "off",
   },
   overrides: [
     {
@@ -26,3 +29,4 @@ module.exports = {
     },
   ],
   globals: {},
+};

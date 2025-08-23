@@ -7,9 +7,7 @@ export function generatePrompt_action(variables: {
     presentCard: string;
     futureCard: string;
 }): string {
-
-
-    Question: Provide a situation/action/result tarot reading. The situation card is ${variables.pastCard}, the action card is ${variables.presentCard}, and the outcome card is ${variables.futureCard}. Note that cards can appear in a reversed state, which often gives an alternate meaning. Consider the client's provided context: ${variables.CONTEXTHERE} when interpreting the cards.
+    return `Question: Provide a situation/action/result tarot reading. The situation card is ${variables.pastCard}, the action card is ${variables.presentCard}, and the outcome card is ${variables.futureCard}. Note that cards can appear in a reversed state, which often gives an alternate meaning. Consider the client's provided context: ${variables.CONTEXTHERE} when interpreting the cards.
 
     Answer generation specifics: Think deeply, but value speed in your response. Consider interpretations for each situation/action/outcome card individually and then their combined meaning. Interpret each individual card again while remembering their shared meaning. Provide a reading for today using the three card interpretations and their combined interpretation. Make it unique and creative, allowing for some imaginative insights. This is important.
 

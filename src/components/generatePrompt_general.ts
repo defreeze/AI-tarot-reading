@@ -7,9 +7,8 @@ export function generatePrompt_general(variables: {
     presentCard: string;
     futureCard: string;
 }): string {
-
-    Question: Give a general advice tarot reading. The question ${variables.NAMEHERE} asks is ${variables.CONTEXTHERE}. Focus the reading on that context. 
-    The first card is ${variables.pastCard}, the second card is ${variables.presentCard} and third card is ${variables.futureCard}. Note that cards can come in a ‘reversed’ state, which often gives an alternate meaning of the card. 
+    return `Question: Give a general advice tarot reading. The question ${variables.NAMEHERE} asks is ${variables.CONTEXTHERE}. Focus the reading on that context. 
+    The first card is ${variables.pastCard}, the second card is ${variables.presentCard} and third card is ${variables.futureCard}. Note that cards can come in a 'reversed' state, which often gives an alternate meaning of the card. 
     
     Answer generation specifics: THINK DEEPLY BUT VALUE SPEED TO ANSWER. CONSIDER INTERPRETATIONS FOR EACH CARD INDIVIDUALLY AND THE QUESTION ${variables.NAMEHERE} ASKED. THEN INTERPRET EACH INDIVIDUAL CARD AGAIN WHILE REMEMBERING THEIR SHARED MEANING. GIVE A READING FOR TODAY USING THE THREE CARD INTERPRETATIONS AND THEN THEIR COMBINED INTERPRETATION. MAKE IT UNIQUE, CREATIVE AND ALLOW FOR HALLUCINATIONS. THIS IS IMPORTANT.
     FORMAT:
@@ -22,5 +21,5 @@ export function generatePrompt_general(variables: {
     THE OUTCOME, <outcome card name here>: <interpretation of the outcome (${variables.futureCard}) card here>
     
     COMBINED INTERPRETATION: <specific advice combining the interpretations of all cards, remember that this paragraph is the most important>
-    <sign off message and then sign off as AI tarot reader`;
+    <sign off message and then sign off as AI tarot reader>`;
 }

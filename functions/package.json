@@ -14,8 +14,10 @@
   },
   "main": "index.js",
   "dependencies": {
+    "cron": "^2.4.4",
     "firebase-admin": "^11.8.0",
-    "firebase-functions": "^4.3.1"
+    "firebase-functions": "^4.3.1",
+    "stripe": "^14.25.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "*",

@@ -1,96 +1,146 @@
-import { doc, setDoc, getDoc, updateDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc, collection, addDoc, serverTimestamp, query, where, getDocs, deleteField } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
-// Create or update user document in Firestore
-export const createOrUpdateUser = async (user) => {
-  try {
-    const userRef = doc(db, 'users', user.uid);
-    const userDoc = await getDoc(userRef);
-
-    if (!userDoc.exists()) {
-      // Create new user document
-      const userData = {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        accountStatus: 'free', // Default to free account
-        subscriptionTier: 'basic', // Default tier
-        subscriptionStartDate: null,
-        subscriptionEndDate: null,
-        lastPaymentDate: null,
-        paymentMethod: null,
-        autoRenew: false,
-        readingLimit: 2, // Free users get 2 readings per day
-        historyAccess: 'limited', // Free users see only 3 most recent readings
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      };
-
-      await setDoc(userRef, userData);
-      console.log('New user document created:', user.uid);
-      return userData;
-    } else {
-      // Update existing user document with any new info
-      const updateData = {
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        updatedAt: serverTimestamp()
-      };
-
-      await updateDoc(userRef, updateData);
-      console.log('Existing user document updated:', user.uid);
-      return { ...userDoc.data(), ...updateData };
-    }
-  } catch (error) {
-    console.error('Error creating/updating user:', error);
-    throw error;
-  }
+// Helper functions for week boundaries
+export const getWeekStart = () => {
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const daysToSubtract = dayOfWeek === 0 ? 0 : dayOfWeek; // If it's Sunday, don't subtract
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - daysToSubtract);
+    weekStart.setHours(0, 0, 0, 0);
+    return weekStart;
 };
 
-// Get user document from Firestore
+export const getWeekEnd = () => {
+    const weekStart = getWeekStart();
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
+    return weekEnd;
+};
+
+// Create or update user document
+export const createOrUpdateUser = async (userId, userData = {}) => {
+    try {
+        const userRef = doc(db, 'users', userId);
+        const userDoc = await getDoc(userRef);
+        
+        if (!userDoc.exists()) {
+            // New user - create with default values
+            const newUserData = {
+                uid: userId,
+                email: userData.email || '',
+                displayName: userData.displayName || '',
+                weeklyReadingLimit: 7,
+                weeklyReadingsUsed: 0,
+                lastWeekReset: getWeekStart(),
+                isPremium: false,
+                createdAt: serverTimestamp(),
+                lastUpdated: serverTimestamp(),
+                ...userData
+            };
+            
+            await setDoc(userRef, newUserData);
+            console.log('New user created:', userId);
+            return newUserData;
+        } else {
+            // Existing user - update last updated timestamp
+            await updateDoc(userRef, {
+                lastUpdated: serverTimestamp(),
+                ...userData
+            });
+            console.log('Existing user updated:', userId);
+            return userDoc.data();
+        }
+    } catch (error) {
+        console.error('Error creating/updating user:', error);
+        throw error;
+    }
+};
+
+// Get user document with migration logic
 export const getUserDocument = async (userId) => {
-  try {
-    const userRef = doc(db, 'users', userId);
-    const userDoc = await getDoc(userRef);
-    
-    if (userDoc.exists()) {
-      return userDoc.data();
-    } else {
-      console.log('User document not found:', userId);
-      return null;
+    try {
+        console.log('getUserDocument: Called with userId:', userId);
+        
+        const userRef = doc(db, 'users', userId);
+        const userDoc = await getDoc(userRef);
+        
+        if (!userDoc.exists()) {
+            console.log('getUserDocument: User document does not exist');
+            return null;
+        }
+        
+        const userData = userDoc.data();
+        console.log('getUserDocument: User data fetched:', userData);
+        
+        // Migration logic: if user has old readingLimit field, migrate to new system
+        if (userData.readingLimit !== undefined && userData.weeklyReadingLimit === undefined) {
+            console.log('getUserDocument: Migrating user from old readingLimit system');
+            
+            try {
+                await updateDoc(userRef, {
+                    weeklyReadingLimit: 7,
+                    weeklyReadingsUsed: 0,
+                    lastWeekReset: getWeekStart(),
+                    readingLimit: deleteField() // Remove old field
+                });
+                console.log('getUserDocument: Migration completed successfully');
+                
+                // Update local data
+                userData.weeklyReadingLimit = 7;
+                userData.weeklyReadingsUsed = 0;
+                userData.lastWeekReset = getWeekStart();
+                delete userData.readingLimit;
+            } catch (migrationError) {
+                console.error('getUserDocument: Migration failed:', migrationError);
+                // Continue with existing data if migration fails
+            }
+        }
+        
+        return userData;
+    } catch (error) {
+        console.error('Error getting user document:', error);
+        throw error;
     }
-  } catch (error) {
-    console.error('Error getting user document:', error);
-    throw error;
-  }
 };
 
-// Update user's subscription status
-export const updateUserSubscription = async (userId, subscriptionData) => {
-  try {
-    const userRef = doc(db, 'users', userId);
+// Check if user is premium
+export const isUserPremium = (userData) => {
+    if (!userData) return false;
     
-    const updateData = {
-      accountStatus: subscriptionData.accountStatus,
-      subscriptionTier: subscriptionData.subscriptionTier,
-      subscriptionStartDate: subscriptionData.subscriptionStartDate,
-      subscriptionEndDate: subscriptionData.subscriptionEndDate,
-      lastPaymentDate: subscriptionData.lastPaymentDate,
-      readingLimit: subscriptionData.readingLimit,
-      historyAccess: subscriptionData.historyAccess,
-      updatedAt: serverTimestamp()
-    };
+    // Check if user has premium subscription
+    if (userData.isPremium === true) {
+        return true;
+    }
+    
+    // Check if user has active subscription data
+    if (userData.subscription && userData.subscription.status) {
+        return ['active', 'trialing'].includes(userData.subscription.status);
+    }
+    
+    return false;
+};
 
-    await updateDoc(userRef, updateData);
-    console.log('User subscription updated:', userId);
-    
-    return updateData;
-  } catch (error) {
-    console.error('Error updating user subscription:', error);
-    throw error;
-  }
+// Update user subscription status
+export const updateUserSubscription = async (userId, subscriptionData) => {
+    try {
+        const userRef = doc(db, 'users', userId);
+        
+        await updateDoc(userRef, {
+            subscription: subscriptionData,
+            isPremium: subscriptionData.status === 'active' || subscriptionData.status === 'trialing',
+            weeklyReadingLimit: (subscriptionData.status === 'active' || subscriptionData.status === 'trialing') ? 21 : 7,
+            lastSubscriptionCheck: serverTimestamp(),
+            lastUpdated: serverTimestamp()
+        });
+        
+        console.log('User subscription updated:', userId, subscriptionData.status);
+    } catch (error) {
+        console.error('Error updating user subscription:', error);
+        throw error;
+    }
 };
 
 // Create subscription history record
@@ -119,29 +169,150 @@ export const createSubscriptionRecord = async (subscriptionData) => {
   }
 };
 
-// Check if user has active premium subscription
-export const isUserPremium = (userData) => {
-  if (!userData || userData.accountStatus !== 'premium') {
-    return false;
-  }
+// Get user's remaining weekly readings
+export const getUserRemainingWeeklyReadings = async (userId) => {
+    try {
+        console.log('getUserRemainingWeeklyReadings: Called with userId:', userId);
+        
+        const userData = await getUserDocument(userId);
+        console.log('getUserRemainingWeeklyReadings: User data fetched:', userData);
+        
+        if (!userData) {
+            console.log('getUserRemainingWeeklyReadings: No user data found, returning 0');
+            return 0;
+        }
 
-  if (!userData.subscriptionEndDate) {
-    return false;
-  }
+        if (isUserPremium(userData)) {
+            console.log('getUserRemainingWeeklyReadings: User is premium, returning 21');
+            return 21; // Premium users get 21 readings per week
+        }
 
-  const now = new Date();
-  const subscriptionEnd = userData.subscriptionEndDate.toDate();
-  
-  return subscriptionEnd > now;
+        // Check if we need to reset weekly readings
+        const now = new Date();
+        const lastReset = userData.lastWeekReset?.toDate() || new Date(0);
+        const weekStart = getWeekStart();
+        
+        console.log('getUserRemainingWeeklyReadings: Last reset:', lastReset);
+        console.log('getUserRemainingWeeklyReadings: Current week start:', weekStart);
+        
+        if (lastReset < weekStart) {
+            console.log('getUserRemainingWeeklyReadings: Week has changed, resetting readings');
+            // Week has changed, reset readings
+            await updateDoc(doc(db, 'users', userId), {
+                weeklyReadingsUsed: 0,
+                lastWeekReset: weekStart
+            });
+            return 7; // Fresh week, all readings available
+        }
+        
+        const remaining = Math.max(0, 7 - (userData.weeklyReadingsUsed || 0));
+        console.log('getUserRemainingWeeklyReadings: Remaining readings:', remaining);
+        return remaining;
+        
+    } catch (error) {
+        console.error('Error getting remaining weekly readings:', error);
+        return 0;
+    }
 };
 
-// Get user's remaining readings for today
-export const getUserRemainingReadings = (userData) => {
-  if (isUserPremium(userData)) {
-    return 'unlimited';
-  }
-  
-  // For free users, this would need to be calculated based on actual readings today
-  // For now, return the daily limit
-  return userData.readingLimit || 2;
+// Increment weekly readings count
+export const incrementWeeklyReadings = async (userId) => {
+    try {
+        const userRef = doc(db, 'users', userId);
+        const userData = await getDoc(userRef);
+        
+        if (!userData.exists()) {
+            console.error('User not found for incrementing readings:', userId);
+            return;
+        }
+        
+        const currentData = userData.data();
+        const currentUsed = currentData.weeklyReadingsUsed || 0;
+        
+        await updateDoc(userRef, {
+            weeklyReadingsUsed: currentUsed + 1,
+            lastUpdated: serverTimestamp()
+        });
+        
+        console.log('Weekly readings incremented for user:', userId, 'New total:', currentUsed + 1);
+    } catch (error) {
+        console.error('Error incrementing weekly readings:', error);
+    }
+};
+
+// Legacy function for backward compatibility
+export const getUserRemainingReadings = async (userId) => {
+    return await getUserRemainingWeeklyReadings(userId);
+};
+
+// Get user's reading history for statistics
+export const getUserReadingStats = async (userId) => {
+    try {
+        const readingsRef = collection(db, 'readings');
+        const q = query(
+            readingsRef,
+            where('userId', '==', userId),
+            where('timestamp', '>=', new Date(new Date().getFullYear(), new Date().getMonth(), 1))
+        );
+        
+        const querySnapshot = await getDocs(q);
+        const readings = querySnapshot.docs.map(doc => doc.data());
+        
+        return {
+            totalReadings: readings.length,
+            thisMonthCount: readings.length,
+            lastReadingDate: readings.length > 0 ? readings[readings.length - 1].timestamp : null
+        };
+    } catch (error) {
+        console.error('Error getting user reading stats:', error);
+        return {
+            totalReadings: 0,
+            thisMonthCount: 0,
+            lastReadingDate: null
+        };
+    }
+};
+
+// Get user's favorite reading type
+export const getFavoriteReadingType = async (userId) => {
+    try {
+        const readingsRef = collection(db, 'readings');
+        const q = query(
+            readingsRef,
+            where('userId', '==', userId)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        const readings = querySnapshot.docs.map(doc => doc.data());
+        
+        if (readings.length === 0) return 'No readings yet';
+        
+        // Count reading types
+        const typeCounts = {};
+        readings.forEach(reading => {
+            const type = reading.readingType || 'unknown';
+            typeCounts[type] = (typeCounts[type] || 0) + 1;
+        });
+        
+        // Find most common type
+        const favoriteType = Object.entries(typeCounts).reduce((a, b) => 
+            typeCounts[a[0]] > typeCounts[b[0]] ? a : b
+        )[0];
+        
+        // Map type numbers to readable names
+        const typeNames = {
+            '1': 'Past/Present/Future',
+            '2': 'Action/Outcome',
+            '3': 'Relationship Review',
+            '4': 'Career Path',
+            '5': 'Daily Insight',
+            '6': 'Weekly Insight',
+            '7': 'General Reading'
+        };
+        
+        return typeNames[favoriteType] || favoriteType;
+    } catch (error) {
+        console.error('Error getting favorite reading type:', error);
+        return 'Unknown';
+    }
 };

@@ -11,6 +11,7 @@ import { generatePrompt_weekly } from "./generatePrompt_weekly.ts";
 import { generatePrompt_general } from "./generatePrompt_general.ts";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRefresh } from '@fortawesome/free-solid-svg-icons';
+import { getUserRemainingWeeklyReadings, incrementWeeklyReadings } from '../utils/userManagement';
 
 function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPasswordPage }) {
     const [emoji, setEmoji] = useState('');
@@ -32,12 +33,24 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
     const [loading2, setLoading2] = useState(false);
     const [showLimitPopup, setShowLimitPopup] = useState(false);
     const [inputsDisabled, setInputsDisabled] = useState(false);
+    const [weeklyReadingsRemaining, setWeeklyReadingsRemaining] = useState(7);
 
     const reading = useRef({
         past: { name: "", reversed: false },
         present: { name: "", reversed: false },
         future: { name: "", reversed: false }
     });
+
+    // Check weekly reading limit on component mount
+    useEffect(() => {
+        const checkWeeklyLimit = async () => {
+            if (profile) {
+                const remaining = await getUserRemainingWeeklyReadings(profile.uid);
+                setWeeklyReadingsRemaining(remaining);
+            }
+        };
+        checkWeeklyLimit();
+    }, [profile]);
 
     useEffect(() => {
         setCards([
@@ -81,16 +94,6 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         "Chakra Cheetah", "Zodiac Zebra", "Talisman Tiger", "Rune Rabbit",
         "Ethereal Eel", "Occult Owl", "Majestic Macaw", "Crystal Crow"
     ];
-
-    // Function to get today's clicks from localStorage
-    const getTodayClicks = () => {
-        const now = new Date();
-        const clicks = JSON.parse(localStorage.getItem('tarotClicks')) || [];
-        return clicks.filter(click => {
-            const clickDate = new Date(click);
-            return clickDate.toDateString() === now.toDateString();
-        });
-    };
 
     // Function to get a random nickname
     const getRandomNickname = () => {
@@ -189,11 +192,14 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         return (
             <div className="popup-overlay">
                 <div className="popup-content">
-                    <p>You've reached the limit of 2 readings per day.
+                    <p>You've reached your weekly limit of 7 readings.
+                        <br />
+                        Your limit resets every Sunday. 
                         <br />
                         If you like the app you can buy me a
                         <a href="https://www.buymeacoffee.com/alexdevries" target="_blank" rel="noopener noreferrer"> coffee ☕
                         </a>
+                        or upgrade to Premium for 21 readings per week!
                     </p>
                     <button onClick={() => setShowLimitPopup(false)}>Close</button>
                 </div>
@@ -204,6 +210,12 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
     const generateTextAndImage = async () => {
         if (!profile) {
             setShowPasswordPage(true);
+            return;
+        }
+
+        // Check weekly reading limit first
+        if (weeklyReadingsRemaining <= 0) {
+            setShowLimitPopup(true);
             return;
         }
 
@@ -228,177 +240,179 @@ function Tarotgen({ profile, setLoading, loading, choice, setChoice, setShowPass
         const promptGenerator = promptGenerators[choice];
         const userMood = moodDescriptions[moodChoice] || "Undefined";
 
-        const todayClicks = getTodayClicks();
-        if (todayClicks.length < 100) {
-            setLoading(true);
-            const { past, present, future } = reading.current;
-            const formatCard = (card) => {
-                return card.reversed ? `${card.name} (Reversed)` : card.name;
-            };
+        setLoading(true);
+        const { past, present, future } = reading.current;
+        const formatCard = (card) => {
+            return card.reversed ? `${card.name} (Reversed)` : card.name;
+        };
 
-            const textPrompt = promptGenerator({
-                NAMEHERE: name,
-                MOODHERE: userMood,
-                CONTEXTHERE: context,
-                pastCard: formatCard(past),
-                presentCard: formatCard(present),
-                futureCard: formatCard(future)
+        const textPrompt = promptGenerator({
+            NAMEHERE: name,
+            MOODHERE: userMood,
+            CONTEXTHERE: context,
+            pastCard: formatCard(past),
+            presentCard: formatCard(present),
+            futureCard: formatCard(future)
+        });
+        
+        //console.log('Generated prompt:', textPrompt);
+        //console.log('Prompt length:', textPrompt.length);
+        
+        try {
+            const URL2 = `${process.env.REACT_APP_VALUE3}${process.env.REACT_APP_VALUE1}${process.env.REACT_APP_VALUE4}`;
+            
+            //console.log('Environment variables check:');
+            //console.log('REACT_APP_VALUE1:', process.env.REACT_APP_VALUE1 ? 'Set' : 'Not set');
+            //console.log('REACT_APP_VALUE3:', process.env.REACT_APP_VALUE3 ? 'Set' : 'Not set');
+            //console.log('REACT_APP_VALUE4:', process.env.REACT_APP_VALUE4 ? 'Set' : 'Not set');
+            //console.log('Combined API key length:', URL2.length);
+            //console.log('All env vars starting with REACT_APP:', Object.keys(process.env).filter(key => key.startsWith('REACT_APP_')));
+            //console.log('Current working directory env check:', process.env.NODE_ENV);
+            //console.log('Full process.env object:', process.env);
+            //console.log('Working directory check - current location:', window.location.href);
+            
+            // Check if environment variables are defined
+            if (!process.env.REACT_APP_VALUE1 || !process.env.REACT_APP_VALUE3 || !process.env.REACT_APP_VALUE4) {
+                console.error('Missing environment variables for OpenAI API key');
+                alert('OpenAI API key not configured. Please check your environment variables.');
+                setLoading(false);
+                return;
+            }
+            
+            //console.log('Attempting to call OpenAI API...');
+            //console.log('API Key (first 10 chars):', URL2.substring(0, 10) + '...');
+            //console.log('Prompt:', textPrompt);
+            
+            // Step 1: Generate text with GPT
+            const textResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${URL2}`
+                },
+                body: JSON.stringify({
+                    model: 'gpt-4o',
+                    //model: 'gpt-4o',  // Specify the model you want to use 'gpt-3.5-turbo-1106'
+                    messages: [{ role: 'system', content: 'You are an expert AI Tarot reader.' }, { role: 'user', content: textPrompt }],
+                    max_completion_tokens: 3000
+                })
             });
             
-            //console.log('Generated prompt:', textPrompt);
-            //console.log('Prompt length:', textPrompt.length);
-            
-            try {
-                const URL2 = `${process.env.REACT_APP_VALUE3}${process.env.REACT_APP_VALUE1}${process.env.REACT_APP_VALUE4}`;
-                
-                //console.log('Environment variables check:');
-                //console.log('REACT_APP_VALUE1:', process.env.REACT_APP_VALUE1 ? 'Set' : 'Not set');
-                //console.log('REACT_APP_VALUE3:', process.env.REACT_APP_VALUE3 ? 'Set' : 'Not set');
-                //console.log('REACT_APP_VALUE4:', process.env.REACT_APP_VALUE4 ? 'Set' : 'Not set');
-                //console.log('Combined API key length:', URL2.length);
-                //console.log('All env vars starting with REACT_APP:', Object.keys(process.env).filter(key => key.startsWith('REACT_APP_')));
-                //console.log('Current working directory env check:', process.env.NODE_ENV);
-                //console.log('Full process.env object:', process.env);
-                //console.log('Working directory check - current location:', window.location.href);
-                
-                // Check if environment variables are defined
-                if (!process.env.REACT_APP_VALUE1 || !process.env.REACT_APP_VALUE3 || !process.env.REACT_APP_VALUE4) {
-                    console.error('Missing environment variables for OpenAI API key');
-                    alert('OpenAI API key not configured. Please check your environment variables.');
-                    setLoading(false);
-                    return;
-                }
-                
-                //console.log('Attempting to call OpenAI API...');
-                //console.log('API Key (first 10 chars):', URL2.substring(0, 10) + '...');
-                //console.log('Prompt:', textPrompt);
-                
-                // Step 1: Generate text with GPT
-                const textResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${URL2}`
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-4o',
-                        //model: 'gpt-4o',  // Specify the model you want to use 'gpt-3.5-turbo-1106'
-                        messages: [{ role: 'system', content: 'You are an expert AI Tarot reader.' }, { role: 'user', content: textPrompt }],
-                        max_completion_tokens: 3000
-                    })
-                });
-                
-                //console.log('Response status:', textResponse.status);
-                //console.log('Response ok:', textResponse.ok);
+            //console.log('Response status:', textResponse.status);
+            //console.log('Response ok:', textResponse.ok);
 
-                if (!textResponse.ok) {
-                    const errorData = await textResponse.json();
-                    console.error('OpenAI API error:', errorData);
-                    if (textResponse.status === 401) {
-                        alert('Invalid OpenAI API key. Please check your configuration.');
-                    } else {
-                        alert(`OpenAI API error: ${errorData.error?.message || 'Unknown error'}`);
-                    }
-                    setLoading(false);
-                    return;
-                }
-
-                const textData = await textResponse.json();
-                
-                // Debug: Log the entire response structure
-                //console.log('Full response structure:', {
-                //    hasChoices: !!textData.choices,
-                //    choicesLength: textData.choices?.length,
-                //    firstChoice: textData.choices?.[0],
-                //    firstChoiceKeys: textData.choices?.[0] ? Object.keys(textData.choices[0]) : [],
-                //    messageKeys: textData.choices?.[0]?.message ? Object.keys(textData.choices[0].message) : []
-                //});
-                
-                // Log the raw response for debugging
-                //console.log('Raw API response:', JSON.stringify(textData, null, 2));
-                
-                // Check if the response has the expected structure
-                //console.log('Checking response structure...');
-                //console.log('textData.choices exists:', !!textData.choices);
-                //console.log('textData.choices length:', textData.choices?.length);
-                //console.log('textData.choices type:', typeof textData.choices);
-                //console.log('textData.choices is array:', Array.isArray(textData.choices));
-                
-                if (textData.choices && textData.choices.length > 0) {
-                    const firstChoice = textData.choices[0];
-                    //console.log('First choice object:', firstChoice);
-                    //console.log('First choice type:', typeof firstChoice);
-                    
-                    if (firstChoice.message && firstChoice.message.content) {
-                        setGeneratedText(firstChoice.message.content);
-                    } else if (firstChoice.text) {
-                        // Fallback for older API versions
-                        setGeneratedText(firstChoice.text);
-                    } else {
-                        // Try to find content in any possible location
-                        const content = firstChoice.content || firstChoice.text || firstChoice.message?.text || firstChoice.message?.content;
-                        if (content) {
-                            setGeneratedText(content);
-                        } else {
-                            setGeneratedText('Error: Unexpected response structure from AI');
-                        }
-                    }
+            if (!textResponse.ok) {
+                const errorData = await textResponse.json();
+                console.error('OpenAI API error:', errorData);
+                if (textResponse.status === 401) {
+                    alert('Invalid OpenAI API key. Please check your configuration.');
                 } else {
-                    setGeneratedText('Error: No choices received from AI');
+                    alert(`OpenAI API error: ${errorData.error?.message || 'Unknown error'}`);
                 }
-                
-                // Save reading to history if user is logged in and we have content
-                if (profile && profile.uid && textData.choices && textData.choices.length > 0) {
-                    try {
-                        console.log('Saving reading to history...');
-                        console.log('Profile:', profile);
-                        console.log('User ID:', profile.uid);
-                        
-                        const { addDoc, collection, serverTimestamp } = await import('firebase/firestore');
-                        const { db } = await import('../firebaseConfig');
-                        
-                        const firstChoice = textData.choices[0];
-                        const generatedContent = firstChoice.message?.content || firstChoice.text || '';
-                        
-                        const readingData = {
-                            userId: profile.uid,
-                            timestamp: serverTimestamp(),
-                            readingType: choice,
-                            cards: reading.current,
-                            generatedText: generatedContent,
-                            isPaid: false
-                        };
-                        
-                        console.log('Reading data to save:', readingData);
-                        
-                        const docRef = await addDoc(collection(db, 'readings'), readingData);
-                        console.log('Reading saved successfully with ID:', docRef.id);
-                    } catch (error) {
-                        console.error('Error saving reading to history:', error);
-                    }
-                } else {
-                    console.log('Not saving reading to history:');
-                    console.log('Profile exists:', !!profile);
-                    console.log('User ID exists:', !!(profile && profile.uid));
-                    console.log('Choices exist:', !!(textData.choices && textData.choices.length > 0));
-                }
-            } catch (error) {
-                //console.error(`Error calling OpenAI API: ${error.message}`);
-                alert(`Error: ${error.message}. Please check your internet connection and API configuration.`);
-            } finally {
                 setLoading(false);
-                setStage(2);
+                return;
             }
-            const currentClicks = JSON.parse(localStorage.getItem('tarotClicks')) || [];
-            const now = new Date();
-            currentClicks.push(now);
-            localStorage.setItem('tarotClicks', JSON.stringify(currentClicks));
-        } else {
 
-            setShowLimitPopup(true);
+            const textData = await textResponse.json();
+            
+            // Debug: Log the entire response structure
+            //console.log('Full response structure:', {
+            //    hasChoices: !!textData.choices,
+            //    choicesLength: textData.choices?.length,
+            //    firstChoice: textData.choices?.[0],
+            //    firstChoiceKeys: textData.choices?.[0] ? Object.keys(textData.choices[0]) : [],
+            //    messageKeys: textData.choices?.[0]?.message ? Object.keys(textData.choices[0].message) : []
+            //});
+            
+            // Log the raw response for debugging
+            //console.log('Raw API response:', JSON.stringify(textData, null, 2));
+            
+            // Check if the response has the expected structure
+            //console.log('Checking response structure...');
+            //console.log('textData.choices exists:', !!textData.choices);
+            //console.log('textData.choices length:', textData.choices?.length);
+            //console.log('textData.choices type:', typeof textData.choices);
+            //console.log('textData.choices is array:', Array.isArray(textData.choices));
+            
+            if (textData.choices && textData.choices.length > 0) {
+                const firstChoice = textData.choices[0];
+                //console.log('First choice object:', firstChoice);
+                //console.log('First choice type:', typeof firstChoice);
+                
+                if (firstChoice.message && firstChoice.message.content) {
+                    setGeneratedText(firstChoice.message.content);
+                } else if (firstChoice.text) {
+                    // Fallback for older API versions
+                    setGeneratedText(firstChoice.text);
+                } else {
+                    // Try to find content in any possible location
+                    const content = firstChoice.content || firstChoice.text || firstChoice.message?.text || firstChoice.message?.content;
+                    if (content) {
+                        setGeneratedText(content);
+                    } else {
+                        setGeneratedText('Error: Unexpected response structure from AI');
+                    }
+                }
+            } else {
+                setGeneratedText('Error: No choices received from AI');
+            }
+            
+            // Save reading to history if user is logged in and we have content
+            if (profile && profile.uid && textData.choices && textData.choices.length > 0) {
+                try {
+                    console.log('Saving reading to history...');
+                    console.log('Profile:', profile);
+                    console.log('User ID:', profile.uid);
+                    
+                    const { addDoc, collection, serverTimestamp } = await import('firebase/firestore');
+                    const { db } = await import('../firebaseConfig');
+                    
+                    const firstChoice = textData.choices[0];
+                    const generatedContent = firstChoice.message?.content || firstChoice.text || '';
+                    
+                    const readingData = {
+                        userId: profile.uid,
+                        timestamp: serverTimestamp(),
+                        readingType: choice,
+                        cards: reading.current,
+                        generatedText: generatedContent,
+                        isPaid: false
+                    };
+                    
+                    console.log('Reading data to save:', readingData);
+                    
+                    const docRef = await addDoc(collection(db, 'readings'), readingData);
+                    console.log('Reading saved successfully with ID:', docRef.id);
+                } catch (error) {
+                    console.error('Error saving reading to history:', error);
+                }
+            } else {
+                console.log('Not saving reading to history:');
+                console.log('Profile exists:', !!profile);
+                console.log('User ID exists:', !!(profile && profile.uid));
+                console.log('Choices exist:', !!(textData.choices && textData.choices.length > 0));
+            }
+        } catch (error) {
+            //console.error(`Error calling OpenAI API: ${error.message}`);
+            alert(`Error: ${error.message}. Please check your internet connection and API configuration.`);
+        } finally {
+            setLoading(false);
+            setStage(2);
         }
-
+        
+        // Increment weekly readings count after successful reading
+        if (profile && profile.uid) {
+            try {
+                await incrementWeeklyReadings(profile.uid);
+                // Update the local state to reflect the new count
+                const newRemaining = await getUserRemainingWeeklyReadings(profile.uid);
+                setWeeklyReadingsRemaining(newRemaining);
+            } catch (error) {
+                console.error('Error updating weekly readings count:', error);
+            }
+        }
     };
+
     const [currentMessage, setCurrentMessage] = useState(0);
     const loadingMessages = [
         "Shuffling the deck...",

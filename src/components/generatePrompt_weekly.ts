@@ -7,9 +7,7 @@ export function generatePrompt_weekly(variables: {
     presentCard: string;
     futureCard: string;
 }): string {
-
-
-    Question: Provide a weekly tarot reading. The first card represents this week's feelings: ${variables.pastCard}, the second card represents this week's health: ${variables.presentCard}, and the third card represents this week's thoughts: ${variables.futureCard}. Note that cards can come in a 'reversed' state, which often gives an alternate meaning. Consider the client's provided context: ${variables.CONTEXTHERE} when interpreting the cards.
+    return `Question: Provide a weekly tarot reading. The first card represents this week's feelings: ${variables.pastCard}, the second card represents this week's health: ${variables.presentCard}, and the third card represents this week's thoughts: ${variables.futureCard}. Note that cards can come in a 'reversed' state, which often gives an alternate meaning. Consider the client's provided context: ${variables.CONTEXTHERE} when interpreting the cards.
 
     Answer generation specifics: Think deeply, but value speed in your response. Provide a reading for the coming week using the three card interpretations and their combined meaning. Make it unique and creative, allowing for some imaginative insights. This is important.
 

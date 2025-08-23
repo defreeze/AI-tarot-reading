@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
-import { getUserDocument, isUserPremium } from '../utils/userManagement';
+import { getUserDocument, isUserPremium, getUserRemainingWeeklyReadings } from '../utils/userManagement';
 import './AccountInfo.css';
 
 function AccountInfo({ userId }) {
@@ -21,26 +21,39 @@ function AccountInfo({ userId }) {
         totalReadings: 0,
         readingsThisMonth: 0,
         readingTypes: {},
-        lastReadingDate: null
+        lastReadingDate: null,
+        weeklyReadingsRemaining: 0
     });
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchAccountData = async () => {
-            if (!userId) return;
+            if (!userId) {
+                console.error('AccountInfo: userId is undefined or null');
+                setLoading(false);
+                return;
+            }
+
+            console.log('AccountInfo: Fetching data for userId:', userId);
 
             try {
                 // Fetch user document with subscription data
                 const userDoc = await getUserDocument(userId);
+                console.log('AccountInfo: User document fetched:', userDoc);
                 setUserData(userDoc);
+
+                // Get remaining weekly readings
+                const weeklyReadingsRemaining = await getUserRemainingWeeklyReadings(userId);
+                console.log('AccountInfo: Weekly readings remaining:', weeklyReadingsRemaining);
 
                 // Get all readings for the user
                 const readingsRef = collection(db, 'readings');
                 const q = query(readingsRef, where('userId', '==', userId));
+                console.log('AccountInfo: Executing Firebase query for userId:', userId);
+                
                 const querySnapshot = await getDocs(q);
-
-                console.log('Found readings:', querySnapshot.size); // Debug log
+                console.log('AccountInfo: Firebase query result - Found readings:', querySnapshot.size);
 
                 const readings = [];
                 const types = {};
@@ -51,7 +64,7 @@ function AccountInfo({ userId }) {
 
                 querySnapshot.forEach((doc) => {
                     const reading = doc.data();
-                    console.log('Reading data:', reading); // Debug log
+                    console.log('AccountInfo: Reading document data:', doc.id, reading);
                     readings.push(reading);
                     
                     // Count reading types - check multiple possible field names
@@ -64,7 +77,7 @@ function AccountInfo({ userId }) {
                         type = reading.type;
                     }
                     
-                    console.log('Reading type found:', type); // Debug log
+                    console.log('AccountInfo: Reading type found:', type);
                     
                     // Convert numeric types to readable names if needed
                     if (typeof type === 'number' || !isNaN(type)) {
@@ -87,25 +100,36 @@ function AccountInfo({ userId }) {
                     }
                 });
 
-                console.log('Processed readings:', readings.length); // Debug log
-                console.log('Reading types:', types); // Debug log
+                console.log('AccountInfo: Processed readings:', readings.length);
+                console.log('AccountInfo: Reading types:', types);
+                console.log('AccountInfo: This month count:', thisMonthCount);
 
                 // Get most recent reading date
                 const sortedReadings = readings.sort((a, b) => 
                     b.timestamp?.toDate() - a.timestamp?.toDate()
                 );
 
-                console.log('Last reading date:', sortedReadings[0]?.timestamp); // Debug log
+                console.log('AccountInfo: Last reading date:', sortedReadings[0]?.timestamp);
 
                 setStats({
                     totalReadings: readings.length,
                     readingsThisMonth: thisMonthCount,
                     readingTypes: types,
                     lastReadingDate: sortedReadings[0]?.timestamp?.toDate(),
-                    typeLastUsed: typeLastUsed
+                    typeLastUsed: typeLastUsed,
+                    weeklyReadingsRemaining: weeklyReadingsRemaining
                 });
             } catch (error) {
-                console.error('Error fetching account data:', error);
+                console.error('AccountInfo: Error fetching account data:', error);
+                // Set default values on error
+                setStats({
+                    totalReadings: 0,
+                    readingsThisMonth: 0,
+                    readingTypes: {},
+                    lastReadingDate: null,
+                    typeLastUsed: {},
+                    weeklyReadingsRemaining: 0
+                });
             } finally {
                 setLoading(false);
             }
@@ -117,7 +141,6 @@ function AccountInfo({ userId }) {
     if (loading) {
         return (
             <div className="account-info-box">
-                <h5>Statistics</h5>
                 <p>Loading...</p>
             </div>
         );
@@ -165,11 +188,21 @@ function AccountInfo({ userId }) {
         }
     };
 
-
+    // Get current week info for display
+    const getCurrentWeekInfo = () => {
+        const now = new Date();
+        const day = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+        const daysUntilSaturday = 6 - day;
+        const daysSinceSunday = day;
+        
+        if (day === 0) return "Sunday (Week starts)";
+        if (day === 6) return "Saturday (Week ends)";
+        
+        return `${daysUntilSaturday} days left this week`;
+    };
 
     return (
         <div className="account-info-box">
-            <h5>Statistics</h5>
             
             <div className="stats-grid">
                 <div className="stat-item">
@@ -182,11 +215,16 @@ function AccountInfo({ userId }) {
                     <div className="stat-label">This Month</div>
                 </div>
                 
-                <div className="stat-item">
+                <div className="stat-item tooltip-container">
                     <div className="stat-number">
-                        {userData && isUserPremium(userData) ? '5' : Math.max(0, 2 - stats.readingsThisMonth)}
+                        {userData && isUserPremium(userData) ? '21' : (() => {
+                            console.log('AccountInfo: Weekly readings remaining from stats:', stats.weeklyReadingsRemaining);
+                            console.log('AccountInfo: User data for premium check:', userData);
+                            return stats.weeklyReadingsRemaining;
+                        })()}
                     </div>
-                    <div className="stat-label">Daily Limit</div>
+                    <div className="stat-label">Weekly readings left</div>
+                    <div className="tooltip">Readings are added at the end of each week</div>
                 </div>
             </div>
 
@@ -197,20 +235,20 @@ function AccountInfo({ userId }) {
                         <div className="detail-value">{formatDate(stats.lastReadingDate)}</div>
                     </div>
                     
-                                         <div className="detail-box">
-                         <div className="detail-label">Account Status</div>
-                         <div className="detail-value">
-                             {userData && isUserPremium(userData) ? (
-                                 <span style={{ color: '#b98145', fontWeight: 'bold' }}>
-                                     💎 Premium User
-                                 </span>
-                             ) : (
-                                 <span style={{ color: '#4682b4', fontWeight: 'bold' }}>
-                                     💸 Free User
-                                 </span>
-                             )}
-                         </div>
-                     </div>
+                    <div className="detail-box">
+                        <div className="detail-label">Account Status</div>
+                        <div className="detail-value">
+                            {userData && isUserPremium(userData) ? (
+                                <span style={{ color: '#b98145', fontWeight: 'bold' }}>
+                                    💎 Premium User
+                                </span>
+                            ) : (
+                                <span style={{ color: '#4682b4', fontWeight: 'bold' }}>
+                                    💸 Free User
+                                </span>
+                            )}
+                        </div>
+                    </div>
                     
                     <div className="detail-box">
                         <div className="detail-label">Favorite Reading Type</div>
@@ -256,7 +294,7 @@ function AccountInfo({ userId }) {
                 )}
                 
                 <div className="plan-comparison">
-                    <h6>Free vs Premium account</h6>
+                    <h6>Free vs Premium Plan</h6>
                     <div className="comparison-table">
                         <div className="comparison-header">
                             <div className="feature-label">Features</div>
@@ -267,11 +305,16 @@ function AccountInfo({ userId }) {
                             💎Premium Plan
                             </div>
                         </div>
-                        
                         <div className="comparison-row">
-                            <div className="feature-label">Daily Readings</div>
-                            <div className={`plan-value ${!userData || !isUserPremium(userData) ? 'highlighted' : ''}`}>2</div>
-                            <div className={`plan-value ${userData && isUserPremium(userData) ? 'highlighted' : ''}`}>5</div>
+                            <div className="feature-label">Cost</div>
+                            <div className={`plan-value ${!userData || !isUserPremium(userData) ? 'highlighted' : ''}`}>Free</div>
+                            <div className={`plan-value ${userData && isUserPremium(userData) ? 'highlighted' : ''}`}>€5 / month</div>
+                        </div>
+
+                        <div className="comparison-row">
+                            <div className="feature-label">Weekly Readings</div>
+                            <div className={`plan-value ${!userData || !isUserPremium(userData) ? 'highlighted' : ''}`}>7</div>
+                            <div className={`plan-value ${userData && isUserPremium(userData) ? 'highlighted' : ''}`}>21</div>
                         </div>
                         
                         <div className="comparison-row">
@@ -286,11 +329,7 @@ function AccountInfo({ userId }) {
                             <div className={`plan-value ${userData && isUserPremium(userData) ? 'highlighted' : ''}`}>First access</div>
                         </div>
                         
-                        <div className="comparison-row">
-                            <div className="feature-label">Community</div>
-                            <div className={`plan-value ${!userData || !isUserPremium(userData) ? 'highlighted' : ''}`}>Read only</div>
-                            <div className={`plan-value ${userData && isUserPremium(userData) ? 'highlighted' : ''}`}>Forum access</div>
-                        </div>
+
                         
                         <div className="comparison-row">
                             <div className="feature-label">Developer happiness</div>
@@ -302,7 +341,7 @@ function AccountInfo({ userId }) {
                 
                 {userData && !isUserPremium(userData) && (
                     <div className="upgrade-prompt">
-                        <p>💎 Upgrade to Premium for all the latest features and support development!</p>
+                        <p>💎 Upgrade to Premium for the latest features and support development!</p>
                     </div>
                 )}
             </div>
